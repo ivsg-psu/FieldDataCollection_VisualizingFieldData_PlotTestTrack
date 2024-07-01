@@ -1,5 +1,5 @@
 function [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
-    csv_filename, varargin)
+    csv_filenames, varargin)
 %% fcn_PlotTestTrack_plot
 % Creates a plot of entered traces in either LLA, ENU, or STH-linear
 % formats.
@@ -7,11 +7,11 @@ function [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_
 % FORMAT:
 %
 %       [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
-%       csv_filename, (flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+%       csv_filenames, (flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
 %       flag_plot_ENU,flag_plot_STH,plot_color,fig_num))
 % INPUTS:
 %
-%      csv_filename: The name of the .csv file that contains the latitude,
+%      csv_filenames: The name of the .csv file that contains the latitude,
 %                    longitude and optionally the altitude of the location
 %                    at which the OBU sent out the BSM message to the RSU
 %                    that was in range
@@ -237,73 +237,9 @@ reference_longitude = -77.83592832;
 reference_altitude = 344.189;
 gps_object = GPS(reference_latitude,reference_longitude,reference_altitude); % Load the GPS class
 
-% locations of the towers and its corresponding use on the test track
-% Trace_coordinates_ENU = [
-%             -41.54388324160499 -111.0086546354483 -12.592103434894112
-%             ];
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'m*',MarkerSize=20);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'1','Color','m','FontSize',20,'FontWeight','bold');
-%
-%         % % Pole with the time led, Height ~ 13 meters
-%         Trace_coordinates_ENU = [
-%             29.746349250935626 124.74785860585521 -9.039292080071405
-%             ];
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'m*',MarkerSize=20);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'3','Color','m','FontSize',20,'FontWeight','bold');
-%
-%         % Power pole by the gas tank, Height ~ 10 meters
-%         Trace_coordinates_ENU = [
-%             -21.40996058267557 -155.877934772639 -12.619945213934377
-%             ];
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'m*',MarkerSize=20);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'2','Color','m','FontSize',20,'FontWeight','bold');
-%
-%         % % Power pole by the detour, Height ~ 9 meters
-%         Trace_coordinates_ENU = [
-%             78.71383357714284 -60.13763178116716 -10.848769161102917
-%             ];
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'b*',MarkerSize=20);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'4','Color','b','FontSize',20,'FontWeight','bold');
-%
-%         % % Pole by the lane test area,Height ~ 10.5 meters
-%         Trace_coordinates_ENU = [
-%             261.5226068612395 0.9362222334994122 -10.041353704834773
-%             ];
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'*',MarkerSize=20,Color=[0.9290 0.6940 0.1250]);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'7','Color',[0.9290 0.6940 0.1250],'FontSize',20,'FontWeight','bold');
-%
-%         % % Pole at the crash test area - East, Height ~ 13 meters
-%         Trace_coordinates_ENU = [
-%             236.28759539790076 183.8291816550618 -7.3790257131302175
-%             ];
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'*',MarkerSize=20,Color=[0.9290 0.6940 0.1250]);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'5','Color',[0.9290 0.6940 0.1250],'FontSize',20,'FontWeight','bold');
-%
-%         % % Pole at the crash test area - Middle, Height ~ 13 meters
-%         Trace_coordinates_ENU = [
-%             128.68142817896114 169.2357589741786 -8.40854669915419
-%             ];
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'*',MarkerSize=20,Color=[0.9290 0.6940 0.1250]);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'6','Color',[0.9290 0.6940 0.1250],'FontSize',20,'FontWeight','bold');
-%
-%         % Light Pole east corner
-%         Trace_coordinates_ENU = [468.7771748930397 128.66683330454703 -8.282502229370525
-%             ];% Height 22 meters
-%         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-%         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'y*',MarkerSize=20);
-%         text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'Gateway 2','Color','y','FontSize',20,'FontWeight','bold');
-
-
 % Read csv file containing LLA coordinates of the OBU when the BSM
 % message was sent out to the RSU
-BSM_LLA = csvread(csv_filename, 1); %#ok<*CSVRD>
+BSM_LLA = csvread(csv_filenames, 1); %#ok<*CSVRD>
 
 % LLA is collected as an integer X 10^4, so convert back to standard
 % decimal format for LLA
@@ -381,70 +317,6 @@ if flag_plot_LLA == 1
         % geoplot(pole7_coordinates_lla(:,1), pole7_coordinates_lla(:,2), '*', MarkerSize=20, Color=[0.9290, 0.6940, 0.1250]);
         % text(pole7_coordinates_lla(:,1), pole7_coordinates_lla(:,2), '6', 'Color', [0.9290, 0.6940, 0.1250], 'FontSize', 20, 'FontWeight', 'bold');
 
-        % % % Power Pole by the garage, Height ~ 8 meters
-        Trace_coordinates_ENU = [
-            -41.54388324160499 -111.0086546354483 -12.592103434894112
-            ];
-        Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-        geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'m*',MarkerSize=20);
-        text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'1','Color','m','FontSize',20,'FontWeight','bold');
-
-        % % Pole with the time led, Height ~ 13 meters
-        Trace_coordinates_ENU = [
-            29.746349250935626 124.74785860585521 -9.039292080071405
-            ];
-        Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-        geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'m*',MarkerSize=20);
-        text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'3','Color','m','FontSize',20,'FontWeight','bold');
-
-        % Power pole by the gas tank, Height ~ 10 meters
-        Trace_coordinates_ENU = [
-            -21.40996058267557 -155.877934772639 -12.619945213934377
-            ];
-        Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-        geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'m*',MarkerSize=20);
-        text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'2','Color','m','FontSize',20,'FontWeight','bold');
-
-        % % Power pole by the detour, Height ~ 9 meters
-        Trace_coordinates_ENU = [
-            78.71383357714284 -60.13763178116716 -10.848769161102917
-            ];
-        Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-        geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'b*',MarkerSize=20);
-        text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'4','Color','b','FontSize',20,'FontWeight','bold');
-
-        % % Pole by the lane test area,Height ~ 10.5 meters
-        Trace_coordinates_ENU = [
-            261.5226068612395 0.9362222334994122 -10.041353704834773
-            ];
-        Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-        geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'*',MarkerSize=20,Color=[0.9290 0.6940 0.1250]);
-        text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'7','Color',[0.9290 0.6940 0.1250],'FontSize',20,'FontWeight','bold');
-
-        % % Pole at the crash test area - East, Height ~ 13 meters
-        Trace_coordinates_ENU = [
-            236.28759539790076 183.8291816550618 -7.3790257131302175
-            ];
-        Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-        geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'*',MarkerSize=20,Color=[0.9290 0.6940 0.1250]);
-        text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'5','Color',[0.9290 0.6940 0.1250],'FontSize',20,'FontWeight','bold');
-
-        % % Pole at the crash test area - Middle, Height ~ 13 meters
-        Trace_coordinates_ENU = [
-            128.68142817896114 169.2357589741786 -8.40854669915419
-            ];
-        Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-        geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'*',MarkerSize=20,Color=[0.9290 0.6940 0.1250]);
-        text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'6','Color',[0.9290 0.6940 0.1250],'FontSize',20,'FontWeight','bold');
-
-        if flag_plot_hubs == 1
-            % Light Pole east corner
-            Trace_coordinates_ENU = [468.7771748930397 128.66683330454703 -8.282502229370525
-                ];% Height 22 meters
-            Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(Trace_coordinates_ENU);
-            geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'y*',MarkerSize=20);
-            text(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'Gateway 2','Color','y','FontSize',20,'FontWeight','bold');
-        end
     end
 end
 

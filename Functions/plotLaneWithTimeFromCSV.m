@@ -28,7 +28,7 @@ function plotLaneWithTimeFromCSV(csvFile)
     % Plot lines connecting consecutive points
     lineColor = [0.9290, 0.6940, 0.1250]
     for i = 1:length(x)-1
-        plot(x(i:i+1), y(i:i+1), '-','LineWidth', 15, 'Color', lineColor); % Connect consecutive points with a line
+        plot(x(i:i+1), y(i:i+1), '-','LineWidth', 1, 'Color', lineColor); % Connect consecutive points with a line
     end
     
     % Label the axes

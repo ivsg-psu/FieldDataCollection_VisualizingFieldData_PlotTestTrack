@@ -6,15 +6,16 @@ function fcn_PlotTestTrack_rangeRSU(csv_filenames, optional_parameters)
 
     figure(1);
 
-    h_geoplot = geoplot(40.8637, -77.8359, '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
+    %h_geoplot = geoplot(40.8637, -77.8359, '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
 
-    h_parent =  get(h_geoplot,'Parent');
-    set(h_parent,'ZoomLevel',16.375);
+    %h_parent =  get(h_geoplot,'Parent');
+    %set(h_parent,'ZoomLevel',16.375);
     try
         geobasemap satellite
     catch
         geobasemap openstreetmap
     end
+    geotickformat -dd;
     hold on;
 
     for i = 1:length(csv_filenames)

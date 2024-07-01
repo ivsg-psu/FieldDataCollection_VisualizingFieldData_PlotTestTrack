@@ -63,7 +63,7 @@ library_url{ith_library}     = 'https://github.com/ivsg-psu/FeatureExtraction_Da
 
 
 %% Clear paths and folders, if needed
-if 1==0
+if 1==1
     clear flag_PlotTestTrack_Folders_Initialized;
     fcn_INTERNAL_clearUtilitiesFromPathAndFolders;
 
