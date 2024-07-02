@@ -57,7 +57,4 @@ function plotLLACoordinatesWithTimeFromCSV(csvFile)
     
     hold off;
 end
-    
-    hold off;
-end
 
