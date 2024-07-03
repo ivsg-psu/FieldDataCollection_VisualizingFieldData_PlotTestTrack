@@ -1,4 +1,4 @@
-function plotLLACoordinatesWithTimeFromCSV(csvFile, baseLat, baseLon)
+function plotLLACoordinatesWithTimeFromCSV(csvFile, baseLat, baseLon, showTrajectory)
 %% plotLLACoordinatesWithTimeFromCSV
 % Function to create animated plot of latitude, longitude coordinates with respect to time.
 %
@@ -19,10 +19,11 @@ function plotLLACoordinatesWithTimeFromCSV(csvFile, baseLat, baseLon)
 %
 %      baseLat (optional): Latitude of the base location. Default is 40.8637.
 %      baseLon (optional): Longitude of the base location. Default is -77.8359.
+%      showTrajectory (optional): Boolean to toggle trajectory line. Default is true.
 %
 % OUTPUT:
 %
-%       Animated plot of the car moving in LLA coordinates with respect to time.
+%       Plot of LLA coordinates with respect to time
 %
 %
 % DEPENDENCIES:
@@ -35,7 +36,7 @@ function plotLLACoordinatesWithTimeFromCSV(csvFile, baseLat, baseLon)
 %       script_plotLLACoordinatesWithTimeFromCVS.m for a test suite.
 %
 % This function was written on 2024_07_01 by R. Ross
-% Questions or comments? vbw5054@psu.edu
+% Questions or comments? rkr5407@psu.edu
 
 % Revision history:
 % 
@@ -64,6 +65,8 @@ function plotLLACoordinatesWithTimeFromCSV(csvFile, baseLat, baseLon)
     % Default base location coordinates (PSU test track)
     defaultBaseLat = 40.8637;
     defaultBaseLon = -77.8359;
+    % Default plots trajectory
+    defaultShowTrajectory = true;
 
     % Check for optional inputs and set defaults if necessary
     if nargin < 2 || isempty(baseLat)
@@ -71,6 +74,9 @@ function plotLLACoordinatesWithTimeFromCSV(csvFile, baseLat, baseLon)
     end
     if nargin < 3 || isempty(baseLon)
     baseLon = defaultBaseLon;
+    end
+    if nargin < 4 || isempty(showTrajectory)
+    showTrajectory = defaultShowTrajectory;
     end
 
     % Create a figure
@@ -95,8 +101,10 @@ function plotLLACoordinatesWithTimeFromCSV(csvFile, baseLat, baseLon)
     
     hold on;
     
-    % Plot the trajectory line
-    traj = geoplot(lat(:), lon(:), 'r-','MarkerSize', 5);
+    % Plot the trajectory line if showTrajectory is true
+    if showTrajectory
+    traj = geoplot(lat(:), lon(:), 'r-', 'LineWidth', 2);
+    end
 
     hold on;
     
