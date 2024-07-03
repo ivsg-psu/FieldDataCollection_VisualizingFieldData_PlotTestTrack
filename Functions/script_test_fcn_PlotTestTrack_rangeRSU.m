@@ -1,3 +1,9 @@
+% script_test_fcn_PlotTestTrack_rangeRSU.m
+% This is a script to exercise the function: fcn_PlotTestTrack_rangeRSU.m
+% This function was written on 2024_06_14 by Aryaan, ???
+
+% Revision history:
+
 close all;
 csv_filenames = {'20ft.csv', '30ft.csv'};
 
