@@ -1,6 +1,6 @@
 function [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
     csv_filenames, varargin)
-%% fcn_PlotTestTrack_plot
+%% fcn_PlotTestTrack_plotBSMfromOBUtoRSU
 % Creates a plot of entered traces in either LLA, ENU, or STH-linear
 % formats.
 %

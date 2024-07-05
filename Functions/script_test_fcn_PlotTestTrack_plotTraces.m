@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_plotTraces.m
+% script_test_fcn_PlotTestTrack_plot.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotTraces.m
 % This function was written on 2023_03_25 by V. Wagh, vbw5054@psu.edu
 
