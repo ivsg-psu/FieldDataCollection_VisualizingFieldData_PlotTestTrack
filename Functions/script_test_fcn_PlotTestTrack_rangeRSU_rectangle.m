@@ -1,8 +1,4 @@
-% script_test_fcn_PlotTestTrack_rangeRSU.m
-% This is a script to exercise the function: fcn_PlotTestTrack_rangeRSU.m
-% This function was written on 2024_06_14 by Aryaan, ???
-
-% Revision history:
+%% Basic example 1: 20ft vs 30ft
 
 close all;
 csv_filenames = {'20ft.csv', '30ft.csv'};
@@ -12,9 +8,9 @@ optional_parameters = {
     {[0, 0, 1], 10, [29.746349250935626, 124.74785860585521, -9.039292080071405], 1, 200}   
 };
 
-fcn_PlotTestTrack_rangeRSU(csv_filenames, optional_parameters);
+fcn_PlotTestTrack_rangeRSU_rectangle(csv_filenames, optional_parameters);
 
-%% Basic example 2: 20ft vs 50ft
+%% Basic example 2: 30ft vs 50ft
 
 close all;
 csv_filenames = {'30ft.csv', '50ft.csv'};
@@ -24,7 +20,7 @@ optional_parameters = {
     {[0, 0, 1], 10, [29.746349250935626, 124.74785860585521, -9.039292080071405], 1, 200}   
 };
 
-fcn_PlotTestTrack_rangeRSU(csv_filenames, optional_parameters);
+fcn_PlotTestTrack_rangeRSU_rectangle(csv_filenames, optional_parameters);
 
 %% Pittsburg Test Site
 
@@ -40,11 +36,11 @@ optional_parameters = {
     {[0, 1, 1], 10, RSU_Location2.pole9_coordinates_enu, 1, 1000}   
 };
 
-fcn_PlotTestTrack_rangeRSU(csv_filenames, optional_parameters);
+fcn_PlotTestTrack_rangeRSU_rectangle(csv_filenames, optional_parameters);
 
 legend("BSM plot at RSU 1","RSU1 location","BSM plot at RSU2","RSU2locatiobn");
 
-%% 
+%% Pittsburg Test Site Middle Part 1
 
 close all;
 csv_filenames = {'PittsburgTestStartMiddlePart1.csv'};
@@ -58,11 +54,11 @@ optional_parameters = {
   
 };
 
-fcn_PlotTestTrack_rangeRSU(csv_filenames, optional_parameters);
+fcn_PlotTestTrack_rangeRSU_rectangle(csv_filenames, optional_parameters);
 
 legend("BSM plot at RSU 1","RSU1 location");
 
-%% 
+%% Pittsburg Test Site Middle Part 2
 
 close all;
 csv_filenames = {'PittsburgTestStartMiddlePart2.csv'};
@@ -74,6 +70,6 @@ optional_parameters = {
     {[0, 1, 1], 10, RSU_Location2.pole9_coordinates_enu, 1, 1000}   
 };
 
-fcn_PlotTestTrack_rangeRSU(csv_filenames, optional_parameters);
+fcn_PlotTestTrack_rangeRSU_rectangle(csv_filenames, optional_parameters);
 
 legend("BSM plot at RSU2","RSU2 location");
