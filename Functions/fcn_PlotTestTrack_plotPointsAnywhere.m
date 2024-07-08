@@ -1,22 +1,22 @@
-function [LLA_points, ENU_points, STH_points]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+function [LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
     initial_points, input_coordinates_type, varargin)
 %% fcn_PlotTestTrack_plotPointsAnywhere
-% Takes the input points in any format, LLA/ENU /STH and plots them as
-% points in all LLA, ENU as well as STH coordinates if specified
+% Takes the input points in any format, LLA/ENU and plots them as
+% points in all LLA and ENU coordinates if specified
 %
 % FORMAT:
 %
-%      [LLA_points, ENU_points, STH_points]  = fcn_PlotTestTrack_plotPointsAnywhere(...
-%       initial_points, input_coordinates_type, (base_station_coordinates, STH_unit_vector,
-%       plot_color, line_width, LLA_fig_num, ENU_fig_num, STH_fig_num))
+%      [LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+%       initial_points, input_coordinates_type, (base_station_coordinates,
+%       plot_color, MarkerSize, LLA_fig_num, ENU_fig_num))
 %
 % INPUTS:
 %
-%      initial_points: a matrix of NX2 for LLA, ENU or STH coordinates
+%      initial_points: a matrix of NX2 for LLA or ENU coordinates
 %
 %       input_coordinates_type = A string stating the type of
-%       Trace_coordinates that have been the input. String can be "LLA" or
-%       "ENU" or "STH"
+%       initial_points that have been the input. String can be "LLA" or
+%       "ENU"
 %
 %      (OPTIONAL INPUTS)
 %
@@ -24,19 +24,14 @@ function [LLA_points, ENU_points, STH_points]  = fcn_PlotTestTrack_plotPointsAny
 %       longitude and reference altitude for the base station that we can
 %       use to convert ENU2LLA and vice-versa
 %
-%       STH_unit_vector: the reference vector for the STH
-%       coordinate frame to use for STH plotting
-%
 %       plot_color: a color specifier such as [1 0 0] or 'r' indicating
 %       what color the traces should be plotted
 %
-%       line_width: the line width to plot the traces
+%       MarkerSize: the line width to plot the traces
 %
 %       LLA_fig_num: a figure number for the LLA plot
 %
 %       ENU_fig_num: a figure number for the ENU plot
-%
-%       STH_fig_num: a figure number for the STH plot
 %
 % OUTPUTS:
 %
@@ -85,7 +80,7 @@ end
 
 if flag_check_inputs == 1
     % Are there the right number of inputs?
-    narginchk(2,9);
+    narginchk(2,8);
 end
 
 % base station coordinates
@@ -102,39 +97,28 @@ if 3 <= nargin
     end
 end
 
-% STH unit vector
-hard_coded_reference_unit_tangent_vector_outer_lanes   = [0.793033249943519   0.609178351949592];
-hard_coded_reference_unit_tangent_vector_LC_south_lane = [0.794630317120972   0.607093616431785];
-reference_unit_tangent_vector = hard_coded_reference_unit_tangent_vector_LC_south_lane; % Initialize the reference vector
-if 4 <= nargin
-    STH_vector = varargin{2};
-    if ~isempty(STH_vector)
-        reference_unit_tangent_vector = STH_vector;
-    end
-end
-
 % Does user want to specify plot_color?
 plot_color = [1 0 1]; % Default
-if 5 <= nargin
-    temp = varargin{3};
+if 4 <= nargin
+    temp = varargin{2};
     if ~isempty(temp)
         plot_color = temp;
     end
 end
 
-% Does user want to specify line_width?
-line_width = 3; % Default
-if 6 <= nargin
-    temp = varargin{4};
+% Does user want to specify MarkerSize?
+MarkerSize = 10; % Default
+if 5 <= nargin
+    temp = varargin{3};
     if ~isempty(temp)
-        line_width = temp;
+        MarkerSize = temp;
     end
 end
 
 % Does user want to specify LLA_fig_num?
 LLA_fig_num = []; % Default
-if 7<= nargin
-    temp = varargin{5};
+if 6<= nargin
+    temp = varargin{4};
     if ~isempty(temp)
         LLA_fig_num = temp;
     end
@@ -142,25 +126,17 @@ end
 
 % Does user want to specify ENU_fig_num?
 ENU_fig_num = []; % Default is do not plot
-if 8 <= nargin
-    temp = varargin{6};
+if 7 <= nargin
+    temp = varargin{5};
     if ~isempty(temp)
         ENU_fig_num = temp;
     end
 end
 
-% Does user want to specify STH_fig_num?
-STH_fig_num = []; % Default is do not plot
-if 9<= nargin
-    temp = varargin{7};
-    if ~isempty(temp)
-        STH_fig_num = temp;
-    end
-end
-
 % If all are empty, default to LLA
-if isempty(LLA_fig_num) && isempty(ENU_fig_num) && isempty(STH_fig_num)
-    LLA_fig_num = figure;
+if isempty(LLA_fig_num) && isempty(ENU_fig_num)
+    LLA_fig_num = 1;
+    ENU_fig_num = 2;
 end
 
 % Setup figures if there is debugging
@@ -182,77 +158,38 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % steps
-% 1. if given trace coordinates are in LLA, convert to ENU and STH
-% if given trace coordinaes are in ENU, convert to LLA and STH
-% if given trace coordinates are in STH, convert to ENU and LLA
+% 1. if given trace coordinates are in LLA, convert to ENU
+% if given trace coordinaes are in ENU, convert to LLA
 
 % initializing empty arrays
 LLA_coordinates = [];
 ENU_coordinates =[];
-STH_coordinates = [];
 
 % if given trace_coordinates are LLA coordinates
 if input_coordinates_type == "LLA"
 
-    LLA_coordinates = Trace_coordinates;
+    LLA_coordinates = initial_points;
 
     % get ENU
     ENU_data_with_nan = [];
     [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-        fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,Trace_coordinates);
+        fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,initial_points);
 
     ENU_coordinates = ENU_positions_cell_array{1};
 
-    % get STH
-    for ith_array = 1:length(ENU_positions_cell_array)
-        if ~isempty(ENU_positions_cell_array{ith_array})
-            ST_positions = fcn_LoadWZ_convertXYtoST(ENU_positions_cell_array{ith_array}(:,1:2),reference_unit_tangent_vector);
-            STH_coordinates = ST_positions;
-        end
-    end
-
 elseif input_coordinates_type == "ENU"
 
-    ENU_coordinates = Trace_coordinates;
-    % get LLA 
+    ENU_coordinates = initial_points;
+    % get LLA
     LLA_data_with_nan = [];
     [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-        fcn_INTERNAL_prepDataForOutput(Trace_coordinates,LLA_data_with_nan);
-
-    LLA_coordinates = LLA_positions_cell_array;
-
-    % get STH
-    for ith_array = 1:length(ENU_positions_cell_array)
-        if ~isempty(ENU_positions_cell_array{ith_array})
-            ST_positions = fcn_LoadWZ_convertXYtoST(ENU_positions_cell_array{ith_array}(:,1:2),reference_unit_tangent_vector);
-            STH_coordinates = ST_positions;
-        end
-    end
-
-elseif input_coordinates_type == "STH"
-
-    STH_coordinates = Trace_coordinates;
-
-    % find ENU coordinates from ST coordiantes
-    ENU_coordinates = fcn_LoadWZ_convertSTtoXY(STH_coordinates(:,1:2),reference_unit_tangent_vector);
-
-    % find LLA
-    ENU_coordinates_3_cols = [ENU_coordinates ENU_coordinates(:,1)*0];
-    LLA_data_with_nan = [];
-    [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-        fcn_INTERNAL_prepDataForOutput(ENU_coordinates_3_cols,LLA_data_with_nan);
+        fcn_INTERNAL_prepDataForOutput(initial_points,LLA_data_with_nan);
 
     LLA_coordinates = LLA_positions_cell_array{1};
 
 end
 
-% call a function to plot the points
-fcn_INTERNAL_plotSinglePoint(plot_color, line_width, ...
-    LLA_positions_cell_array, ENU_positions_cell_array, ...
-    LLA_fig_num, ENU_fig_num, STH_fig_num, reference_unit_tangent_vector);
 
-
-!!!!!!!!!!!!!!! stopped here
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
@@ -264,12 +201,13 @@ fcn_INTERNAL_plotSinglePoint(plot_color, line_width, ...
 %                            __/ |
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % % Plot the inputs?
-% if flag_do_plots
-%
-%
-%     % Nothing to do here!
-% end
+
+% call a function to plot the points
+fcn_INTERNAL_plotSinglePoint(plot_color, MarkerSize, ...
+    LLA_coordinates, ENU_coordinates, base_station_coordinates, ...
+    LLA_fig_num, ENU_fig_num);
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
@@ -290,54 +228,44 @@ end % Ends main function for fcn_PlotTestTrack_plot
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
 %% fcn_INTERNAL_plotSingleTrace
-function fcn_INTERNAL_plotSinglePoint(plot_color, line_width, ...
-    LLA_positions_cell_array, ENU_positions_cell_array, ...
-    LLA_fig_num, ENU_fig_num, STH_fig_num, reference_unit_tangent_vector, flag_plot_headers_and_tailers, flag_plot_points)
+function fcn_INTERNAL_plotSinglePoint(plot_color, MarkerSize, ...
+    LLA_coordinates, ENU_coordinates, base_station_coordinates, ...
+    LLA_fig_num, ENU_fig_num)
 
 % LLA plot?
 if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
-    if iscell(LLA_positions_cell_array)
-        if ~isempty(LLA_positions_cell_array{1})
-            fcn_LoadWZ_plotTraceLLA(LLA_positions_cell_array,plot_color,line_width, flag_plot_headers_and_tailers, flag_plot_points, LLA_fig_num);
-            title(sprintf('LLA Trace geometry'));
+    if ~isempty(LLA_coordinates)
+
+        figure(LLA_fig_num);
+        clf;
+        h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
+        h_parent =  get(h_geoplot,'Parent');
+        set(h_parent);
+        try
+            geobasemap satellite
+
+        catch
+            geobasemap openstreetmap
         end
-    else
-        error('Expecting a cell array for LLA data')
+        geotickformat -dd
+        hold on
     end
+
+    geoplot(LLA_coordinates(:,1), LLA_coordinates(:,2), '.','Color',plot_color,'Markersize',MarkerSize);
+    title(sprintf('LLA Coordinates'));
 end
+
 
 % ENU plot?
 if exist('ENU_fig_num','var') && ~isempty(ENU_fig_num)
-    if iscell(ENU_positions_cell_array)
-        if ~isempty(ENU_positions_cell_array{1})
-            fcn_LoadWZ_plotTraceENU(ENU_positions_cell_array,plot_color,line_width, flag_plot_headers_and_tailers, flag_plot_points, ENU_fig_num);
-            title(sprintf('ENU Trace geometry'));
-        end
-    else
-        error('Expecting a cell array for ENU data')
-    end
-end
 
-% STH plot?
-
-% tell the user that if they do not enter a reference_unit_tangent_vector
-% then the default will be used
-if exist('STH_fig_num','var') && ~isempty(STH_fig_num) && isempty(STH_vector)
-    warning(['You have not entered a unit vector for plotting the STH coordinates, ' ...
-        'so the default unit_vector is used.' ...
-        'The deafult unit vector is for the ' ...
-        'hard_coded_reference_unit_tangent_vector_LC_south_lane ' ...
-        '= [0.794630317120972   0.607093616431785];'])
-end
-
-if exist('STH_fig_num','var') && ~isempty(STH_fig_num) && exist('reference_unit_tangent_vector','var') && ~isempty(reference_unit_tangent_vector)
-    for ith_array = 1:length(ENU_positions_cell_array)
-        if ~isempty(ENU_positions_cell_array{ith_array})
-            ST_positions = fcn_LoadWZ_convertXYtoST(ENU_positions_cell_array{ith_array}(:,1:2),reference_unit_tangent_vector);
-            fcn_LoadWZ_plotTraceENU(ST_positions,plot_color,line_width, flag_plot_headers_and_tailers, flag_plot_points, STH_fig_num);
-            title(sprintf('STH Trace geometry'));
-            STH_coordinates = ST_positions;
-        end
+    if ~isempty(ENU_coordinates)
+        figure(ENU_fig_num);
+        clf;
+        axis equal;
+        hold on;
+        plot(ENU_coordinates(:,1),ENU_coordinates(:,2),'.','Color',plot_color,'MarkerSize',MarkerSize);
+        title(sprintf('ENU coordinates'));
     end
 end
 
