@@ -99,10 +99,10 @@ end
 
 % Does user want to specify plot_color?
 plot_color = [1 0 1]; % Default
-if 4 <= nargin
-    temp = varargin{2};
-    if ~isempty(temp)
-        plot_color = temp;
+if 4 <= nargin % 4th variable input of the entire function
+    temp = varargin{2}; % 2nd variable input of the optional inputs is assigned to the temp variable
+    if ~isempty(temp) % if temp is not empty
+        plot_color = temp; % make plot_color to be same as temp 
     end
 end
 

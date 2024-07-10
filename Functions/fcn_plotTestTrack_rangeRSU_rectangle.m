@@ -1,4 +1,4 @@
-function plotTestTrack_rangeRSU_rectangle(reference_latitude, reference_longitude, reference_altitude, rsu_coordinates_enu, width, length)
+function fcn_plotTestTrack_rangeRSU_rectangle(reference_latitude, reference_longitude, reference_altitude, rsu_coordinates_enu, width, length)
     reference_latitude = 40.86368573;
     reference_longitude = -77.83592832;
     reference_altitude = 344.189;

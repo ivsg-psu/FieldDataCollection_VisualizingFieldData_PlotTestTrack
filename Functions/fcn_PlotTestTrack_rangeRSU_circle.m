@@ -7,7 +7,7 @@ function fcn_PlotTestTrack_rangeRSU_circle(reference_latitude, reference_longitu
     lla_coords = gps_object.ENU2WGSLLA(rsu_coordinates_enu);
 
     figure;
-    h_geoplot = geoplot(lla_coords(1), lla_coords(2), '*','Color',[0 1 0],'LineWidth',3,'MarkerSize',10);
+    h_geoplot = geoplot(lla_coords(1), lla_coords(2), '*','Color',[0 1 0],'LineWidth',3,'MarkerSize',10); % make the plot color of the RSU an optional input
 
     h_parent = get(h_geoplot, 'Parent');
     set(h_parent, 'ZoomLevel', 16.375);
@@ -27,7 +27,7 @@ function fcn_PlotTestTrack_rangeRSU_circle(reference_latitude, reference_longitu
     hold off;
 
     figure;
-    plot(rsu_coordinates_enu(1), rsu_coordinates_enu(2), '*', 'Color', [0 1 0], 'LineWidth', 3, 'MarkerSize', 10);
+    plot(rsu_coordinates_enu(1), rsu_coordinates_enu(2), '*', 'Color', [0 1 0], 'LineWidth', 3, 'MarkerSize', 10);% make the plot color of the RSU an optional input
     hold on;
 
     circle_x = rsu_coordinates_enu(1) + radius * cos(theta);

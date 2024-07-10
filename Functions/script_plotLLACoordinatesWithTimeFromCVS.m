@@ -7,9 +7,9 @@
 % 
 %% Example 1
 % Only CVS file input is required to run, other inputs are defaulted 
-csvFile = '50ft.csv'; % Path to your CSV file
+csvFile = 'Test Track1.csv'; % Path to your CSV file
 plotLLACoordinatesWithTimeFromCSV(csvFile);
 %% Example 2
-plotLLACoordinatesWithTimeFromCSV('50ft.csv', [], [], true);  % With trajectory line
+plotLLACoordinatesWithTimeFromCSV('Test Track1.csv', [], [], true);  % With trajectory line
 %% Example 3
-plotLLACoordinatesWithTimeFromCSV('50ft.csv', [], [], false); % Without trajectory line
+plotLLACoordinatesWithTimeFromCSV('Test Track1.csv', [], [], false); % Without trajectory line

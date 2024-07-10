@@ -5,6 +5,11 @@
 
 
 %% test 1
-csvFile = '50ft.csv'; % Path to your CSV file
-fcn_PlotTestTrack_LineWithBoundaryWithTime('50ft.csv', [], [], true); 
+csvFile = 'Test Track1.csv'; % Path to your CSV file
+fcn_PlotTestTrack_LineWithBoundaryWithTime(csvFile, [], [], true); 
 
+%% test 2
+csvFile = 'Test Track2.csv'; % Path to your CSV file
+fcn_PlotTestTrack_LineWithBoundaryWithTime(csvFile, [], [], true); 
+
+%% 
