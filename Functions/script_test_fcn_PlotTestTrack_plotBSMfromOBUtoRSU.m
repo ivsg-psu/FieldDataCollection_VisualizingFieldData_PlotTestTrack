@@ -131,7 +131,7 @@ fig_num = 444;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
 
-%%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
+%%  Basic example 8 - RSU range test at Pittsburg with time 10/07/2024
 
 csv_filename ='Pittsburgh_1_11_07_2024_noTime.csv';
 flag_plot_spokes = 0;
@@ -146,7 +146,7 @@ fig_num = 444;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
 
-%%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
+%%  Basic example 9 - RSU range test at Pittsburg with time 10/07/2024
 
 csv_filename ='Pittsburgh_2_11_07_2024_noTime.csv';
 flag_plot_spokes = 0;
@@ -175,7 +175,7 @@ plot_color = [0 1 1];
 MarkerSize = 10;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
 
-%%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
+%%  Basic example 7 - RSU range test at Pittsburg without time 11/07/2024 ( to use this, delete the time column from the csv file)
 
 csv_filename ='Pittsburgh_3_noTime.csv';
 flag_plot_spokes = 0;
