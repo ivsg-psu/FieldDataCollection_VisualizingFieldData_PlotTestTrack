@@ -81,7 +81,7 @@ fig_num = 123;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
 
-%% 
+%% 5
 
 csv_filename_one = 'PittsburgTestStartMiddlePart1.csv';
 csv_filename_two = 'PittsburgTestStartMiddlePart2.csv';
@@ -100,3 +100,33 @@ figure(fig_num);
 [LLA_BSM_coordinates_two, ENU_BSM_coordinates_two, STH_BSM_coordinates_two]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename_two, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color_two,fig_num);
+
+%%  Basic example 6 - RSU range test at Pittsburg with time 10/07/2024
+
+csv_filename ='Pittssburgh_Test_Run_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color = [1 1 0];
+fig_num = 444;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
+
+%%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
+
+csv_filename ='Pittsburgh_1_(Ended_Early)_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color = [0 1 1];
+fig_num = 444;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
