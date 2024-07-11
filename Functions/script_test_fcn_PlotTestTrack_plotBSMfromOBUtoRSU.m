@@ -130,3 +130,76 @@ fig_num = 444;
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
+
+%%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
+
+csv_filename ='Pittsburgh_1_11_07_2024_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color = [0 1 1];
+fig_num = 444;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
+
+%%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
+
+csv_filename ='Pittsburgh_2_11_07_2024_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+Plot_color = [0 0 1];
+fig_num = 444;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+reference_latitute = 40.44181017;
+reference_longitude = -79.76090840;
+reference_altitude = 327.428;
+
+rsu_coordinates_lla = [40.44203, -79.76149, 0];
+
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+radius = 1000;
+plot_color = [0 1 1];
+MarkerSize = 10;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+%%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
+
+csv_filename ='Pittsburgh_3_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+Plot_color = [0 0 1];
+fig_num = 444;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+reference_latitute = 40.44181017;
+reference_longitude = -79.76090840;
+reference_altitude = 327.428;
+
+rsu_coordinates_lla = [40.44203, -79.76149, 0];
+
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+radius = 1000;
+plot_color = [0 1 1];
+MarkerSize = 10;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);

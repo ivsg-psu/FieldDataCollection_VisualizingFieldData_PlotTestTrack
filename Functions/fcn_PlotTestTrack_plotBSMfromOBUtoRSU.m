@@ -287,6 +287,7 @@ if flag_plot_LLA == 1
     catch
         geobasemap openstreetmap
     end
+    geotickformat -dd;
     hold on;
 
     % plot the location of the BSM message received

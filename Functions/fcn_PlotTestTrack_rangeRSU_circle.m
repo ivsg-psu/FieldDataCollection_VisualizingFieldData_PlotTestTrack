@@ -1,29 +1,28 @@
-function [LLA_coordinates, ENU_coordinates] = fcn_PlotTestTrack_rangeRSU_circle(...
+function fcn_PlotTestTrack_rangeRSU_circle(...
     reference_latitude, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, varargin)
 %% fcn_PlotTestTrack_rangeRSU_circle
 % Takes the input points from the RSU, LLA/ENU and plots a circle
 % in all LLA and ENU coordinates if specified
 
 % INPUTS:
-%   reference_latitude: 40.86368573
+%   reference_latitude: the base station latitude 
 %
 %   reference_longitude: -77.83592832
 %
 %   reference_altitude: 344.189
 %
-%   rsu_coordinates_enu = A string stating the type of
-%   initial_points that have been the input. String can be "LLA" or
-%   "ENU"
+%   rsu_coordinates_enu = ENU coords in NX3 format
 %
-%   radius = Radius measured from the RSU
-%
+%   radius = Radius measured from the RSU in meters
 %
 %   (OPTIONAL INPUTS)
 %
 %   plot_color: a color specifier such as [1 0 0] or 'r' indicating
-%   what color the traces should be plotted
+%   what color the RSU point and circle should be plotted
 %
-%   MarkerSize: the line width to plot the traces
+%   MarkerSize: the size of the marker to plot the RSU position
+%
+%   fig_num: figure number
 % OUTPUTS:
 %
 %       (none)
@@ -35,11 +34,11 @@ function [LLA_coordinates, ENU_coordinates] = fcn_PlotTestTrack_rangeRSU_circle(
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_PlotTestTrack_plotPointsAnywhere.m for a full
+%       script_test_fcn_PlotTestTrack_rangeRSU_circle.m for a full
 %       test suite.
 %
 % This function was written on 2024_07_10 by A. Kim
-% Questions or comments? sbrennan@psu.edu
+% Questions or comments? sbrennan@psu.edu % Abel's email
 
 
 flag_do_debug = 0; % Flag to plot the results for debugging
@@ -68,27 +67,14 @@ end
 
 if flag_check_inputs == 1
     % Are there the right number of inputs?
-    narginchk(5,7);
+    narginchk(5,8);
 end
 
-% base station coordinates
-% Prep for GPS conversions
-% The true location of the track base station is [40.86368573°, -77.83592832°, 344.189 m].
-reference_latitude = 40.86368573;
-reference_longitude = -77.83592832;
-reference_altitude = 344.189;
-base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude]; % Default
-if 3 <= nargin
-    temp = varargin{1};
-    if ~isempty(temp)
-        base_station_coordinates = temp;
-    end
-end
 
 % Does user want to specify plot_color?
 plot_color = [1 0 1]; % Default
-if 4 <= nargin
-    temp = varargin{2};
+if 6 <= nargin
+    temp = varargin{1};
     if ~isempty(temp)
         plot_color = temp;
     end
@@ -96,36 +82,23 @@ end
 
 % Does user want to specify MarkerSize?
 MarkerSize = 10; % Default
-if 5 <= nargin
-    temp = varargin{3};
+if 7 <= nargin
+    temp = varargin{2};
     if ~isempty(temp)
         MarkerSize = temp;
     end
 end
 
-% Does user want to specify LLA_fig_num?
-LLA_fig_num = []; % Default
-if 6<= nargin
-    temp = varargin{4};
+% assign LLA and ENY figure numbers
+% Does user want to specify fig_num?
+fig_num = 100; % Default
+if 8 <= nargin
+    temp = varargin{end};
     if ~isempty(temp)
-        LLA_fig_num = temp;
+        fig_num = temp;
     end
 end
 
-% Does user want to specify ENU_fig_num?
-ENU_fig_num = []; % Default is do not plot
-if 7 <= nargin
-    temp = varargin{5};
-    if ~isempty(temp)
-        ENU_fig_num = temp;
-    end
-end
-
-% If all are empty, default to LLA
-if isempty(LLA_fig_num) && isempty(ENU_fig_num)
-    LLA_fig_num = 1;
-    ENU_fig_num = 2;
-end
 
 % Setup figures if there is debugging
 if flag_do_debug
@@ -145,9 +118,6 @@ end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-reference_latitude = 40.86368573;
-reference_longitude = -77.83592832;
-reference_altitude = 344.189;
 
 % Create a GPS object with the reference latitude, longitude, and altitude
 gps_object = GPS(reference_latitude, reference_longitude, reference_altitude);
@@ -156,8 +126,8 @@ gps_object = GPS(reference_latitude, reference_longitude, reference_altitude);
 lla_coords = gps_object.ENU2WGSLLA(rsu_coordinates_enu);
 
 % Plot the RSU coordinates on the geoplot created
-figure;
-h_geoplot = geoplot(lla_coords(1), lla_coords(2), '*','Color',[0 1 0],'LineWidth',3,'MarkerSize',10);
+figure(fig_num);
+h_geoplot = geoplot(lla_coords(1), lla_coords(2), '*','Color',plot_color,'LineWidth',3,'MarkerSize',MarkerSize);
 
 % Obtain the parent of the geoplot with a sattelite or openstreetmap view
 h_parent = get(h_geoplot, 'Parent');
@@ -174,16 +144,16 @@ theta = linspace(0, 2*pi, 100); % Generate theta values
 radius_in_degrees = radius / 111000; % Convert radius from meters to degrees
 circle_lat = lla_coords(1) + radius_in_degrees * cos(theta); % Calculate latitude values
 circle_lon = lla_coords(2) + radius_in_degrees * sin(theta) ./ cosd(lla_coords(1)); % Calculate longitude values
-geoplot(circle_lat, circle_lon, 'Color', [0 0 1], 'LineWidth', 1.5);
+geoplot(circle_lat, circle_lon, 'Color', plot_color, 'LineWidth', 1.5);
 
 % Plot the RSU coordinates on the ENU plot
 hold off;
-figure;
-plot(rsu_coordinates_enu(1), rsu_coordinates_enu(2), '*', 'Color', [0 1 0], 'LineWidth', 3, 'MarkerSize', 10);
+figure(fig_num+1);
+plot(rsu_coordinates_enu(1), rsu_coordinates_enu(2), '*', 'Color', plot_color, 'LineWidth', 3, 'MarkerSize', MarkerSize);
 hold on;
 circle_x = rsu_coordinates_enu(1) + radius * cos(theta); % Calculate x coordinates for the circle in ENU plot
 circle_y = rsu_coordinates_enu(2) + radius * sin(theta); % Calculate y coordinates for the circle in ENU plot
-plot(circle_x, circle_y, 'Color', [0 0 1], 'LineWidth', 1.5);
+plot(circle_x, circle_y, 'Color', plot_color, 'LineWidth', 1.5);
 hold off;
 xlabel('East (m)');
 ylabel('North (m)');
