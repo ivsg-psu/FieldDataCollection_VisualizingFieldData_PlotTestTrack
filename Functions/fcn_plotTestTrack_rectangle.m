@@ -1,4 +1,4 @@
-function fcn_plotTestTrack_rangeRSU_rectangle2(csvFile, car_width, car_length, baseLat, baseLon, baseAlt)
+function fcn_plotTestTrack_rectangle(csvFile, car_width, car_length, baseLat, baseLon, baseAlt)
     
     % Read the CSV file
     data = readmatrix(csvFile);
