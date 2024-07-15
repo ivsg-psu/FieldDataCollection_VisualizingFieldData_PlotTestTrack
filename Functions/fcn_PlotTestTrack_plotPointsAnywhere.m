@@ -48,7 +48,7 @@ function [LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywh
 %       test suite.
 %
 % This function was written on 2024_07_01 by V. Wagh
-% Questions or comments? sbrennan@psu.edu
+% Questions or comments? vbw5054@psu.edu
 
 % Revision history:
 % 2024_03_23 by V. Wagh
@@ -237,7 +237,7 @@ if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
     if ~isempty(LLA_coordinates)
 
         figure(LLA_fig_num);
-        clf;
+        %clf;
         h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
         h_parent =  get(h_geoplot,'Parent');
         set(h_parent);
