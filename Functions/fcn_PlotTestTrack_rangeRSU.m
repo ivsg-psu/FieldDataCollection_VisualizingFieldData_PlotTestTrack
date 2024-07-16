@@ -110,14 +110,6 @@ function fcn_PlotTestTrack_rangeRSU(csv_filenames, optional_parameters)
         Trace_coordinates_LLA =  gps_object.ENU2WGSLLA(rsu_coordinates_enu);
         geoplot(Trace_coordinates_LLA(:,1),Trace_coordinates_LLA(:,2),'*', 'Color', color, 'MarkerSize',20);
 
-        % Plot each RSU detection range
-        if flag_show_boundary == 1
-            theta = 0:0.01:2*pi;
-            circle_radius = boundary_range / 111000;  
-            circle_lat = Trace_coordinates_LLA(1) + circle_radius * cos(theta);
-            circle_lon = Trace_coordinates_LLA(2) + circle_radius * sin(theta) / cos(Trace_coordinates_LLA(1));
-            geoplot(circle_lat, circle_lon, 'Color', color, 'LineWidth', 1.5);
-        end
     end
 
     hold off;

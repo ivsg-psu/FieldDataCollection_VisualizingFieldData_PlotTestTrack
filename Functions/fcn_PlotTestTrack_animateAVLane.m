@@ -129,7 +129,7 @@ end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % default altitude
-baseAlt = 344.189;
+baseAlt = 344.189; % TO DO: make this also an optional input
 gps_object = GPS(baseLat,baseLon,baseAlt); % Load the GPS class
 
 % Read csv file
@@ -161,7 +161,7 @@ for ith_coordinate = 1:Num_length
     Y1 = ENU_coordinates(ith_coordinate,2);
     X2 = ENU_coordinates(ith_coordinate+1,1);
     Y2 = ENU_coordinates(ith_coordinate+1,2);
-    distance = -1.8288;
+    distance = -1.8288; % TO DO: have this as an optional input
     [LeftLaneX(ith_coordinate), LeftLaneY(ith_coordinate)] = fcn_INTERNAL_calcPerpendicularPoint(X1, Y1, X2, Y2, distance);
 end
 
@@ -172,7 +172,7 @@ for ith_coordinate = 1:Num_length
     Y1 = ENU_coordinates(ith_coordinate,2);
     X2 = ENU_coordinates(ith_coordinate+1,1);
     Y2 = ENU_coordinates(ith_coordinate+1,2);
-    distance = 1.8288;
+    distance = 1.8288; % TO DO: have this as an optional input
     [RightLaneX(ith_coordinate), RightLaneY(ith_coordinate)] = fcn_INTERNAL_calcPerpendicularPoint(X1, Y1, X2, Y2, distance);
 end
 
@@ -200,7 +200,10 @@ ENU_RightLaneY = RightLaneY';
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure (1); % Create a figure
+% TO DO: chnage this to an internal function, call the internal fumction in
+% the debug area
+
+figure (1); % Create a figure, % TO DO: optional input fig_num
 clf;
 % Plot the base station with a green star. This sets up the figure for
 % the first time, including the zoom into the test track area.
@@ -222,6 +225,16 @@ geoplot(LLA_LeftLane(:,1), LLA_LeftLane(:,2), 'b-',"LineWidth",3);
 geoplot(LLA_RightLane(:,1), LLA_RightLane(:,2), 'c-',"LineWidth",3);
 hold off;
 
+% TO DO: add legends for all markers on the plots 
+
+% TO DO: animate the plotting code such that the plot updates as we watch
+% it, so a moving plot       priority two
+
+% TO DO: add a vehicle (rectangle) that moves in front of the lane being
+% painted (such that it looks like a lane is being painted after the
+% vehicle, the vehicle should be able to turn along with the trace, so that
+% the orientation of the vehicle is maintained)   priority one
+
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
@@ -239,13 +252,6 @@ end
 %
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
-%% fcn_INTERNAL_calcUnitVector
-function unit_vector = fcn_INTERNAL_calcUnitVector(point_start,point_end)
-vector_to_calculate    = point_end - point_start;
-magnitude_vector_to_calculate = sum(vector_to_calculate.^2,2).^0.5;
-unit_vector = vector_to_calculate./magnitude_vector_to_calculate;
-end % Ends fcn_INTERNAL_calcUnitVector
-
 %% fcn_INTERNAL_calcPerpendicularPoint
 function [X_new, Y_new] = fcn_INTERNAL_calcPerpendicularPoint(X1, Y1, X2, Y2, distance)
 

@@ -287,10 +287,13 @@ if flag_plot_LLA == 1
     catch
         geobasemap openstreetmap
     end
+    geotickformat -dd;
     hold on;
 
     % plot the location of the BSM message received
     geoplot(LLA_BSM_coordinates(:,1), LLA_BSM_coordinates(:,2), '.','Color',plot_color,'Markersize',10);
+    geoplot(LLA_BSM_coordinates(1,1), LLA_BSM_coordinates(1,2), 'o','Color',[0 1 0],'Markersize',10,'LineWidth',2);
+    geoplot(LLA_BSM_coordinates(end,1), LLA_BSM_coordinates(end,2), 'x','Color',[1 0 0],'Markersize',10,'LineWidth',2);
 
     % if the user wants to plot the spokes
     if flag_plot_spokes == 1 % save all the pole locations in a .mat file

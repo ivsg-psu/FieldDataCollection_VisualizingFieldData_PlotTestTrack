@@ -1,0 +1,5 @@
+%%  Basic example 
+
+csvFile = '50ft.csv';
+
+fcn_plotTestTrack_animated_rectangle(csvFile, [], [], [], [], [])

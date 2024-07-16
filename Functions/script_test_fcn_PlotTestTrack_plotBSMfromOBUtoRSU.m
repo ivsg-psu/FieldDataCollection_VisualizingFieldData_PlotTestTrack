@@ -1,4 +1,3 @@
-
 % script_test_fcn_PlotTestTrack_plotBSMfromOBUtoRSU.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotBSMfromOBUtoRSU.m
 % This function was written on 2024_06_02 by V. Wagh, vbw5054@psu.edu
@@ -379,5 +378,3 @@ radius = 1000;
 plot_color = [0 1 1];
 MarkerSize = 10;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
-
-
