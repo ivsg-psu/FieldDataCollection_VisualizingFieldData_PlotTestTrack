@@ -1,5 +1,5 @@
-% script_test_fcn_LoadWZ_plotTraceENU.m
-% This is a script to exercise the function: fcn_LoadWZ_plotTraceENU.m
+% script_test_fcn_PlotTestTrack_plotTraceENU.m
+% This is a script to exercise the function: fcn_PlotTestTrack_plotTraceENU.m
 % This function was written on 2023_07_20 by S. Brennan, sbrennan@psu.edu
 
 
@@ -13,7 +13,7 @@ close all;
 % Load the first marker cluster - call it by name
 lane_marker_name = 'FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite';
 [LLA_positions_cell_array, ENU_positions_cell_array] = ...
-    fcn_LoadWZ_loadTrace(lane_marker_name); 
+    fcn_PlotTestTrack_loadTrace(lane_marker_name); 
 
 
 
@@ -41,7 +41,7 @@ line_width = [];
 flag_plot_headers_and_tailers = [];
 
 % Plot LLA cell array
-fcn_LoadWZ_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 
 title(sprintf('Fig %.0d: showing plot of entire cell array in ENU',fig_num), 'Interpreter','none');
 
@@ -54,7 +54,7 @@ plot_color = [];
 % Plot ENU results by each cell
 for ith_data = 1:length(ENU_positions_cell_array)
     ENU_data_to_plot = ENU_positions_cell_array{ith_data};
-    fcn_LoadWZ_plotTraceENU(ENU_data_to_plot, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+    fcn_PlotTestTrack_plotTraceENU(ENU_data_to_plot, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 end
 
 title(sprintf('Fig %.0d: showing plot of entire cell array in ENU',fig_num),'Interpreter','none');
@@ -66,7 +66,7 @@ plot_color = [0 0 1];
 line_width = 5;
 
 % Plot ENU cell array
-fcn_LoadWZ_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 
 title(sprintf('Fig %.0d: showing plot_color',fig_num), 'Interpreter','none');
 
@@ -78,7 +78,7 @@ line_width = 5;
 flag_plot_headers_and_tailers = 0;
 
 % Plot ENU cell array
-fcn_LoadWZ_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 
 title(sprintf('Fig %.0d: showing flag_plot_headers_and_tailers',fig_num), 'Interpreter','none');
 
@@ -90,7 +90,7 @@ if 1==0
     %% Bad input name
     bad_lane_marker_name = 'this is bad';
     [LLA_positions_cell_array, ENU_positions_cell_array] = ...
-        fcn_LoadWZ_loadTrace(bad_lane_marker_name);
+        fcn_PlotTestTrack_loadTrace(bad_lane_marker_name);
 
     %%
 end

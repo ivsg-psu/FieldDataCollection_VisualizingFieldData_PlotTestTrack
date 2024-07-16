@@ -1,5 +1,5 @@
-% script_test_fcn_LoadWZ_plotTraceLLA.m
-% This is a script to exercise the function: fcn_LoadWZ_plotTraceLLA.m
+% script_test_fcn_PlotTestTrack_plotTraceLLA.m
+% This is a script to exercise the function: fcn_PlotTestTrack_plotTraceLLA.m
 % This function was written on 2023_07_20 by S. Brennan, sbrennan@psu.edu
 
 
@@ -13,7 +13,7 @@ close all;
 % Load the first marker cluster - call it by name
 lane_marker_name = 'FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite';
 [LLA_positions_cell_array, ENU_positions_cell_array] = ...
-    fcn_LoadWZ_loadTrace(lane_marker_name);
+    fcn_PlotTestTrack_loadTrace(lane_marker_name);
 
 
 
@@ -42,7 +42,7 @@ flag_plot_headers_and_tailers = [];
 flag_plot_points = [];
 
 % Plot LLA cell array
-fcn_LoadWZ_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
 
 title(sprintf('Fig %.0d: showing plot of entire cell array in LLA',fig_num),'Interpreter','none');
 
@@ -55,7 +55,7 @@ plot_color = [];
 % Plot LLA results by each cell
 for ith_data = 1:length(LLA_positions_cell_array)
     LLA_data_to_plot = LLA_positions_cell_array{ith_data};
-    fcn_LoadWZ_plotTraceLLA(LLA_data_to_plot, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+    fcn_PlotTestTrack_plotTraceLLA(LLA_data_to_plot, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
 end
 
 title(sprintf('Fig %.0d: showing plot of entire cell array in LLA',fig_num),'Interpreter','none');
@@ -67,7 +67,7 @@ plot_color = [0 0 1];
 line_width = 5;
 
 % Plot LLA cell array
-fcn_LoadWZ_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
 
 title(sprintf('Fig %.0d: showing plot_color and line width',fig_num),'Interpreter','none');
 
@@ -79,7 +79,7 @@ line_width = 5;
 flag_plot_headers_and_tailers = 0;
 
 % Plot LLA cell array
-fcn_LoadWZ_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
 
 title(sprintf('Fig %.0d: showing effect of flag_plot_headers_and_tailers',fig_num),'Interpreter','none');
 

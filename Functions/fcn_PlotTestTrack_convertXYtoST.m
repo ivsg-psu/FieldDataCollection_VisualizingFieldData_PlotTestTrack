@@ -1,12 +1,12 @@
-function ST_points = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,varargin)
-%% fcn_LoadWZ_convertXYtoST
+function ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,varargin)
+%% fcn_PlotTestTrack_convertXYtoST
 % Takes xEast and yNorth points in the ENU coordinates and used them as an
 % input to give the station ( distance from origin in the direction of
 % travel) and transvers (distance from origin in the orthogonal direction) 
 %
 % FORMAT:
 %
-%       fcn_LoadWZ_convertXYtoST(ENU_points, v_unit,fig_num)
+%       fcn_PlotTestTrack_convertXYtoST(ENU_points, v_unit,fig_num)
 %
 % INPUTS:
 %      
@@ -29,7 +29,7 @@ function ST_points = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,varargin)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_LoadWZ_convertXYtoST.m for a full
+%       script_test_fcn_PlotTestTrack_convertXYtoST.m for a full
 %       test suite.
 %
 % This function was written on 2023_07_10 by V. Wagh

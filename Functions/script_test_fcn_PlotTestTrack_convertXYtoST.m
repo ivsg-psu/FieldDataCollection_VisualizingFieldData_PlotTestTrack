@@ -1,5 +1,5 @@
-%script_test_fcn_LoadWZ_convertXYtoST
-% tests fcn_LoadWZ_convertXYtoST.m
+%script_test_fcn_PlotTestTrack_convertXYtoST
+% tests fcn_PlotTestTrack_convertXYtoST.m
 
 % Revision history
 % 2023_07_10 - vbw5054@psu.edu
@@ -9,7 +9,7 @@ close all
 clc
 
 % % calculation
-% MarkerCluster = fcn_LoadWZ_MarkerDataTemplate();
+% MarkerCluster = fcn_PlotTestTrack_MarkerDataTemplate();
 % % getting the unit orthogonal vector
 % % use the unit orthogonal to get the to get the distance between the
 % % current lane marker and the existing lane marker
@@ -33,7 +33,7 @@ v_unit = v_bar/v_bar_magnitude;
 
 ENU_points = [2,2];
 fig_num = 1001;
-ST_points = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,fig_num);
+ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 assert(abs(ST_points(:,1)- 2*2^0.5)<1E-10);
 assert(isequal(ST_points(:,2),0));
 %% Basic example 2
@@ -46,7 +46,7 @@ v_unit = v_bar/v_bar_magnitude;
 
 ENU_points = [2,2];
 fig_num = 1002;
-[ST_points(:,1), ST_points(:,2)] = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,fig_num);
+[ST_points(:,1), ST_points(:,2)] = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 assert(abs(ST_points(:,1) - 2)<1E-10);
 assert(abs(ST_points(:,2) + 2)<1E-10);
 
@@ -61,12 +61,12 @@ v_unit = v_bar/v_bar_magnitude;
 
 
 ENU_points = [2,2];
-ST_points = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,fig_num);
+ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 
 Transform_point = [1  0]; % 90 degree line segment
-v_unit2 = fcn_LoadWZ_convertXYtoST(Transform_point,v_unit,fig_num);
+v_unit2 = fcn_PlotTestTrack_convertXYtoST(Transform_point,v_unit,fig_num);
 
-[X_recalc, Y_recalc] = fcn_LoadWZ_convertXYtoST(ST_points,v_unit2,fig_num);
+[X_recalc, Y_recalc] = fcn_PlotTestTrack_convertXYtoST(ST_points,v_unit2,fig_num);
 assert(isequal(X_recalc,2))
 assert(isequal(Y_recalc,2))
 
@@ -82,7 +82,7 @@ v_unit = v_bar/v_bar_magnitude;
 
 
 ENU_points = [2,2; 2 -1];
-ST_points = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,fig_num);
+ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 
 %% Basic example 5
 % very simple points : [2,2]
@@ -94,7 +94,7 @@ v_bar_magnitude = sum((v_bar).^2,2).^0.5;
 v_unit = v_bar/v_bar_magnitude;
 
 ENU_points = [2,2; 2 -1];
-ST_points = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,fig_num);
+ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 
 %% Basic example 6 
 % very simple points : [2,2]
@@ -103,6 +103,6 @@ fig_num = 1002;
 theta = 5;
 R = [cosd(theta) -sind(theta); sind(theta) cosd(theta)];
 v_unit = ENU_points*R;
-ST_points = fcn_LoadWZ_convertXYtoST(ENU_points,v_unit,fig_num);
+ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 
 

@@ -1,10 +1,10 @@
-function fcn_LoadWZ_plotTraceLLA(LLA_data, varargin)
-%% fcn_LoadWZ_plotTraceLLA
+function fcn_PlotTestTrack_plotTraceLLA(LLA_data, varargin)
+%% fcn_PlotTestTrack_plotTraceLLA
 % Plots trace of LLA data via geoplot.
 %
 % FORMAT:
 %
-%       fcn_LoadWZ_plotTraceLLA(LLA_data,(plot_color),(fig_num))
+%       fcn_PlotTestTrack_plotTraceLLA(LLA_data,(plot_color),(fig_num))
 %
 % INPUTS:
 %
@@ -30,7 +30,7 @@ function fcn_LoadWZ_plotTraceLLA(LLA_data, varargin)
 %       fig_num: a figure number to plot result
 %
 %       (ENVIRONMENT VARIABLES)
-%       uses setenv("MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES","1");
+%       uses setenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES","1");
 %       to add offset during plotting, in images, to match to true LLA
 %       coordinates.
 %      
@@ -46,7 +46,7 @@ function fcn_LoadWZ_plotTraceLLA(LLA_data, varargin)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_LoadWZ_plotTraceLLA.m for a full
+%       script_test_fcn_PlotTestTrack_plotTraceLLA.m for a full
 %       test suite.
 %
 % This function was written on 2023_07_18 by S. Brennan
@@ -183,7 +183,7 @@ temp_fig_handle = gcf;
 if isempty(temp_fig_handle.Children)
     % Initialize the plot
     % which automatically plot the base station with a green star
-    fcn_LoadWZ_geoPlotData([],[],'',fig_num);
+    fcn_PlotTestTrack_geoPlotData([],[],'',fig_num);
 end
 
 % Plot LLA results as cell?
@@ -209,7 +209,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if flag_do_plots    
-    fcn_LoadWZ_plotMarkerClusters(markerCluster,fig_num);
+    fcn_PlotTestTrack_plotMarkerClusters(markerCluster,fig_num);
     
 end % Ends check if plotting
 
@@ -247,11 +247,11 @@ gps_object = GPS(reference_latitude,reference_longitude,reference_altitude); % L
 % above them.
 offset_Lat = 0; % default offset
 offset_Lon = 0; % default offset
-MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
-MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
-if ~isempty(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
-    offset_Lat = str2double(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
-    offset_Lon  = str2double(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
+MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
+MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
+if ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
+    offset_Lat = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
+    offset_Lon  = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
 end
 
 

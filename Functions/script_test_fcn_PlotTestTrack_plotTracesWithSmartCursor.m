@@ -1,5 +1,5 @@
-% script_test_fcn_LoadWZ_plotTracesWithSmartCursor.m
-% This is a script to exercise the function: fcn_LoadWZ_plotTracesWithSmartCursor.m
+% script_test_fcn_PlotTestTrack_plotTracesWithSmartCursor.m
+% This is a script to exercise the function: fcn_PlotTestTrack_plotTracesWithSmartCursor.m
 % This function was written on 2023_08_14 by S. Brennan, sbrennan@psu.edu
 
 % Revision history:
@@ -23,16 +23,16 @@ close all;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
 %% Basic example 1
-TraceNames = fcn_LoadWZ_nameTraces;
+TraceNames = fcn_PlotTestTrack_nameTraces;
 
-% FORMAT: [flags_whichIsSelected] = fcn_LoadWZ_findSelectedTraces(TraceNames,cell_string_array_to_select,cell_string_array_to_avoid)
-isPlotted = fcn_LoadWZ_findSelectedTraces(TraceNames,{'FieldMeasurements_OriginalLaneChangeArea'},{});
+% FORMAT: [flags_whichIsSelected] = fcn_PlotTestTrack_findSelectedTraces(TraceNames,cell_string_array_to_select,cell_string_array_to_avoid)
+isPlotted = fcn_PlotTestTrack_findSelectedTraces(TraceNames,{'FieldMeasurements_OriginalLaneChangeArea'},{});
 
 
-% FORMAT: fcn_LoadWZ_plotTracesWithSmartCursor(...
+% FORMAT: fcn_PlotTestTrack_plotTracesWithSmartCursor(...
 %     TraceNames,isPlotted,plot_color,line_width,...
 %     LLA_fig_num,ENU_fig_num,STH_fig_num,reference_unit_tangent_vector)
-fcn_LoadWZ_plotTracesWithSmartCursor(TraceNames,isPlotted);
+fcn_PlotTestTrack_plotTracesWithSmartCursor(TraceNames,isPlotted);
 
 
 
@@ -61,13 +61,13 @@ grid on;
 hold on;
 set(gcf,'UserData',[]); % Clear the data
 
-TraceNames = fcn_LoadWZ_nameTraces;
+TraceNames = fcn_PlotTestTrack_nameTraces;
 
-% FORMAT: [flags_whichIsSelected] = fcn_LoadWZ_findSelectedTraces(TraceNames,cell_string_array_to_select,cell_string_array_to_avoid)
-isPlotted = fcn_LoadWZ_findSelectedTraces(TraceNames,{'FieldMeasurements_OriginalLaneChangeArea'},{});
+% FORMAT: [flags_whichIsSelected] = fcn_PlotTestTrack_findSelectedTraces(TraceNames,cell_string_array_to_select,cell_string_array_to_avoid)
+isPlotted = fcn_PlotTestTrack_findSelectedTraces(TraceNames,{'FieldMeasurements_OriginalLaneChangeArea'},{});
 
-% FORMAT: fcn_LoadWZ_plotTracesWithSmartCursor(...
+% FORMAT: fcn_PlotTestTrack_plotTracesWithSmartCursor(...
 %     TraceNames,isPlotted,plot_color,line_width,...
 %     LLA_fig_num,ENU_fig_num,STH_fig_num,reference_unit_tangent_vector)
-fcn_LoadWZ_plotTracesWithSmartCursor(TraceNames,isPlotted,[1 0 0],2,LLA_fig_num,ENU_fig_num,STH_fig_num,STH_transverse_vector);
+fcn_PlotTestTrack_plotTracesWithSmartCursor(TraceNames,isPlotted,[1 0 0],2,LLA_fig_num,ENU_fig_num,STH_fig_num,STH_transverse_vector);
 

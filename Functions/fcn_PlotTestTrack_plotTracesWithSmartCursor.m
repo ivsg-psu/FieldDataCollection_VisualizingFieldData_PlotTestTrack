@@ -1,6 +1,6 @@
-function fcn_LoadWZ_plotTracesWithSmartCursor(...
+function fcn_PlotTestTrack_plotTracesWithSmartCursor(...
     TraceNames,isPlotted, varargin)
-%% fcn_LoadWZ_plotTracesWithSmartCursor
+%% fcn_PlotTestTrack_plotTracesWithSmartCursor
 % Creates a plot of selected traces in either LLA, ENU, or STH-linear
 % formats, and for the LLA plot, includes a "smart cursor" option where the
 % plotted line will indicate the point data, line name, etc. if the mouse
@@ -9,7 +9,7 @@ function fcn_LoadWZ_plotTracesWithSmartCursor(...
 % FORMAT:
 %
 %       [flags_whichIsSelected] = ...
-%       fcn_LoadWZ_plotTracesWithSmartCursor(...
+%       fcn_PlotTestTrack_plotTracesWithSmartCursor(...
 %          TraceNames,isPlotted,plot_color,line_width,...
 %          LLA_fig_num,ENU_fig_num,STH_fig_num,reference_unit_tangent_vector)
 %
@@ -47,7 +47,7 @@ function fcn_LoadWZ_plotTracesWithSmartCursor(...
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_LoadWZ_plotTracesWithSmartCursor.m for a full
+%       script_test_fcn_PlotTestTrack_plotTracesWithSmartCursor.m for a full
 %       test suite.
 %
 % This function was written on 2023_08_13 by S. Brennan
@@ -179,25 +179,25 @@ for ith_trace = 1:N_Traces
         % LLA plot?
         if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
             [~, ENU_positions_cell_array] = ...
-                fcn_LoadWZ_loadTrace(trace_name,  0, plot_color, line_width, LLA_fig_num);
+                fcn_PlotTestTrack_loadTrace(trace_name,  0, plot_color, line_width, LLA_fig_num);
             title(sprintf('LLA Trace geometry for trace number %.0d with name %s',ith_trace,trace_name),'Interpreter','none');
         else
             [~, ENU_positions_cell_array] = ...
-                fcn_LoadWZ_loadTrace(trace_name);
+                fcn_PlotTestTrack_loadTrace(trace_name);
         end
 
         % ENU plot?
         if exist('ENU_fig_num','var') && ~isempty(ENU_fig_num)
             flag_plot_headers_and_tailers = 1;
-            fcn_LoadWZ_plotTraceENU(ENU_positions_cell_array,plot_color,line_width, flag_plot_headers_and_tailers, ENU_fig_num);
+            fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array,plot_color,line_width, flag_plot_headers_and_tailers, ENU_fig_num);
             title(sprintf('ENU Trace geometry for trace number %.0d with name %s',ith_trace,trace_name),'Interpreter','none');
         end
 
         % STH plot?
         if exist('STH_fig_num','var') && ~isempty(STH_fig_num) && exist('reference_unit_tangent_vector','var') && ~isempty(reference_unit_tangent_vector)
-            ST_positions = fcn_LoadWZ_convertXYtoST(ENU_positions_cell_array{1}(:,1:2),reference_unit_tangent_vector);
+            ST_positions = fcn_PlotTestTrack_convertXYtoST(ENU_positions_cell_array{1}(:,1:2),reference_unit_tangent_vector);
             flag_plot_headers_and_tailers = 1;
-            fcn_LoadWZ_plotTraceENU(ST_positions,plot_color,line_width, flag_plot_headers_and_tailers, STH_fig_num);
+            fcn_PlotTestTrack_plotTraceENU(ST_positions,plot_color,line_width, flag_plot_headers_and_tailers, STH_fig_num);
             title(sprintf('STH Trace geometry for trace number %.0d with name %s',ith_trace,trace_name),'Interpreter','none');
         end
 
@@ -228,7 +228,7 @@ if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
 
-end % Ends main function for fcn_LoadWZ_plotTracesWithSmartCursor
+end % Ends main function for fcn_PlotTestTrack_plotTracesWithSmartCursor
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

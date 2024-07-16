@@ -260,7 +260,7 @@ ENU_BSM_coordinates = ENU_positions_cell_array{1};
 % convert ENU to STH
 for ith_array = 1:length(ENU_positions_cell_array)
     if ~isempty(ENU_positions_cell_array{ith_array})
-        ST_positions = fcn_LoadWZ_convertXYtoST(ENU_positions_cell_array{ith_array}(:,1:2),reference_unit_tangent_vector);
+        ST_positions = fcn_PlotTestTrack_convertXYtoST(ENU_positions_cell_array{ith_array}(:,1:2),reference_unit_tangent_vector);
         STH_BSM_coordinates = ST_positions;
     end
 end
@@ -387,7 +387,7 @@ end
 
 % The data passed in may be separated into sections, separated by NaN
 % values. Here, we break them into sub-arrays
-indicies_cell_array = fcn_LoadWZ_breakArrayByNans(ENU_data_with_nan);
+indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(ENU_data_with_nan);
 ENU_positions_cell_array{length(indicies_cell_array)} = {};
 LLA_positions_cell_array{length(indicies_cell_array)} = {};
 for ith_array = 1:length(indicies_cell_array)

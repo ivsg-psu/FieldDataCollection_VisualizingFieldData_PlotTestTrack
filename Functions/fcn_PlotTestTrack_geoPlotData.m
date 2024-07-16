@@ -1,12 +1,12 @@
-function fcn_LoadWZ_geoPlotData(varargin)
-%% fcn_LoadWZ_geoPlotData
+function fcn_PlotTestTrack_geoPlotData(varargin)
+%% fcn_PlotTestTrack_geoPlotData
 % Plots data from an array one by one, created to plot data arrays for
 % scenarios, using the "geoplot" command. If the user gives no data to
 % plot, then the function initializes the figure.
 %
 % FORMAT:
 %
-%       fcn_LoadWZ_geoPlotData((data_array),(color),(text),(fig_num))
+%       fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
 %
 % INPUTS:
 %
@@ -33,7 +33,7 @@ function fcn_LoadWZ_geoPlotData(varargin)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_LoadWZ_geoPlotData.m for a full
+%       script_test_fcn_PlotTestTrack_geoPlotData.m for a full
 %       test suite.
 %
 % This function was written on 2023_06_06 by V. Wagh
@@ -200,11 +200,11 @@ end
 % above them.
 offset_Lat = 0; % Default offset 
 offset_Lon = 0; % Default offset 
-MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
-MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
-if ~isempty(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
-    offset_Lat = str2double(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
-    offset_Lon  = str2double(MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
+MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
+MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
+if ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
+    offset_Lat = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
+    offset_Lon  = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
 end
 
 if flag_make_new_plot 

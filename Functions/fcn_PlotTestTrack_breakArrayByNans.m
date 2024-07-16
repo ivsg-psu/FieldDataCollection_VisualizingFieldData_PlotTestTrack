@@ -1,11 +1,11 @@
-%%  fcn_LoadWZ_breakArrayByNans
-function indicies_cell_array = fcn_LoadWZ_breakArrayByNans(input_array)
+%%  fcn_PlotTestTrack_breakArrayByNans
+function indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(input_array)
 % Finds sections of nan, and breaks indicies into segments of non-nan data,
 % returning indicies of each segment
 %
 % FORMAT:
 %
-%       indicies_cell_array = fcn_LoadWZ_breakArrayByNans(input_array)
+%       indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(input_array)
 %
 % INPUTS:
 %
@@ -23,7 +23,7 @@ function indicies_cell_array = fcn_LoadWZ_breakArrayByNans(input_array)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_LoadWZ_breakArrayByNans.m for a full
+%       script_test_fcn_PlotTestTrack_breakArrayByNans.m for a full
 %       test suite.
 %
 % This function was written on 2023_07_14 by S. Brennan
@@ -143,7 +143,7 @@ if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
 
-end % Ends main function for  fcn_LoadWZ_breakArrayByNans
+end % Ends main function for  fcn_PlotTestTrack_breakArrayByNans
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

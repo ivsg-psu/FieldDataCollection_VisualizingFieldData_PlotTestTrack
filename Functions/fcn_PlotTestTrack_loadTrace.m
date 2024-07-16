@@ -1,13 +1,13 @@
 function [LLA_positions_cell_array, ENU_positions_cell_array] = ...
-    fcn_LoadWZ_loadTrace(LaneIdentifier, varargin)
-%% fcn_LoadWZ_loadTrace
+    fcn_PlotTestTrack_loadTrace(LaneIdentifier, varargin)
+%% fcn_PlotTestTrack_loadTrace
 % Loads the coordinates of traces in ENU and LLA formats,
 % saving cluster as a cell array
 %
 % FORMAT:
 %
 %     [LLA_positions_cell_array, ENU_positions_cell_array] = ...
-%         fcn_LoadWZ_loadTrace(LaneIdentifier,(plot_color),(line_width),(fig_num))
+%         fcn_PlotTestTrack_loadTrace(LaneIdentifier,(plot_color),(line_width),(fig_num))
 %
 % INPUTS:
 %
@@ -43,7 +43,7 @@ function [LLA_positions_cell_array, ENU_positions_cell_array] = ...
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_LoadWZ_loadTrace for a full
+%       script_test_fcn_PlotTestTrack_loadTrace for a full
 %       test suite.
 %
 % This function was written on 2023_08_22 by S. Brennan
@@ -52,7 +52,7 @@ function [LLA_positions_cell_array, ENU_positions_cell_array] = ...
 
 % Revision history:
 % 2023_08_22 by S. Brennan
-% -- start writing function, converted fcn_LoadWZ_loadLaneMarkerCoords
+% -- start writing function, converted fcn_PlotTestTrack_loadLaneMarkerCoords
 % 2023_09_08 by S. Brennan
 % -- added missing traces for detour area, aligned versions, stop
 % lines, etc.
@@ -169,7 +169,7 @@ end
 
 persistent permanent_TraceNames permanent_TraceLocations_ENU permanent_TraceLocations_LLA permanent_file_date
 
-TraceNames = [fcn_LoadWZ_nameTraces(1) fcn_LoadWZ_nameTraces];
+TraceNames = [fcn_PlotTestTrack_nameTraces(1) fcn_PlotTestTrack_nameTraces];
 
 if ischar(LaneIdentifier) && ~any(strcmp(TraceNames,LaneIdentifier))
     error('Unknown LaneIdentifier string: %s\n',LaneIdentifier);
@@ -286,7 +286,7 @@ if flag_do_plots
     % Plot LLA results
     flag_plot_headers_and_tailers = 1;
     flag_plot_points = 1;
-    fcn_LoadWZ_plotTraceLLA(LLA_positions_cell_array,plot_color,line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+    fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array,plot_color,line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
 
     % Add text label, plot data, etc?
     if ~flag_bypass_full_load
@@ -322,7 +322,7 @@ if flag_do_plots
         dcm = datacursormode;
         dcm.Enable = 'off';
         dcm.Interpreter = 'none';
-        dcm.UpdateFcn = @fcn_LoadWZ_plotShowDataTrace;
+        dcm.UpdateFcn = @fcn_PlotTestTrack_plotShowDataTrace;
     end
 end % Ends check if plotting
 
@@ -369,7 +369,7 @@ end
 
 % The data passed in may be separated into sections, separated by NaN
 % values. Here, we break them into sub-arrays
-indicies_cell_array = fcn_LoadWZ_breakArrayByNans(ENU_data_with_nan);
+indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(ENU_data_with_nan);
 ENU_positions_cell_array{length(indicies_cell_array)} = {};
 LLA_positions_cell_array{length(indicies_cell_array)} = {};
 for ith_array = 1:length(indicies_cell_array)
@@ -383,7 +383,7 @@ end % Ends fcn_INTERNAL_prepDataForOutput
 %% fcn_INTERNAL_loadAllTracesData
 function [permanent_TraceLocations_ENU, permanent_TraceLocations_LLA, permanent_TraceNames] = fcn_INTERNAL_loadAllTracesData
 
-permanent_TraceNames = [fcn_LoadWZ_nameTraces(1) fcn_LoadWZ_nameTraces];
+permanent_TraceNames = [fcn_PlotTestTrack_nameTraces(1) fcn_PlotTestTrack_nameTraces];
 
 
 % Loop through names
@@ -721,8 +721,8 @@ switch TraceSearchString
 
 
     case 'DesignDrawings_OuterTrackLane_StartLineSolidWhite'
-        % Added on 2023_09_25 by copying from fcn_LoadWZ_loadObjectsforScenarios.m
-        StartEndLLACellArray = fcn_LoadWZ_parseKML('Scenario1-1_StartLine.kml');
+        % Added on 2023_09_25 by copying from fcn_PlotTestTrack_loadObjectsforScenarios.m
+        StartEndLLACellArray = fcn_PlotTestTrack_parseKML('Scenario1-1_StartLine.kml');
 
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
@@ -731,8 +731,8 @@ switch TraceSearchString
             StartEndLLACellArray{1}(3:4,:));
 
     case 'DesignDrawings_OuterTrackLane_FinishLineSolidWhite'
-        % Added on 2023_09_25 by copying from fcn_LoadWZ_loadObjectsforScenarios.m
-        StartEndLLACellArray = fcn_LoadWZ_parseKML('Scenario1-1_StartLine.kml');
+        % Added on 2023_09_25 by copying from fcn_PlotTestTrack_loadObjectsforScenarios.m
+        StartEndLLACellArray = fcn_PlotTestTrack_parseKML('Scenario1-1_StartLine.kml');
 
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
@@ -838,7 +838,7 @@ switch TraceSearchString
             ~, ~,...
             ~, ~,...
             ~, ~] = ...
-            fcn_LoadWZ_loadExistingLaneMarkers;
+            fcn_PlotTestTrack_loadExistingLaneMarkers;
 
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
@@ -854,7 +854,7 @@ switch TraceSearchString
             ~, ~,...
             LLA_double_solid_yellow_outer_original, ENU_double_solid_yellow_outer_original,...
             ~, ~] = ...
-            fcn_LoadWZ_loadExistingLaneMarkers;
+            fcn_PlotTestTrack_loadExistingLaneMarkers;
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
             fcn_INTERNAL_prepDataForOutput(...
@@ -867,7 +867,7 @@ switch TraceSearchString
             LLA_double_solid_yellow_inner_original, ENU_double_solid_yellow_inner_original,...
             ~, ~,...
             ~, ~] = ...
-            fcn_LoadWZ_loadExistingLaneMarkers;
+            fcn_PlotTestTrack_loadExistingLaneMarkers;
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
             fcn_INTERNAL_prepDataForOutput(...
@@ -880,7 +880,7 @@ switch TraceSearchString
             ~, ~,...
             ~, ~,...
             LLA_Standard_centerline, ENU_Standard_centerline] = ...
-            fcn_LoadWZ_loadExistingLaneMarkers;
+            fcn_PlotTestTrack_loadExistingLaneMarkers;
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
             fcn_INTERNAL_prepDataForOutput(...
@@ -954,7 +954,7 @@ switch TraceSearchString
         % Open KML file directly - show this using scenario 1_4
 
         scenario_1_4_KML_file_name = 'Scenario_1_4_lines_only_complete.kml';
-        scenario_1_4_data_matricies = fcn_LoadWZ_parseKML(scenario_1_4_KML_file_name);
+        scenario_1_4_data_matricies = fcn_PlotTestTrack_parseKML(scenario_1_4_KML_file_name);
 
         switch TraceSearchString
             case 'DesignDrawings_NewLine2_Right_SolidYellow'
@@ -1007,7 +1007,7 @@ switch TraceSearchString
         % Get data from KML file
         % Open KML file directly - show this using scenario 1_6
         scenario_1_6_KML_file_name = 'Scenario_1_6_modified_lines.kml';
-        scenario_1_6_data_matricies = fcn_LoadWZ_parseKML(scenario_1_6_KML_file_name);
+        scenario_1_6_data_matricies = fcn_PlotTestTrack_parseKML(scenario_1_6_KML_file_name);
 
         switch TraceSearchString
             case 'DesignDrawings_NewLine1_Center_SolidWhite'
@@ -1082,7 +1082,7 @@ switch TraceSearchString
         % Get data from KML file
         % Open KML file directly - show this using scenario 2_4
         scenario_2_4_KML_file_name = 'Scenario_2_4_modified_lines.kml';
-        scenario_2_4_data_matricies = fcn_LoadWZ_parseKML(scenario_2_4_KML_file_name);
+        scenario_2_4_data_matricies = fcn_PlotTestTrack_parseKML(scenario_2_4_KML_file_name);
 
         switch TraceSearchString
             case 'DesignDrawings_EntryTransitions_ToNewLine1_FromOuterMarkerClusterSolidWhite_FarWest_DottedWhite'
@@ -1112,7 +1112,7 @@ switch TraceSearchString
                 [~, ~, ...
                     ~,  ~,...
                     LLA_double_solid_yellow_outer_original, ENU_double_solid_yellow_outer_original, ~, ~] = ...
-                    fcn_LoadWZ_loadExistingLaneMarkers;
+                    fcn_PlotTestTrack_loadExistingLaneMarkers;
 
                 [~, temp_LLA_positions_cell_array] = ...
                     fcn_INTERNAL_prepDataForOutput(...
@@ -1131,7 +1131,7 @@ switch TraceSearchString
                 [~,         ~, ...
                     LLA_double_solid_yellow_inner_original, ENU_double_solid_yellow_inner_original,...
                     ~ , ~, ~, ~] = ...
-                    fcn_LoadWZ_loadExistingLaneMarkers;
+                    fcn_PlotTestTrack_loadExistingLaneMarkers;
 
                 [~, temp_LLA_positions_cell_array] = ...
                     fcn_INTERNAL_prepDataForOutput(...
@@ -1289,7 +1289,7 @@ switch TraceSearchString
         % Get data from KML file
         % Open KML file directly - show this using scenario 2_4
         scenario_4_2_KML_file_name = 'Scenario_4_2_modified_lines.kml';
-        scenario_4_2_data_matricies = fcn_LoadWZ_parseKML(scenario_4_2_KML_file_name);
+        scenario_4_2_data_matricies = fcn_PlotTestTrack_parseKML(scenario_4_2_KML_file_name);
 
         switch TraceSearchString
             case 'DesignDrawings_EntryTransitions_ToNewLine2Center_FromOuterMarkerClusterSolidWhite_2_DottedWhite'
@@ -1297,7 +1297,7 @@ switch TraceSearchString
                 [~,         ~, ...
                     LLA_double_solid_yellow_inner_original, ENU_double_solid_yellow_inner_original,...
                     ~ , ~, ~, ~] = ...
-                    fcn_LoadWZ_loadExistingLaneMarkers;
+                    fcn_PlotTestTrack_loadExistingLaneMarkers;
 
                 [~, temp_LLA_positions_cell_array] = ...
                     fcn_INTERNAL_prepDataForOutput(...
@@ -1348,7 +1348,7 @@ switch TraceSearchString
                 [~,         ~, ...
                     LLA_double_solid_yellow_inner_original, ENU_double_solid_yellow_inner_original,...
                     ~ , ~, ~, ~] = ...
-                    fcn_LoadWZ_loadExistingLaneMarkers;
+                    fcn_PlotTestTrack_loadExistingLaneMarkers;
 
                 [~, temp_LLA_positions_cell_array] = ...
                     fcn_INTERNAL_prepDataForOutput(...
@@ -1383,7 +1383,7 @@ switch TraceSearchString
                 [~,         ~, ...
                     LLA_double_solid_yellow_inner_original, ENU_double_solid_yellow_inner_original,...
                     ~ , ~, ~, ~] = ...
-                    fcn_LoadWZ_loadExistingLaneMarkers;
+                    fcn_PlotTestTrack_loadExistingLaneMarkers;
 
                 [~, temp_LLA_positions_cell_array] = ...
                     fcn_INTERNAL_prepDataForOutput(...
@@ -1417,7 +1417,7 @@ switch TraceSearchString
                 [~,         ~, ...
                     LLA_double_solid_yellow_inner_original, ENU_double_solid_yellow_inner_original,...
                     ~ , ~, ~, ~] = ...
-                    fcn_LoadWZ_loadExistingLaneMarkers;
+                    fcn_PlotTestTrack_loadExistingLaneMarkers;
 
                 [~, temp_LLA_positions_cell_array] = ...
                     fcn_INTERNAL_prepDataForOutput(...
@@ -1516,7 +1516,7 @@ switch TraceSearchString
         % Get data from KML files
         % Open KML file directly - show this using scenario 4_2
         scenario_4_2_KML_file_name = 'Scenario_4_2_modified_lines.kml';
-        scenario_4_2_data_matricies = fcn_LoadWZ_parseKML(scenario_4_2_KML_file_name);
+        scenario_4_2_data_matricies = fcn_PlotTestTrack_parseKML(scenario_4_2_KML_file_name);
 
         % For debugging
         % figure(3883);
@@ -1535,13 +1535,13 @@ switch TraceSearchString
 
         % Open KML file directly - show this using scenario 1_6
         scenario_1_6_KML_file_name = 'Scenario_1_6_modified_lines.kml';
-        scenario_1_6_data_matricies = fcn_LoadWZ_parseKML(scenario_1_6_KML_file_name);
+        scenario_1_6_data_matricies = fcn_PlotTestTrack_parseKML(scenario_1_6_KML_file_name);
 
         % Load the MC002 data as it intersects and needs to be appended
         [~,         ~, ...
             LLA_double_solid_yellow_inner_original, ENU_double_solid_yellow_inner_original,...
             ~ , ~, ~, ~] = ...
-            fcn_LoadWZ_loadExistingLaneMarkers;
+            fcn_PlotTestTrack_loadExistingLaneMarkers;
 
         [~, temp_LLA_positions_cell_array] = ...
             fcn_INTERNAL_prepDataForOutput(...
@@ -1587,7 +1587,7 @@ switch TraceSearchString
         % Get data from KML file
         % Open KML file directly - show this using scenario 5_1a
         scenario_5_1a_KML_file_name = 'Scenario_5_1a_modified_lines.kml';
-        scenario_5_1a_data_matricies = fcn_LoadWZ_parseKML(scenario_5_1a_KML_file_name);
+        scenario_5_1a_data_matricies = fcn_PlotTestTrack_parseKML(scenario_5_1a_KML_file_name);
 
         switch TraceSearchString
             case 'DesignDrawings_ExitTransitions_ToOuterMarkerClusterSolidWhite_FromNewLine2Right_SmallDottedWhite'
@@ -1674,7 +1674,7 @@ switch TraceSearchString
         % Get data from KML file
         % Open KML file directly - show this using scenario 6_1
         scenario_6_1_KML_file_name = 'Scenario_6_1_modified_lines.kml';
-        scenario_6_1_data_matricies = fcn_LoadWZ_parseKML(scenario_6_1_KML_file_name);
+        scenario_6_1_data_matricies = fcn_PlotTestTrack_parseKML(scenario_6_1_KML_file_name);
 
 
         switch TraceSearchString
@@ -2100,7 +2100,7 @@ switch TraceSearchString
         % Open KML file directly - show this using scenario 1_4
 
         scenario_1_2_KML_file_name = 'Scenario_1_2_Modified_lines.kml';
-        scenario_1_2_data_matricies = fcn_LoadWZ_parseKML(scenario_1_2_KML_file_name);
+        scenario_1_2_data_matricies = fcn_PlotTestTrack_parseKML(scenario_1_2_KML_file_name);
 
         switch TraceSearchString
 
@@ -2404,7 +2404,7 @@ switch TraceSearchString
         % Fill in the lane change area design drawings
 
         [LLA_position_array, ENU_position_array] = ...
-            fcn_LoadWZ_loadDesignLaneChangeAreaCoordinates(TraceSearchString);
+            fcn_PlotTestTrack_loadDesignLaneChangeAreaCoordinates(TraceSearchString);
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
             fcn_INTERNAL_prepDataForOutput(...
@@ -2427,7 +2427,7 @@ switch TraceSearchString
 
     case 'DesignDrawings_CoverUpLine_CoverEntryTransition'
         % The following data is calculated in
-        % script_test_fcn_LoadWZ_calculateCoverTrace
+        % script_test_fcn_PlotTestTrack_calculateCoverTrace
         ENU_position_array = 100*[
             0.088910715996530  -1.777780656976855                   0
             0.107906827196241  -1.780956863822956                   0
@@ -2461,7 +2461,7 @@ switch TraceSearchString
 
     case 'DesignDrawings_CoverUpLine_CoverEntryTransition2'
         % The following data is calculated in
-        % script_test_fcn_LoadWZ_calculateCoverTrace
+        % script_test_fcn_PlotTestTrack_calculateCoverTrace
         ENU_position_array = 100*[
             0.107906827196241  -1.780956863822956                   0
             0.138037544690753  -1.785068146364307                   0
@@ -2506,7 +2506,7 @@ switch TraceSearchString
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     case 'AlignedDesign_OriginalTrackLane_InnerMarkerClusterCenterline'
-        [LLA_position_array, ENU_position_array] = fcn_LoadWZ_shiftCenterline();
+        [LLA_position_array, ENU_position_array] = fcn_PlotTestTrack_shiftCenterline();
 
         [ENU_positions_cell_array, LLA_positions_cell_array] = ...
             fcn_INTERNAL_prepDataForOutput(...
@@ -2514,7 +2514,7 @@ switch TraceSearchString
             LLA_position_array{1});
 
         % HERE IS THE CORRECT FORMAT
-        %             [LLA_position_array, ENU_position_array] = fcn_LoadWZ_shiftCenterline();
+        %             [LLA_position_array, ENU_position_array] = fcn_PlotTestTrack_shiftCenterline();
         %
         %             [ENU_positions_cell_array, LLA_positions_cell_array] = ...
         %                 fcn_INTERNAL_prepDataForOutput(...
@@ -2552,8 +2552,8 @@ switch TraceSearchString
             []);
 
     case 'AlignedDesign_OuterTrackLane_DetourFinishLineSolidWhite'
-        % Added on 2023_09_25 by copying from fcn_LoadWZ_loadObjectsforScenarios.m
-        StartEndLLACellArray = fcn_LoadWZ_parseKML('Scenario1-1_StartLine.kml');
+        % Added on 2023_09_25 by copying from fcn_PlotTestTrack_loadObjectsforScenarios.m
+        StartEndLLACellArray = fcn_PlotTestTrack_parseKML('Scenario1-1_StartLine.kml');
         % Added on 2023_10_12 from hand measurements in the field
         ENU_position_array = [
             -126.245016932 -42.0345622171 -11.2933863864
@@ -2795,7 +2795,7 @@ end
 % Make sure trace is well formed
 too_close_distance = 0.20; % Units are meters
 [LLA_positions_cell_array, ENU_positions_cell_array] = ...
-    fcn_LoadWZ_checkPath(LLA_positions_cell_array, ENU_positions_cell_array, ...
+    fcn_PlotTestTrack_checkPath(LLA_positions_cell_array, ENU_positions_cell_array, ...
     TraceSearchString, too_close_distance);
 
 end % Ends fcn_INTERNAL_loadTraceData

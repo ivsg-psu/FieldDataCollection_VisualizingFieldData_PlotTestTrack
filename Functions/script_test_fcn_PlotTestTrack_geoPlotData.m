@@ -1,5 +1,5 @@
-% script_test_fcn_LoadWZ_geoPlotData.m
-% This is a script to exercise the function: fcn_LoadWZ_geoPlotData.m
+% script_test_fcn_PlotTestTrack_geoPlotData.m
+% This is a script to exercise the function: fcn_PlotTestTrack_geoPlotData.m
 % This function was written on 2023_06_07 by S. Brennan, sbrennan@psu.edu
 % and Vaishnavi Wagh, vbw5054@psu.edu
 
@@ -26,18 +26,18 @@ close all;
 %% BASIC example 1
 % call the function with empty inputs, and it should create the plot with
 % the focus on the test track, satellite view
-fcn_LoadWZ_geoPlotData;
+fcn_PlotTestTrack_geoPlotData;
 
 %% BASIC example 2
 % call the function with empty inputs, but with a figure number,
 % and it should create the plot with
 % the focus on the test track, satellite view
-% fcn_LoadWZ_geoPlotData((data_array),(color),(text),(fig_num))
+% fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
 data_array = []; % Make it empty to NOT plot data
 plot_color = []; % Make it empty to use default
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 222; % Give a figure number to make it plot it the figure
-fcn_LoadWZ_geoPlotData(data_array,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
 
 %% BASIC example 3
 % Plot data onto an empty figure. This will force the code to check to see
@@ -91,14 +91,14 @@ data3 = [
     -77.83211176999998,40.86579081600007,0
     ];
 
-% fcn_LoadWZ_geoPlotData((data_array),(color),(text),(fig_num))
+% fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
 % Fill in the data array. NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
 data_array = [data3(:,2), data3(:,1), data3(:,3)]; 
 plot_color = []; % Make it empty to use default
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 333; % Give a figure number to make it plot it the figure
-fcn_LoadWZ_geoPlotData(data_array,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
 
 %% Basic example 4
 % Plot data onto an existing figure
@@ -106,33 +106,33 @@ fcn_LoadWZ_geoPlotData(data_array,plot_color,plot_text,fig_num);
 % call the function with empty inputs, but with a figure number,
 % and it should create the plot with
 % the focus on the test track, satellite view
-% fcn_LoadWZ_geoPlotData((data_array),(color),(text),(fig_num))
+% fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
 empty_data = []; % Make it empty to NOT plot data
 plot_color = []; % Make it empty to use default
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 444; % Give a figure number to make it plot it the figure
-fcn_LoadWZ_geoPlotData(empty_data,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(empty_data,plot_color,plot_text,fig_num);
 
 % Now call the function again to plot data into an existing figure to check
 % that this works
-fcn_LoadWZ_geoPlotData(data_array,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
 
 %% Basic example 5
 % Plot data with user-given color
 
-% fcn_LoadWZ_geoPlotData((data_array),(color),(text),(fig_num))
+% fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
 plot_data = data_array; % reuse data from before
 plot_color = [0 0 1]; % Make it blue!
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 555; % Give a figure number to make it plot it the figure
-fcn_LoadWZ_geoPlotData(plot_data,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(plot_data,plot_color,plot_text,fig_num);
 
 %% Basic example 6
 % Plot data with text
 
-% fcn_LoadWZ_geoPlotData((data_array),(color),(text),(fig_num))
+% fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
 plot_data = data_array; % reuse data from before
 plot_color = []; % Make it empty to use default
 plot_text = 'Test'; % Make it empty to NOT put text on
 fig_num = 666; % Give a figure number to make it plot it the figure
-fcn_LoadWZ_geoPlotData(plot_data,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(plot_data,plot_color,plot_text,fig_num);

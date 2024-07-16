@@ -21,7 +21,7 @@ figure(fig_num);
 clf;
 
 for ith_BSM = 1:length(BSMs_received_here)
-    fcn_LoadWZ_geoPlotData(BSMs_received_here(ith_BSM,:),'m',sprintf('%d',ith_BSM),fig_num);
+    fcn_PlotTestTrack_geoPlotData(BSMs_received_here(ith_BSM,:),'m',sprintf('%d',ith_BSM),fig_num);
 end
 
 %%
@@ -36,7 +36,7 @@ figure(fig_num);
 clf;
 
 for ith_BSM = 1:length(BSMs_received_here)
-    fcn_LoadWZ_geoPlotData(BSMs_received_here(ith_BSM,:),'m',[],fig_num);
+    fcn_PlotTestTrack_geoPlotData(BSMs_received_here(ith_BSM,:),'m',[],fig_num);
     %geoplot(BSMs_received_here(:,1), BSMs_received_here(:,2),'r.');
     %title(filename,sprintf(ith_BSM));
 end

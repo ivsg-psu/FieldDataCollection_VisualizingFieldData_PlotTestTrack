@@ -1,11 +1,11 @@
-function ENU_points = fcn_LoadWZ_convertSTtoXY(ST_points,v_unit,varargin)
-%% %% fcn_LoadWZ_convertSTtoXY
+function ENU_points = fcn_PlotTestTrack_convertSTtoXY(ST_points,v_unit,varargin)
+%% %% fcn_PlotTestTrack_convertSTtoXY
 % Takes ST_points that are [station, transverse] in ENU coordinates and uses them as an
 % input to give the  xEast and yNorth points 
 %
 % FORMAT:
 %
-%      ENU_points = fcn_LoadWZ_convertSTtoXY(ST_points,v_unit,varargin)
+%      ENU_points = fcn_PlotTestTrack_convertSTtoXY(ST_points,v_unit,varargin)
 %
 % INPUTS:
 %
@@ -28,7 +28,7 @@ function ENU_points = fcn_LoadWZ_convertSTtoXY(ST_points,v_unit,varargin)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_LoadWZ_convertSTtoXY.m for a full
+%       script_test_fcn_PlotTestTrack_convertSTtoXY.m for a full
 %       test suite.
 %
 % This function was written on 2023_07_11 by V. Wagh
@@ -114,12 +114,12 @@ v_orthogonal = (rotation_matrix *v_unit')';
 
 % what is the vector to roate the points?
 Transform_point = [1  0]; % 90 degree line segment
-v_unit2 = fcn_LoadWZ_convertXYtoST(Transform_point,v_unit,fig_num);
+v_unit2 = fcn_PlotTestTrack_convertXYtoST(Transform_point,v_unit,fig_num);
 
 station = ST_points(:,1);
 transverse = ST_points(:,2);
 % get the ENU_points
-ENU_points = fcn_LoadWZ_convertXYtoST(ST_points,v_unit2,fig_num);
+ENU_points = fcn_PlotTestTrack_convertXYtoST(ST_points,v_unit2,fig_num);
 
 
 xEast = ENU_points(:,1);
