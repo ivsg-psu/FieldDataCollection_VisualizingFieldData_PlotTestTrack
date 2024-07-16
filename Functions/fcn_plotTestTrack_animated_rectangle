@@ -1,0 +1,101 @@
+function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, baseLat, baseLon, baseAlt)
+    % Read the CSV file
+    data = readmatrix(csvFile);
+    
+    % Check if the input matrix has four columns
+    if size(data, 2) ~= 4
+        error('The CSV file must contain exactly four columns: latitude, longitude, elevation, and time.');
+    end
+    
+    % Extract latitude, longitude, elevation, and time values
+    lat = data(:, 1) / 10000000;
+    lon = data(:, 2) / 10000000;
+    elv = data(:, 3);
+    time = data(:, 4);
+    
+    % Default base location coordinates (PSU test track)
+    defaultBaseLat = 40.8637;
+    defaultBaseLon = -77.8359;
+    defaultBaseAlt = 344.189;
+    
+    % Default vehicle dimensions in ENU
+    defaultWidth = 0.00015;   % Default width
+    defaultLength = 0.000055;  % Default length
+
+    % Check for optional inputs and set defaults if necessary
+    if nargin < 2 || isempty(car_width)
+        car_width = defaultWidth;
+    end
+    if nargin < 3 || isempty(car_length)
+        car_length = defaultLength;
+    end
+    if nargin < 4 || isempty(baseLat)
+        baseLat = defaultBaseLat;
+    end
+    if nargin < 5 || isempty(baseLon)
+        baseLon = defaultBaseLon;
+    end
+    if nargin < 6 || isempty(baseAlt)
+        baseAlt = defaultBaseAlt;
+    end
+    
+    % Initialize plot
+    figure;
+    % Zoom in on base location
+    h_geoplot = geoplot(baseLat, baseLon, '*','Color',[0 1 0],'LineWidth',3,'MarkerSize',10);
+    h_parent = get(h_geoplot, 'Parent');
+    set(h_parent, 'ZoomLevel', 16.375);
+    try
+        geobasemap satellite;
+    catch
+        geobasemap openstreetmap;
+    end
+    hold on;
+    
+    % Create an empty geoplot for updating later
+    h = geoplot(nan, nan, 'b-'); % 'b-' means blue solid line
+    hold on;
+    
+    % Function to calculate the bearing between two points
+    function bearing = calculateBearing(lat1, lon1, lat2, lon2)
+        dLon = deg2rad(lon2 - lon1);
+        y = sin(dLon) * cos(deg2rad(lat2));
+        x = cos(deg2rad(lat1)) * sin(deg2rad(lat2)) - sin(deg2rad(lat1)) * cos(deg2rad(lat2)) * cos(dLon);
+        bearing = atan2(y, x);
+    end
+
+    % Function to rotate a set of coordinates around a center point
+    function [lat_rot, lon_rot] = rotateCoordinates(lat_coords, lon_coords, center_lat, center_lon, angle)
+        R = [cos(angle), -sin(angle); sin(angle), cos(angle)];
+        coords = R * [lat_coords - center_lat; lon_coords - center_lon];
+        lat_rot = coords(1, :) + center_lat;
+        lon_rot = coords(2, :) + center_lon;
+    end
+    
+    % Loop through each point and calculate the rectangle coordinates with orientation
+    for i = 1:length(lat)
+        if i < length(lat)
+            bearing = calculateBearing(lat(i), lon(i), lat(i+1), lon(i+1));
+        else
+            bearing = calculateBearing(lat(i-1), lon(i-1), lat(i), lon(i)); % Use previous bearing for last point
+        end
+        
+        % Calculate the rectangle coordinates without rotation
+        lat_coords = [lat(i) - car_width/2, lat(i) + car_width/2, lat(i) + car_width/2, lat(i) - car_width/2, lat(i) - car_width/2];
+        lon_coords = [lon(i) - car_length/2, lon(i) - car_length/2, lon(i) + car_length/2, lon(i) + car_length/2, lon(i) - car_length/2];
+        
+        % Rotate the coordinates around the center point
+        [lat_rot, lon_rot] = rotateCoordinates(lat_coords, lon_coords, lat(i), lon(i), bearing);
+        
+        % Update the plot with the new rectangle coordinates
+        set(h, 'LatitudeData', lat_rot, 'LongitudeData', lon_rot);
+        
+        % Pause to simulate real-time plotting
+        if i > 1
+            pause_duration = (time(i) - time(i-1));
+            pause(pause_duration);  % Pause for the calculated duration
+        end
+    end
+    
+    hold off;
+end
