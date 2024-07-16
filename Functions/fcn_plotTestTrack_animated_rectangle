@@ -51,19 +51,18 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
 % 
 %
 
-    % Read the CSV file
-    data = readmatrix(csvFile);
-    
-    % Check if the input matrix has four columns
-    if size(data, 2) ~= 4
-        error('The CSV file must contain exactly four columns: latitude, longitude, elevation, and time.');
-    end
-    
-    % Extract latitude, longitude, elevation, and time values
-    lat = data(:, 1) / 10000000;
-    lon = data(:, 2) / 10000000;
-    elv = data(:, 3);
-    time = data(:, 4);
+%% check input arguments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   _____                   _
+%  |_   _|                 | |
+%    | |  _ __  _ __  _   _| |_ ___
+%    | | | '_ \| '_ \| | | | __/ __|
+%   _| |_| | | | |_) | |_| | |_\__ \
+%  |_____|_| |_| .__/ \__,_|\__|___/
+%              | |
+%              |_|
+% See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     
     % Default base location coordinates (PSU test track)
     defaultBaseLat = 40.8637;
@@ -91,6 +90,31 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
         baseAlt = defaultBaseAlt;
     end
     
+    %% Write main code for plotting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   __  __       _
+%  |  \/  |     (_)
+%  | \  / | __ _ _ _ __
+%  | |\/| |/ _` | | '_ \
+%  | |  | | (_| | | | | |
+%  |_|  |_|\__,_|_|_| |_|
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    % Read the CSV file
+    data = readmatrix(csvFile);
+    
+    % Check if the input matrix has four columns
+    if size(data, 2) ~= 4
+        error('The CSV file must contain exactly four columns: latitude, longitude, elevation, and time.');
+    end
+    
+    % Extract latitude, longitude, elevation, and time values
+    lat = data(:, 1) / 10000000;
+    lon = data(:, 2) / 10000000;
+    elv = data(:, 3);
+    time = data(:, 4);
+    
     % Initialize plot
     figure;
     % Zoom in on base location
@@ -107,23 +131,7 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
     % Create an empty geoplot for updating later
     h = geoplot(nan, nan, 'b-'); % 'b-' means blue solid line
     hold on;
-    
-    % Function to calculate the bearing between two points
-    function bearing = calculateBearing(lat1, lon1, lat2, lon2)
-        dLon = deg2rad(lon2 - lon1);
-        y = sin(dLon) * cos(deg2rad(lat2));
-        x = cos(deg2rad(lat1)) * sin(deg2rad(lat2)) - sin(deg2rad(lat1)) * cos(deg2rad(lat2)) * cos(dLon);
-        bearing = atan2(y, x);
-    end
-
-    % Function to rotate a set of coordinates around a center point
-    function [lat_rot, lon_rot] = rotateCoordinates(lat_coords, lon_coords, center_lat, center_lon, angle)
-        R = [cos(angle), -sin(angle); sin(angle), cos(angle)];
-        coords = R * [lat_coords - center_lat; lon_coords - center_lon];
-        lat_rot = coords(1, :) + center_lat;
-        lon_rot = coords(2, :) + center_lon;
-    end
-    
+        
     % Loop through each point and calculate the rectangle coordinates with orientation
     for i = 1:length(lat)
         if i < length(lat)
@@ -151,3 +159,29 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
     
     hold off;
 end
+%% Functions follow
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   ______                _   _
+%  |  ____|              | | (_)
+%  | |__ _   _ _ __   ___| |_ _  ___  _ __  ___
+%  |  __| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+%  | |  | |_| | | | | (__| |_| | (_) | | | \__ \
+%  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Function to calculate the bearing between two points
+    function bearing = calculateBearing(lat1, lon1, lat2, lon2)
+        dLon = deg2rad(lon2 - lon1);
+        y = sin(dLon) * cos(deg2rad(lat2));
+        x = cos(deg2rad(lat1)) * sin(deg2rad(lat2)) - sin(deg2rad(lat1)) * cos(deg2rad(lat2)) * cos(dLon);
+        bearing = atan2(y, x);
+    end
+
+    % Function to rotate a set of coordinates around a center point
+    function [lat_rot, lon_rot] = rotateCoordinates(lat_coords, lon_coords, center_lat, center_lon, angle)
+        R = [cos(angle), -sin(angle); sin(angle), cos(angle)];
+        coords = R * [lat_coords - center_lat; lon_coords - center_lon];
+        lat_rot = coords(1, :) + center_lat;
+        lon_rot = coords(2, :) + center_lon;
+    end
