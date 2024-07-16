@@ -1,4 +1,56 @@
 function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, baseLat, baseLon, baseAlt)
+%% fcn_plotTestTrack_animated_rectangle
+% create animated plot of the AV represented as a rectangle 
+% moving in LLA coordinates with respect to time. 
+% 
+%
+% FORMAT:
+%
+%       fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, baseLat, baseLon, baseAlt)
+%
+% INPUTS:
+%
+%      (MANDATORY INPUTS)
+%       csvFile: The name of the .csv file that contains the latitude,
+%                    longitude, altitude, and time of the location
+%                    at which the OBU sent out the BSM message to the RSU
+%                    that was in range. The code assumes latitude in first
+%                    column, longitude in second, altitude in third, and 
+%                    time in fourth. 
+%
+%       (OPTIONAL INPUTS)
+%      car_width: Width of AV in LLA coordinates. Default is 0.00015.
+%
+%      car_length: Length of AV in LLA coordinates. Default is 0.000055.
+%
+%      baseLat: Latitude of the base location. Default is 40.8637.
+%
+%      baseLon: Longitude of the base location. Default is -77.8359.
+%
+%      baseAlt: Altitude of the base location. Default is 344.189.
+%
+%
+% OUTPUTS:
+%
+%      Plot of a rectangle to represent the AV in LLA coordinates 
+%      with respect to time.
+%
+% DEPENDENCIES:
+%
+%      (none)
+%
+% EXAMPLES:
+%
+%       See the script:
+%       script_test_fcn_plotTestTrack_animated_rectangle.m
+%
+% This function was written on 2024_07_15 by Rachel Ross
+% Questions or comments? rkr5407@psu.edu
+
+% Revision History
+% 
+%
+
     % Read the CSV file
     data = readmatrix(csvFile);
     
@@ -18,7 +70,7 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
     defaultBaseLon = -77.8359;
     defaultBaseAlt = 344.189;
     
-    % Default vehicle dimensions in ENU
+    % Default vehicle dimensions in LLA
     defaultWidth = 0.00015;   % Default width
     defaultLength = 0.000055;  % Default length
 
