@@ -175,6 +175,8 @@ AltitudeofAV = AltitudeofAV{:,:};
 TimeDiff= LLAandTime(:,4);
 TimeDiff = TimeDiff{:,:};
 
+LocationOBU = [LatitudeofAV LongitudeofAV];
+uniqueLatLonMatrix = unique(inputMatrix, 'rows');
 % Extract latitude, longitude, elevation, and time values, here we get time
 % as NaNs
 lat = LatitudeofAV/10000000;
@@ -229,8 +231,10 @@ end
 
 figure (fig_num); % Create a figure, % TO DO: optional input fig_num
 clf;
-plot(StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
-
+plot(StationCoordinates(:,1),SpeedofAV_mps, "Color",plot_color,"Marker",".");
+title('Station vs Speed plot');
+xlabel('Station Coordinates in m');
+ylabel('Speed in m/s');
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
