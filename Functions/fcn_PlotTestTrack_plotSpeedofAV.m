@@ -170,7 +170,11 @@ gps_object = GPS(reference_latitude,reference_longitude,reference_altitude); % L
 % read the csv file
 % Read csv file containing LLA coordinates and time of the OBU when the BSM
 % message was sent out to the RSU
-LLAandTime = readmatrix(csvFilename); %#ok<*CSVRD>
+csvfile_FID = fopen(csvFilename);
+temp = fscanf(csvfile_FID,'%s, %s, %s, %s, %s',inf);
+fclose(csvfile_FID);
+
+LLAandTime = fscanf(csvFilename); %#ok<*CSVRD> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%stopped here
 
 % LLA is collected as an integer X 10^4, so convert back to standard
 % decimal format for LLA
