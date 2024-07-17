@@ -58,8 +58,11 @@ fig_num = 123;
 
 rsu_coordinates_lla = [40.43073, -79.87261 0];
 
+reference_latitude = reference_latitude_pitts;
+reference_longitude = reference_longitude_pitts;
+reference_altitude = reference_altitude_pitts;
 gps_object = GPS(reference_latitude, reference_longitude, reference_altitude);
-rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1),rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3),reference_latitude, reference_longitude, reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1),rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3),reference_latitude_pitts, reference_longitude_pitts, reference_altitude_pitts);
 
 radius = 1000;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitude, reference_longitude, reference_altitude, rsu_coordinates_enu, radius)

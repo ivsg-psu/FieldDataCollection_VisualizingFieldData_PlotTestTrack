@@ -175,8 +175,9 @@ AltitudeofAV = AltitudeofAV{:,:};
 TimeDiff= LLAandTime(:,4);
 TimeDiff = TimeDiff{:,:};
 
-LocationOBU = [LatitudeofAV LongitudeofAV];
-uniqueLatLonMatrix = unique(inputMatrix, 'rows');
+% LocationOBU = [LatitudeofAV LongitudeofAV];
+% uniqueLatLonMatrix = unique(LocationOBU, 'rows','stable');
+
 % Extract latitude, longitude, elevation, and time values, here we get time
 % as NaNs
 lat = LatitudeofAV/10000000;
@@ -195,7 +196,6 @@ for ith_coordinate = 1:NumLength
     timeatpt1 = TimeDiff(ith_coordinate,:);
     timeatpt2 = TimeDiff(ith_coordinate+1,:);
     SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
-
 end
 
 % add a last point to make the arrays of equal sizes
@@ -320,17 +320,6 @@ function [matrixBeforeColon, matrixBetweenColons, remainingStrings] = fcn_INTERN
     end
 end
 
-% %Example usage:
-% timeStrings = {'12:34:56', '01:23:45', '7:8:90', 'invalid:format', '12:3'};
-% [matrixBeforeColon, matrixBetweenColons, remainingStrings] = parseTimeStrings(timeStrings);
-% 
-% Display results
-% disp('Matrix of numbers before the first colon:');
-% disp(matrixBeforeColon);
-% disp('Matrix of numbers between the colons:');
-% disp(matrixBetweenColons);
-% disp('Remaining strings:');
-% disp(remainingStrings);
 %% fcn_INTERNAL_calcSpeed
 function speed = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2)
 

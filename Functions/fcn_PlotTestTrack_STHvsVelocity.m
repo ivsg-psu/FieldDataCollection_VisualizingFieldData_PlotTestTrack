@@ -68,7 +68,6 @@ if flag_check_inputs == 1
 
 end
 
-
 % Does user want to specify plot_color?
 plot_color = [1 0 1]; % Default is cyan
 if 2 <= nargin
@@ -77,7 +76,6 @@ if 2 <= nargin
         plot_color = temp;
     end
 end
-
 
 % Does user want to specify line_width?
 line_width = 2; % Default
@@ -96,7 +94,6 @@ if 4 <= nargin
         flag_plot_headers_and_tailers = temp;
     end
 end
-
 
 % Does user want to specify flag_plot_points?
 flag_plot_points = 1;
@@ -122,7 +119,6 @@ if 6 == nargin
     end
 end
 
-
 % Is the figure number still empty? If so, then we need to open a new
 % figure
 if flag_make_new_plot && isempty(fig_num)
@@ -130,7 +126,6 @@ if flag_make_new_plot && isempty(fig_num)
     fig_num = get(fig,'Number');
     flag_make_new_plot = 1;
 end
-
 
 % Setup figures if there is debugging
 if flag_do_debug
@@ -157,7 +152,7 @@ LLA_Trace_Elev = LLA_Trace(:,3);
 LLA_Trace = [LLA_Trace_Lat,LLA_Trace_Long,LLA_Trace_Elev];
 
 % initializing empty arrays
-reference_unit_tangent_vector = [0.794630317120972   0.607093616431785];
+reference_unit_tangent_vector = [0.794630317120972   0.607093616431785]; % 
 
 % initializing empty arrays
 LLA_trace = [];
@@ -171,6 +166,9 @@ ENU_data_with_nan = [];
 
 ENU_trace = ENU_positions_cell_array{1};
 
+% calculate only the station coordinates by adding up the distances between
+% points 
+
 % get STH
 for ith_array = 1:length(ENU_positions_cell_array)
     if ~isempty(ENU_positions_cell_array{ith_array})
@@ -178,8 +176,6 @@ for ith_array = 1:length(ENU_positions_cell_array)
         STH_trace = ST_positions;
     end
 end
-
-
 
 % Abstract Lat, Long and Elev from matrix 
 Lat = STH_trace(:,1);
@@ -196,7 +192,7 @@ t = zeros(height(timeStrings), 1);
 % Loop through each time string and convert to total seconds
 for i = 1:height(timeStrings)
     % Convert each entry to a string
-    timeStr = char(timeStrings{i});
+    timeStr = char(timeStrings{i}); % add an if statement to check 
     
     % Split the time string into minutes and seconds
     timeParts = split(timeStr, ':');
@@ -209,6 +205,18 @@ for i = 1:height(timeStrings)
     t(i) = minutes * 60 + seconds;
 end
 
+%%% make matrix for 
+% LocationOBU = [LatitudeofAV LongitudeofAV];
+% uniqueLatLonMatrix = unique(LocationOBU, 'rows','stable');
+
+
+% find the deleted indices for LocationOBU
+% delete corresponding time indices
+% now we have a matrix with unique LAtLong but that can have repeated time:
+% ULatLong_RepTime = [Lat Long repTime];
+% find indices where only col 3 is being repeated
+% deleted the entire row of the ULatLong_RepTime and save it as
+% Unique_LatLonTime
 
 % retrun each variable into non repeatable number
 Lat1 = unique(Lat);
