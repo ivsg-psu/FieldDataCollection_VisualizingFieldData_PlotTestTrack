@@ -151,13 +151,14 @@ LLA_Trace_Long = LLA_Trace(:,2)/10000000;
 LLA_Trace_Elev = LLA_Trace(:,3);
 LLA_Trace = [LLA_Trace_Lat,LLA_Trace_Long,LLA_Trace_Elev];
 
+
 % initializing empty arrays
 reference_unit_tangent_vector = [0.794630317120972   0.607093616431785]; % 
 
 % initializing empty arrays
 LLA_trace = [];
 ENU_trace =[];
-STH_trace = [];
+ENU_trace = [];
 
 % get ENU
 ENU_data_with_nan = [];
@@ -166,20 +167,10 @@ ENU_data_with_nan = [];
 
 ENU_trace = ENU_positions_cell_array{1};
 
-% calculate only the station coordinates by adding up the distances between
-% points 
 
-% get STH
-for ith_array = 1:length(ENU_positions_cell_array)
-    if ~isempty(ENU_positions_cell_array{ith_array})
-        ST_positions = fcn_LoadWZ_convertXYtoST(ENU_positions_cell_array{ith_array}(:,1:2),reference_unit_tangent_vector);
-        STH_trace = ST_positions;
-    end
-end
 
 % Abstract Lat, Long and Elev from matrix 
-Lat = STH_trace(:,1);
-Long = STH_trace(:,2);
+LocationOBU = ENU_trace(:,1:2);
 Elev = LLA_Trace(:,3);
 
 
@@ -190,115 +181,83 @@ timeStrings = csvFile.timediff;
 t = zeros(height(timeStrings), 1);
 
 % Loop through each time string and convert to total seconds
-for i = 1:height(timeStrings)
-    % Convert each entry to a string
-    timeStr = char(timeStrings{i}); % add an if statement to check 
-    
-    % Split the time string into minutes and seconds
-    timeParts = split(timeStr, ':');
-    
-    % Convert minutes and seconds to numeric values
-    minutes = str2double(timeParts{1});
-    seconds = str2double(timeParts{2});
-    
-    % Calculate total seconds
-    t(i) = minutes * 60 + seconds;
+if iscell(timeStrings)
+    for i = 1:height(timeStrings)
+        % Convert each entry to a string
+        timeStr = char(timeStrings{i});
+        % Split the time string into minutes and seconds
+        timeParts = split(timeStr, ':');
+
+        % Convert minutes and seconds to numeric values
+        minutes = str2double(timeParts{1});
+        seconds = str2double(timeParts{2});
+
+        % Calculate total seconds
+        t(i) = minutes * 60 + seconds;
+
+    end
+else 
+    timeStrings = cellstr(timeStrings);
+    for i = 1:height(timeStrings)
+        % Convert each entry to a string
+        timeStr = char(timeStrings{i});
+        % Split the time string into minutes and seconds
+        timeParts = split(timeStr, ':');
+
+        % Convert minutes and seconds to numeric values
+        hours = str2double(timeParts{1});
+        minutes = str2double(timeParts{2});
+        seconds = str2double(timeParts{3});
+
+        % Calculate total seconds
+        t(i) = hours*3600 + minutes * 60 + seconds;
+
+    end
 end
 
-%%% make matrix for 
-% LocationOBU = [LatitudeofAV LongitudeofAV];
-% uniqueLatLonMatrix = unique(LocationOBU, 'rows','stable');
-
-
-% find the deleted indices for LocationOBU
-% delete corresponding time indices
-% now we have a matrix with unique LAtLong but that can have repeated time:
-% ULatLong_RepTime = [Lat Long repTime];
-% find indices where only col 3 is being repeated
-% deleted the entire row of the ULatLong_RepTime and save it as
-% Unique_LatLonTime
-
 % retrun each variable into non repeatable number
-Lat1 = unique(Lat);
-Long1 = unique(Long);
+ULatLong_RepTime = unique(LocationOBU,'rows','stable');
 t1 = unique(t);
-
 position = [];
 
 %IF statement is used to check which variable has the smallest length
-if (length(Lat1) < length(t1)) && (length(Long1) < length(t1))
-    if (length(Lat1) > length(Long1))
-  [logicalIndices, indices] = ismember(Lat1,Lat);  % find indices
+if (length(ULatLong_RepTime(:,1)) < length(t1))
+  [logicalIndices, indices] = ismember(ULatLong_RepTime,LocationOBU,'rows');  % find indices
 
     % return all variable in same size
-    Lat_real = Lat(indices); 
-    Long_real = Long(indices);
+    ULatLong = LocationOBU(indices,:);
     t_real = t(indices);
 
     % use for loop to calculate the speech of every two points and position
-    for n = 1:length(Lat1)-1
-        x = Lat_real(n+1)-Lat_real(n);
-        y = Long_real(n+1)-Long_real(n);
+    East = ULatLong(:,1);
+    North = ULatLong(:,2);
+    for n = 1:length(indices)-1
+        East1 = East(n+1)-East(n);
+        North1 = North(n+1)-North(n);
         delta_t = t_real(n+1)-t_real(n);
-        distance = sqrt(x^2+y^2);
+        distance = sqrt(East1^2+North1^2);
         speed(n) = abs(distance/delta_t);
-        position(n,:) = [Lat_real(n),Long_real(n)];
-    end
-    elseif length(Long1) > length(Lat1)
-    [logicalIndices, indices] = ismember(Long1,Long); % find indices
-
-    % return all variable in same size
-    Lat_real = Lat(indices); 
-    Long_real = Long(indices);
-    t_real = t(indices);
-
-    % use for loop to calculate the speech of every two points and position
-    for n = 1:length(Long1)-1
-        x = Lat_real(n+1)-Lat_real(n);
-        y = Long_real(n+1)-Long_real(n);
-        delta_t(n) = t_real(n+1)-t_real(n);
-        distance = sqrt(x^2+y^2);
-        speed(n) = abs(distance/delta_t);
-        position(n,:) = [Lat_real(n),Long_real(n)];
-    end
-    elseif length(Long1) == length(Lat1)
-    [logicalIndices, indices] = ismember(Long1,Long); % find indices
-
-    % return all variable in same size
-    Lat_real = Lat(indices); 
-    Long_real = Long(indices);
-    t_real = t(indices);
-
-    % use for loop to calculate the speech of every two points and position
-    for n = 1:length(Long1)-1
-        x = Lat_real(n+1)-Lat_real(n);
-        y = Long_real(n+1)-Long_real(n);
-        delta_t = t_real(n+1)-t_real(n);
-        distance = sqrt(x^2+y^2);
-        speed(n) = abs(distance/delta_t);
-        position(n,:) = [Lat_real(n),Long_real(n)];
-    end
+        position(n,:) = [East1,North1];
     end
 else
-    [logicalIndices, indices] = ismember(t1,t);  % find the indices 
+    [logicalIndices, indices] = ismember(t1,t); % find indices
 
     % return all variable in same size
-    Lat_real = Lat(indices); 
-    Long_real = Long(indices);
+    ULatLong = LocationOBU(indices,:);
     t_real = t(indices);
 
-    % use for loop to calculate the speech of every two points and postion
-    for n = 1:length(t1)-1
-        x = Lat_real(n+1)-Lat_real(n);
-        y = Long_real(n+1)-Long_real(n);
+    % use for loop to calculate the speech of every two points and position
+    East = ULatLong(:,1);
+    North = ULatLong(:,2);
+    for n = 1:length(indices)-1
+        East1 = East(n+1)-East(n);
+        North1 = North(n+1)-North(n);
         delta_t = t_real(n+1)-t_real(n);
-        distance = sqrt(x^2+y^2);
+        distance = sqrt(East1^2+North1^2);
         speed(n) = abs(distance/delta_t);
-        position(n,:) = [Lat_real(n),Long_real(n)];
-    end   
+        position(n,:) = [East1,North1];
+    end
 end
-
-
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
@@ -311,10 +270,11 @@ end
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plotting
+speed_mph = speed * 2.23694;
 colors = speed;
 scatter3(position(:,1),position(:,2),speed,20,colors);
-xlabel('x')
-ylabel('y')
+xlabel('East')
+ylabel('Nort')
 zlabel('speed')
 colormap('jet'); % You can use 'viridis' if you have it, or other colormaps
 colorbar; % Add a color bar to show the color mapping
