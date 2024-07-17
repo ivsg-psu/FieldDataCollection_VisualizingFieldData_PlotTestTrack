@@ -250,8 +250,13 @@ if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
         geotickformat -dd
         hold on
     end
-
-    geoplot(LLA_coordinates(:,1), LLA_coordinates(:,2), '.','Color',plot_color,'Markersize',MarkerSize);
+    if length(plot_color) == length(LLA_coordinates)
+        for i = 1:length(LLA_coordinates)
+            geoplot(LLA_coordinates(i,1), LLA_coordinates(i,2), '.','Color',plot_color(i,1:3),'Markersize',MarkerSize);
+        end
+    else
+        geoplot(LLA_coordinates(:,1), LLA_coordinates(:,2), '.','Color',plot_color,'Markersize',MarkerSize);
+    end
     title(sprintf('LLA Coordinates'));
 end
 
@@ -264,7 +269,16 @@ if exist('ENU_fig_num','var') && ~isempty(ENU_fig_num)
         clf;
         axis equal;
         hold on;
-        plot(ENU_coordinates(:,1),ENU_coordinates(:,2),'.','Color',plot_color,'MarkerSize',MarkerSize);
+        
+
+        if length(plot_color) == length(LLA_coordinates)
+            for i = 1:length(LLA_coordinates)
+                plot(ENU_coordinates(i,1),ENU_coordinates(i,2),'.','Color',plot_color(i,1:3),'MarkerSize',MarkerSize);
+            end
+        else
+            plot(ENU_coordinates(:,1),ENU_coordinates(:,2),'.','Color',plot_color,'MarkerSize',MarkerSize);
+        end
+        
         title(sprintf('ENU coordinates'));
     end
 end
@@ -296,7 +310,7 @@ end
 
 % The data passed in may be separated into sections, separated by NaN
 % values. Here, we break them into sub-arrays
-indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(ENU_data_with_nan);
+indicies_cell_array = fcn_LoadWZ_breakArrayByNans(ENU_data_with_nan);
 ENU_positions_cell_array{length(indicies_cell_array)} = {};
 LLA_positions_cell_array{length(indicies_cell_array)} = {};
 for ith_array = 1:length(indicies_cell_array)

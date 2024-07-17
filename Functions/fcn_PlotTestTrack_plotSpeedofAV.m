@@ -87,7 +87,7 @@ end
 
 % base station coordinates
 % Prep for GPS conversions
-% The true location of the track base station is [40.86368573°, -77.83592832°, 344.189 m].
+% The true location of the track base station is [40.86368573°, -77.83592832°, 344.189 m].
 reference_latitude = 40.86368573;
 reference_longitude = -77.83592832;
 reference_altitude = 344.189;
@@ -164,18 +164,18 @@ end
 
 % Prep for GPS conversions
 % The true location of the track base station is [40.86368573°,
-% -77.83592832°, 344.189 m] for the default
+% -77.83592832°, 344.189 m] for the default
 gps_object = GPS(reference_latitude,reference_longitude,reference_altitude); % Load the GPS class
 
 % read the csv file
 % Read csv file containing LLA coordinates and time of the OBU when the BSM
 % message was sent out to the RSU
-csvfile_FID = fopen(csvFilename);
-temp = fscanf(csvfile_FID,'%s, %s, %s, %s, %s',inf);
-fclose(csvfile_FID);
+LLAandTime = readmatrix(csvFilename); %#ok<*CSVRD>
+time = readtable(csvFilename);
+time = time.timediff;
 
-LLAandTime = fscanf(csvFilename); %#ok<*CSVRD> %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%stopped here
 
+LLAandTime(:,4) = arrayfun(@(a) fcn_INTERNAL_totalSeconds(a), time);
 % LLA is collected as an integer X 10^4, so convert back to standard
 % decimal format for LLA
 BSMs_LLA_corrected = [LLAandTime(:,1)/10000000 LLAandTime(:,2)/10000000 LLAandTime(:,3)];
@@ -192,7 +192,7 @@ ENU_data_with_nan = [];
 ENU_BSM_coordinates = ENU_positions_cell_array{1};
 
 % get the time from BSMs
-Time_BSMs = LLAandTime(:,5);
+Time_BSMs = LLAandTime(:,4);
 
 % get speed
 NumLength = length(ENU_BSM_coordinates)-1;
@@ -201,11 +201,21 @@ for ith_coordinate = 1:NumLength
     point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2);
     timeatpt1 = Time_BSMs(ith_coordinate,:);
     timeatpt2 = Time_BSMs(ith_coordinate+1,:);
+    if timeatpt2 == timeatpt1
+        timeatpt2 = timeatpt2+.1;
+    end
     SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
 end
 
 % convert speed from m/s tp mph 
 SpeedofAV = SpeedofAV_mps*2.23694;
+%Calculate percentage
+
+speedPercent = fcn_INTERNAL_calculatePercentage(maxVelocity,minVelocity,SpeedofAV);
+
+%convert to color:
+colors = fcn_INTERNAL_assignColor(plot_color, speedPercent);
+
 
 % create speed categories
 lowerLimit = minVelocity;
@@ -234,24 +244,38 @@ end
 % this is not yert done!!!!!!!!!!!!!!!!!!
 
 % % Plot the speeds according to their speed categories
-for ith_coordinate = 1:length(ENU_BSM_coordinates)
+%for ith_coordinate = 1:length(ENU_BSM_coordinates)
 
 
-    for ith_category = 1:length(categories)
+initial_points = ENU_BSM_coordinates;
+input_coordinates_type = "ENU";
+colors(length(colors)+1,1:3)=colors(length(colors),1:3);
+MarkerSize = [];
+fcn_PlotTestTrack_plotPointsAnywhere(...
+    initial_points, input_coordinates_type, base_station_coordinates,...
+    colors, MarkerSize, LLA_fig_num, ENU_fig_num);
 
-        if SpeedofAV(ith_coordinate) <= max(categories{ith_category})
-
-            initial_points = ENU_BSM_coordinates;
-            input_coordinates_type = "ENU";
-            plot_color = plot_speedColor{ith_category};
-            MarkerSize = [];
-            fcn_PlotTestTrack_plotPointsAnywhere(...
-                initial_points, input_coordinates_type, base_station_coordinates,...
-                plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
-        end
-    end
-
+for i = 0:.01:1
+    colorbarColors(int64(i*100+1),1:3) = plot_color.*i;
 end
+
+
+figure(LLA_fig_num);
+colormap(colorbarColors)
+c = colorbar('Ticks',[0:.1:1],...
+         'TickLabels',{linspace(minVelocity,maxVelocity,11)})
+c.Label.String = 'Speed (mph)';
+
+
+figure(ENU_fig_num);
+colormap(colorbarColors)
+c = colorbar('Ticks',[0:.1:1],...
+         'TickLabels',{linspace(minVelocity,maxVelocity,11)})
+c.Label.String = 'Speed (mph)';
+
+
+
+%end
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
@@ -280,6 +304,49 @@ function speed = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2)
 
     % Calculate the speed
     speed = distance / timeInterval;
+end
+
+%% fcn_INTERNAL_calculatePercentage
+
+function percentage = fcn_INTERNAL_calculatePercentage(max_speed, min_speed, input_speed)
+    for i = 1:length(input_speed)
+        input_speed(i);
+        usable_speed = min(max_speed, max(min_speed, input_speed(i)));
+        percentage(i) = (usable_speed - min_speed)/(max_speed-min_speed);
+    end
+end
+
+%% fcn_INTERNAL_assignColor
+
+function color = fcn_INTERNAL_assignColor(max_color, percentages)
+    for i = 1:length(percentages)
+        color(i,1:3) = max_color.*percentages(i);
+    end
+end
+
+%% fcn_INTERNAL_totalSeconds
+
+function seconds = fcn_INTERNAL_totalSeconds(timeStr)
+    % Check if the string contains hours, minutes, and seconds or just minutes and seconds
+    parts = split(timeStr, ':');
+    numParts = length(parts);
+    
+    if numParts == 3
+        % Time string contains hours, minutes, and seconds
+        hours = str2double(parts{1});
+        minutes = str2double(parts{2});
+        seconds = str2double(parts{3});
+    elseif numParts == 2
+        % Time string contains only minutes and seconds
+        hours = 0;
+        minutes = str2double(parts{1});
+        seconds = str2double(parts{2});
+    else
+        error('Invalid time format');
+    end
+    
+    % Convert hours and minutes to seconds and add them up
+    totalSeconds = hours * 3600 + minutes * 60 + seconds;
 end
 
 %% fcn_INTERNAL_createCategories
