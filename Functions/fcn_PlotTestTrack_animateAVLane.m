@@ -217,12 +217,26 @@ catch
     geobasemap openstreetmap
 end
 geotickformat -dd;
-hold on;
+
+
 
 % plot original data i.e centerline
-geoplot(lat, lon,'m-',"LineWidth",3);
-geoplot(LLA_LeftLane(:,1), LLA_LeftLane(:,2), 'b-',"LineWidth",3);
-geoplot(LLA_RightLane(:,1), LLA_RightLane(:,2), 'c-',"LineWidth",3);
+hold on
+h_center = geoplot(lat, lon, 'm-', "LineWidth", 3);
+h_left = geoplot(LLA_LeftLane(:, 1), LLA_LeftLane(:, 2), 'b-', "LineWidth", 3);
+h_right = geoplot(LLA_RightLane(:, 1), LLA_RightLane(:, 2), 'c-', "LineWidth", 3);
+
+% Animation loop
+for ith_coordinate = 1:Num_length
+    % Update the data for each plot
+    set(h_center, 'XData', lat(1:ith_coordinate), 'YData', lon(1:ith_coordinate), 'LineWidth', 3);
+    set(h_left, 'XData', LLA_LeftLane(1:ith_coordinate, 1), 'YData', LLA_LeftLane(1:ith_coordinate, 2), 'LineWidth', 3);
+    set(h_right, 'XData', LLA_RightLane(1:ith_coordinate, 1), 'YData', LLA_RightLane(1:ith_coordinate, 2), 'LineWidth', 3);
+    
+    % Pause to control the speed of the animation
+    pause(0.1);
+end
+
 hold off;
 
 % TO DO: add legends for all markers on the plots 
