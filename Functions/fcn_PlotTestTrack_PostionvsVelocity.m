@@ -1,10 +1,10 @@
-function [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile)
-%% fcn_PlotTestTrack_STHvsVelocity
-% plot velocity of van vs position(STH) respect to time 
+function [speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile)
+%% fcn_PlotTestTrack_PostionvsVelocity
+% plot velocity of van vs position respect to time 
 %
 % FORMAT:
 %
-%       function [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile,varargin)
+%       function [speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile,varargin)
 %
 % INPUTS:
 %
@@ -30,7 +30,7 @@ function [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_PlotTestTrack_STHvsVelocity.m
+%       script_test_fcn_PlotTestTrack_PostionvsVelocity.m
 %
 % This function was written on 2024_07_15 by Jiabao Zhao
 % --Start to write the function 
@@ -153,7 +153,7 @@ LLA_Trace = [LLA_Trace_Lat,LLA_Trace_Long,LLA_Trace_Elev];
 
 
 % initializing empty arrays
-reference_unit_tangent_vector = [0.794630317120972   0.607093616431785]; % 
+%reference_unit_tangent_vector = [0.794630317120972   0.607093616431785]; % 
 
 % initializing empty arrays
 LLA_trace = [];
@@ -306,7 +306,7 @@ end
 
 % The data passed in may be separated into sections, separated by NaN
 % values. Here, we break them into sub-arrays
-indicies_cell_array = fcn_LoadWZ_breakArrayByNans(ENU_data_with_nan);
+indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(ENU_data_with_nan);
 ENU_positions_cell_array{length(indicies_cell_array)} = {};
 LLA_positions_cell_array{length(indicies_cell_array)} = {};
 for ith_array = 1:length(indicies_cell_array)
