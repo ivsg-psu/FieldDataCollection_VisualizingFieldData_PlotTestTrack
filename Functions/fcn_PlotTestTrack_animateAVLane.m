@@ -203,7 +203,7 @@ ENU_RightLaneY = RightLaneY';
 % TO DO: chnage this to an internal function, call the internal fumction in
 % the debug area
 
-figure (1); % Create a figure, % TO DO: optional input fig_num
+figure (fig_num); % Create a figure, % TO DO: optional input fig_num
 clf;
 % Plot the base station with a green star. This sets up the figure for
 % the first time, including the zoom into the test track area.
