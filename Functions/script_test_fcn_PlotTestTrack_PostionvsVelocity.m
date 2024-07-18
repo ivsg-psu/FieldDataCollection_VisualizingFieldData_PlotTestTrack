@@ -1,5 +1,5 @@
-% script_test_fcn_PlotTestTrack_STHvsVelocity.m - this is is a script written
-% to test the function: fcn_PlotTestTrack_STHvsVelocity.m
+% script_test_fcn_PlotTestTrack_PostionvsVelocity.m - this is is a script written
+% to test the function: fcn_PlotTestTrack_PostionvsVelocity.m
 %
 % Revision history:
 % 2024_07_15 - started writing the function and script
@@ -12,6 +12,6 @@ csvFile = readtable('Pittsburgh_3.csv'); % Path to your CSV file
 csvFile = readtable('site2_3.csv'); % Path to your CSV file
 [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile);
 
-%% Test 2
+%% Test 3
 csvFile = readtable('site2_1.csv'); % Path to your CSV file
 [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile);
