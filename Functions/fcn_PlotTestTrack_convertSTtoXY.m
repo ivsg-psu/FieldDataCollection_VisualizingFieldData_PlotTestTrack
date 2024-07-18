@@ -38,18 +38,37 @@ function ENU_points = fcn_PlotTestTrack_convertSTtoXY(ST_points,v_unit,varargin)
 % Revision history:
 % 2023_07_11 by V. Wagh
 % -- start writing function
+% 2024_07_17 - A. Kim
+% -- Added improved debugging and input checking section
 
-flag_do_debug = 0; % Flag to plot the results for debugging
-flag_check_inputs = 1; % Flag to perform input checking
-flag_do_plots = 0; % % Flag to plot the final results
+%% Debugging and Input checks
 
+% Check if flag_max_speed set. This occurs if the fig_num variable input
+% argument (varargin) is given a number of -1, which is not a valid figure
+% number.
+flag_max_speed = 0;
+if (nargin==3 && isequal(varargin{end},-1))
+    flag_do_debug = 0; % Flag to plot the results for debugging
+    flag_check_inputs = 0; % Flag to perform input checking
+    flag_max_speed = 1;
+else
+    % Check to see if we are externally setting debug mode to be "on"
+    flag_do_debug = 0; % Flag to plot the results for debugging
+    flag_check_inputs = 1; % Flag to perform input checking
+    MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS");
+    MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG");
+    if ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG)
+        flag_do_debug = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG);
+        flag_check_inputs  = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS);
+    end
+end
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
-    debug_fig_num = 34838;
+    debug_fig_num = 23434; %#ok<NASGU>
 else
-    debug_fig_num = [];  
+    debug_fig_num = []; %#ok<NASGU>
 end
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
