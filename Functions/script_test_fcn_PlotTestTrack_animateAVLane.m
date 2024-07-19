@@ -10,8 +10,12 @@ csvFile = 'Test Track1.csv'; % Path to your CSV file
 
 baseLat = [];
 baseLon = [];
+baseAlt = []; 
+% baseAlt = 344.189; 
 fig_num = [];
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile, baseLat,baseLon, fig_num);
+car_width = 6; 
+car_length = 14;
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
 
 %% Pittsburg test 10/07/2024
 csvFile = 'Pittsburgh_1_(Ended_Early).csv'; % Path to your CSV file
@@ -25,7 +29,7 @@ base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts,
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
 fig_num = 123;
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile, baseLat,baseLon, fig_num);
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
 
 %% Pittsburg test 11/07/2024
 csvFile = 'Pittsburgh_1_11_07_2024.csv'; % Path to your CSV file
@@ -39,7 +43,7 @@ base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts,
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
 fig_num = 123;
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile, baseLat,baseLon, fig_num);
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
 
 %% Pittsburg test 11/07/2024
 csvFile = 'Pittsburgh_2_11_07_2024.csv'; % Path to your CSV file
@@ -53,7 +57,7 @@ base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts,
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
 fig_num = 123;
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile, baseLat,baseLon, fig_num);
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
 
 
 rsu_coordinates_lla = [40.43073, -79.87261 0];
@@ -66,3 +70,6 @@ rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1),rsu_coordin
 
 radius = 1000;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitude, reference_longitude, reference_altitude, rsu_coordinates_enu, radius)
+
+
+
