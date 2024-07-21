@@ -16,7 +16,7 @@ base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts,
 
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
-fig_num = 100;
+fig_num = 177;
 fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, baseLat,baseLon, fig_num);
 
 

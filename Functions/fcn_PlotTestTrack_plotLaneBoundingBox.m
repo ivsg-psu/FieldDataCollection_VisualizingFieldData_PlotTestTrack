@@ -117,14 +117,19 @@ end
 %  |_|  |_|\__,_|_|_| |_|
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile, baseLat,baseLon, fig_num);
+baseAlt = 344.189; % TO DO: make this also an optional input
+car_length = 14;
+car_width = 6;
+left_color = [];
+right_color = [];
+AV_color = [];
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
 
 ENU_RightLane = [ENU_RightLaneX ENU_RightLaneY (ENU_RightLaneX*0)];
 ENU_LeftLane = [ENU_LeftLaneX ENU_LeftLaneY (ENU_LeftLaneX*0)];
 
-
-baseAlt = 344.189; % TO DO: make this also an optional input
 gps_object = GPS(baseLat,baseLon,baseAlt);
 
 LLA_leftLane = gps_object.ENU2WGSLLA(ENU_LeftLane);

@@ -92,13 +92,13 @@ end
 
 if flag_check_inputs == 1
     % Are there the right number of inputs?
-    narginchk(7,10);
+    narginchk(3,10);
 
 end
 
 % Default base location coordinates (PSU test track)
 baseLat = 40.8637; % default
-if 2 <= nargin
+if 4 <= nargin
     temp = varargin{1};
     if ~isempty(temp)
         baseLat = temp;
@@ -107,17 +107,50 @@ end
 
 baseLon = -77.8359;% default
 % Default base location coordinates (PSU test track)
-if 3 <= nargin
+if 5 <= nargin
     temp = varargin{2};
     if ~isempty(temp)
         baseLon = temp;
     end
 end
 
+baseAlt = 344.189;% default
+% Default base location coordinates (PSU test track)
+if 6 <= nargin
+    temp = varargin{3};
+    if ~isempty(temp)
+        baseAlt = temp;
+    end
+end
+
+left_color = [0 0 1]; % deafult 
+if 7 <= nargin
+    temp = varargin{4};
+    if ~isempty(temp)
+        left_color = temp;
+    end
+end
+
+right_color = [0 1 1]; % deafult 
+if 8 <= nargin
+    temp = varargin{5};
+    if ~isempty(temp)
+        right_color = temp;
+    end
+end
+
+AV_color = [1 0 1]; % deafult 
+if 9 <= nargin
+    temp = varargin{6};
+    if ~isempty(temp)
+        AV_color = temp;
+    end
+end
+
 % fig_num
 fig_num = 100; % Default
-if 4 <= nargin
-    temp = varargin{3};
+if 10 <= nargin
+    temp = varargin{end};
     if ~isempty(temp)
         fig_num = temp;
     end
@@ -139,8 +172,7 @@ end
 %  |_|  |_|\__,_|_|_| |_|
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% default altitude
-baseAlt = 344.189; 
+
 gps_object = GPS(baseLat,baseLon,baseAlt); % Load the GPS class
 
 % Read csv file
@@ -160,7 +192,6 @@ time = LLAandTime(:, 4);
 
 % convert LLA to ENU
 ENU_coordinates = gps_object.WGSLLA2ENU(lat,lon,elv,baseLat,baseLon,baseAlt);
-
 
 % last point
 Num_length = length(ENU_coordinates)-1;
@@ -211,11 +242,14 @@ ENU_RightLaneY = RightLaneY';
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-figure (fig_num); % Create a figure, % TO DO: optional input fig_num
+figure (fig_num); % Create a figure
 clf;
-% Plot the base station with a green star. This sets up the figure for
+
+
+% Plot the base station i.e the RSU in this case with the same colour as the AV.
+% This sets up the figure for
 % the first time, including the zoom into the test track area.
-h_geoplot = geoplot(baseLat, baseLon, '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
+h_geoplot = geoplot(baseLat, baseLon, '*','Color',AV_color,'Linewidth',3,'Markersize',10);
 h_parent = get(h_geoplot,'Parent');
 set(h_parent,'ZoomLevel',16.375);
 
@@ -227,13 +261,12 @@ end
 geotickformat -dd;
 
 
-
 % plot original data i.e centerline and rectangle of car
 hold on
-h_center = geoplot(lat, lon, 'm-', "LineWidth", 3);
-h_left = geoplot(LLA_LeftLane(:, 1), LLA_LeftLane(:, 2), 'b-', "LineWidth", 3);
-h_right = geoplot(LLA_RightLane(:, 1), LLA_RightLane(:, 2), 'c-', "LineWidth", 3);
-h_rect = geoplot(nan, nan, 'r-', 'LineWidth', 2);
+h_center = geoplot(lat, lon, "Color",AV_color, "LineWidth", 3);
+h_left = geoplot(LLA_LeftLane(:, 1), LLA_LeftLane(:, 2), "Color",left_color, "LineWidth", 3);
+h_right = geoplot(LLA_RightLane(:, 1), LLA_RightLane(:, 2), "Color",right_color, "LineWidth", 3);
+h_rect = geoplot(nan, nan, "Color",AV_color, 'LineWidth', 2);
 
 % Conversion factors
 feet_per_degree_lat = 364567; % Approximate conversion factor for latitude

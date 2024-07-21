@@ -11,11 +11,15 @@ csvFile = 'Test Track1.csv'; % Path to your CSV file
 baseLat = [];
 baseLon = [];
 baseAlt = []; 
-% baseAlt = 344.189; 
 fig_num = [];
 car_width = 6; 
 car_length = 14;
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
+left_color = [];
+right_color = [];
+AV_color = [];
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
 
 %% Pittsburg test 10/07/2024
 csvFile = 'Pittsburgh_1_(Ended_Early).csv'; % Path to your CSV file
@@ -29,7 +33,14 @@ base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts,
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
 fig_num = 123;
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
+left_color = [1 0 0];
+right_color = [1 1 0];
+AV_color = [0 1 1];
+car_width = 6; 
+car_length = 14;
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
 
 %% Pittsburg test 11/07/2024
 csvFile = 'Pittsburgh_1_11_07_2024.csv'; % Path to your CSV file
@@ -42,8 +53,15 @@ base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts,
 
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
-fig_num = 123;
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
+fig_num = 222;
+left_color = [1 0 0];
+right_color = [1 1 0];
+AV_color = [0 1 1];
+car_width = 6; 
+car_length = 14;
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
 
 %% Pittsburg test 11/07/2024
 csvFile = 'Pittsburgh_2_11_07_2024.csv'; % Path to your CSV file
@@ -54,10 +72,20 @@ reference_longitude_pitts = -79.76090840;
 reference_altitude_pitts = 327.428;
 base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts, reference_altitude_pitts];
 
+car_length = 4.27; % 4.27m is the standard length of a sedan
+car_width = 1.77; % 1.77 m is the standard width of a sedan
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
-fig_num = 123;
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] = fcn_PlotTestTrack_animateAVLane(csvFile,car_length, car_width, baseLat, baseLon, baseAlt, fig_num);
+baseAlt = reference_altitude_pitts;
+fig_num = 567;
+left_color = [1 0 0];
+right_color = [1 1 0];
+AV_color = [0 1 1];
+car_width = 6; 
+car_length = 14;
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
 
 
 rsu_coordinates_lla = [40.43073, -79.87261 0];
