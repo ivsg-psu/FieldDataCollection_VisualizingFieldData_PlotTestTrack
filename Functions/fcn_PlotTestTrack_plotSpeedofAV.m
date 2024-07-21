@@ -55,37 +55,17 @@ function SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
 % Revision history:
 % 2024_07_14 by V. Wagh
 % -- start writing function from fcn_PlotTestTrack_plotPointsAnywhere
-% 2024_07_17 - A. Kim
-% -- Added improved debugging and input checking section
 
-%% Debugging and Input checks
 
-% Check if flag_max_speed set. This occurs if the fig_num variable input
-% argument (varargin) is given a number of -1, which is not a valid figure
-% number.
-flag_max_speed = 0;
-if (nargin==7 && isequal(varargin{end},-1))
-    flag_do_debug = 0; % Flag to plot the results for debugging
-    flag_check_inputs = 0; % Flag to perform input checking
-    flag_max_speed = 1;
-else
-    % Check to see if we are externally setting debug mode to be "on"
-    flag_do_debug = 0; % Flag to plot the results for debugging
-    flag_check_inputs = 1; % Flag to perform input checking
-    MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS");
-    MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG");
-    if ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG);
-        flag_check_inputs  = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS);
-    end
-end
+flag_do_debug = 0; % Flag to plot the results for debugging
+flag_check_inputs = 1; % Flag to perform input checking
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
-    debug_fig_num = 23434; %#ok<NASGU>
+    debug_fig_num = 34838;
 else
-    debug_fig_num = []; %#ok<NASGU>
+    debug_fig_num = [];
 end
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

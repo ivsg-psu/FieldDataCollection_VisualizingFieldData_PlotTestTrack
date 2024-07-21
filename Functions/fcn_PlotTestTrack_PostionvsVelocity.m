@@ -1,10 +1,10 @@
-function [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile, varargin)
-%% fcn_PlotTestTrack_STHvsVelocity
-% plot velocity of van vs position(STH) respect to time 
+function [speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile)
+%% fcn_PlotTestTrack_PostionvsVelocity
+% plot velocity of van vs position respect to time 
 %
 % FORMAT:
 %
-%       function [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile,varargin)
+%       function [speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile,varargin)
 %
 % INPUTS:
 %
@@ -30,42 +30,24 @@ function [speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile, varargin)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_PlotTestTrack_STHvsVelocity.m
+%       script_test_fcn_PlotTestTrack_PostionvsVelocity.m
 %
 % This function was written on 2024_07_15 by Jiabao Zhao
 % --Start to write the function 
 % Questions or comments? jpz5469@psu.edu
-% 2024_07_17 - A. Kim
-% -- Added improved debugging and input checking section
 
-%% Debugging and Input checks
 
-% Check if flag_max_speed set. This occurs if the fig_num variable input
-% argument (varargin) is given a number of -1, which is not a valid figure
-% number.
-flag_max_speed = 0;
-if (nargin==2 && isequal(varargin{end},-1))
-    flag_do_debug = 0; % Flag to plot the results for debugging
-    flag_check_inputs = 0; % Flag to perform input checking
-    flag_max_speed = 1;
-else
-    % Check to see if we are externally setting debug mode to be "on"
-    flag_do_debug = 0; % Flag to plot the results for debugging
-    flag_check_inputs = 1; % Flag to perform input checking
-    MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS");
-    MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG");
-    if ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG);
-        flag_check_inputs  = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS);
-    end
-end
+
+flag_do_debug = 0; % Flag to show the results for debugging
+flag_do_plots = 0; % % Flag to plot the final results
+flag_check_inputs = 1; % Flag to perform input checking
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
-    debug_fig_num = 23434; %#ok<NASGU>
+    debug_fig_num = 34838;
 else
-    debug_fig_num = []; %#ok<NASGU>
+    debug_fig_num = [];
 end
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -171,7 +153,7 @@ LLA_Trace = [LLA_Trace_Lat,LLA_Trace_Long,LLA_Trace_Elev];
 
 
 % initializing empty arrays
-reference_unit_tangent_vector = [0.794630317120972   0.607093616431785]; % 
+%reference_unit_tangent_vector = [0.794630317120972   0.607093616431785]; % 
 
 % initializing empty arrays
 LLA_trace = [];
@@ -324,7 +306,7 @@ end
 
 % The data passed in may be separated into sections, separated by NaN
 % values. Here, we break them into sub-arrays
-indicies_cell_array = fcn_LoadWZ_breakArrayByNans(ENU_data_with_nan);
+indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(ENU_data_with_nan);
 ENU_positions_cell_array{length(indicies_cell_array)} = {};
 LLA_positions_cell_array{length(indicies_cell_array)} = {};
 for ith_array = 1:length(indicies_cell_array)
