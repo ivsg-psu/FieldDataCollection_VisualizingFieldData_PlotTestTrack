@@ -36,7 +36,7 @@ fig_num = [];
 
 %% Basic example 2 - RSU range test at Pittsburg with time
 
-csvFile = 'PA_288_3.csv';
+csvFile = 'Pittsburgh_3.csv';
 
 baseLat = 40.44181017;
 baseLon = -79.76090840;
@@ -46,19 +46,8 @@ fig_num = [];
 
 [AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 
-%% Basic example 3 - RSU range test at Pittsburg with time
 
-csvFile = 'Pittsburgh_2_11_07_2024.csv';
-
-baseLat = 40.44181017;
-baseLon = -79.76090840;
-baseAlt = 327.428;
-plot_color = [];
-fig_num = [];
-
-[AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
-
-%% Basic example 3 - RSU range test at Pittsburg with time
+%% Basic example 3 - RSU range test at PA_288 with time
 
 csvFile = 'PA_288_2.csv';
 

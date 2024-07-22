@@ -208,7 +208,7 @@ end
 SpeedofAV_mps = SpeedofAV_mps';
 
 % Find the indices of rows with any element above 50
-rowsToDelete = any(SpeedofAV_mps > 50, 2);
+rowsToDelete = any(SpeedofAV_mps > 25, 2); % the mph should not go beyong 50
 
 % Delete those rows from the matrix
 SpeedofAV_mps(rowsToDelete, :) = [];
