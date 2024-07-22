@@ -175,14 +175,20 @@ AltitudeofAV = AltitudeofAV{:,:};
 TimeDiff= LLAandTime(:,4);
 TimeDiff = TimeDiff{:,:};
 
-% LocationOBU = [LatitudeofAV LongitudeofAV];
-% uniqueLatLonMatrix = unique(LocationOBU, 'rows','stable');
+LocationandTimeOBU = [LatitudeofAV LongitudeofAV AltitudeofAV];
+
+% Find unique rows based on the first two columns
+[~, uniqueIdx] = unique(LocationandTimeOBU(:, 1:2), 'rows', 'stable');
+
+% Extract the unique rows from the original matrix
+uniqueRows = LocationandTimeOBU(uniqueIdx, :);
 
 % Extract latitude, longitude, elevation, and time values, here we get time
 % as NaNs
-lat = LatitudeofAV/10000000;
-lon = LongitudeofAV/10000000;
-elv = AltitudeofAV/10000000;
+lat = uniqueRows(:,1)/10000000;
+lon = uniqueRows(:,2)/10000000;
+elv = uniqueRows(:,3)/10000000;
+time = TimeDiff(uniqueIdx, :);
 
 % convert LLA to ENU
 ENU_coordinates = gps_object.WGSLLA2ENU(lat,lon,elv,baseLat,baseLon,baseAlt);
@@ -193,13 +199,22 @@ NumLength = length(ENU_coordinates)-1;
 for ith_coordinate = 1:NumLength
     point1 = ENU_coordinates(ith_coordinate,1:2);
     point2 = ENU_coordinates(ith_coordinate+1,1:2);
-    timeatpt1 = TimeDiff(ith_coordinate,:);
-    timeatpt2 = TimeDiff(ith_coordinate+1,:);
+    timeatpt1 = time(ith_coordinate,:);
+    timeatpt2 = time(ith_coordinate+1,:);
     SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
 end
 
+% correct orientation of matrix
+SpeedofAV_mps = SpeedofAV_mps';
+
+% Find the indices of rows with any element above 50
+rowsToDelete = any(SpeedofAV_mps > 50, 2);
+
+% Delete those rows from the matrix
+SpeedofAV_mps(rowsToDelete, :) = [];
+
 % add a last point to make the arrays of equal sizes
-SpeedofAV_mps(end+1) = SpeedofAV_mps(end) ;
+SpeedofAV_mps(end+1) = SpeedofAV_mps(end);
 
 % convert speed from m/s tp mph 
 AVSpeed = SpeedofAV_mps*2.23694;
@@ -214,6 +229,7 @@ for ith_coordinate = 1:NumLength
     StationCoordinates(ith_coordinate+1,1) = StationCoordinates(ith_coordinate,1) +  distance;
 end
 
+StationCoordinates(rowsToDelete, :) = [];
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
@@ -231,10 +247,10 @@ end
 
 figure (fig_num); % Create a figure, % TO DO: optional input fig_num
 clf;
-plot(StationCoordinates(:,1),SpeedofAV_mps, "Color",plot_color,"Marker",".");
+plot(StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
 title('Station vs Speed plot');
 xlabel('Station Coordinates in m');
-ylabel('Speed in m/s');
+ylabel('Speed in mph');
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
