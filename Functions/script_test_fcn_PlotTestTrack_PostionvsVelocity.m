@@ -6,12 +6,12 @@
 
 %% Test 1 
 csvFile = readtable('Pittsburgh_3.csv'); % Path to your CSV file
-[speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile);
+[speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile);
 
 %% Test 2
 csvFile = readtable('site2_3.csv'); % Path to your CSV file
-[speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile);
+[speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile);
 
 %% Test 3
 csvFile = readtable('site2_1.csv'); % Path to your CSV file
-[speed,position] = fcn_PlotTestTrack_STHvsVelocity(csvFile);
+[speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile);
