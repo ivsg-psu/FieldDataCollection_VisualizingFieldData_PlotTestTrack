@@ -27,8 +27,7 @@ function SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
 %
 %       minVelocity: minimum velocity allowed in mph
 %
-%       plot_color: a color specifier such as [1 0 0] or 'r' indicating
-%       what color the traces should be plotted
+%       plot_color: a colormap color string such as 'jet' or 'summer'
 %
 %       LLA_fig_num: a figure number for the LLA plot
 %
@@ -113,16 +112,16 @@ minVelocity = 15; % Default is at 15mph with is the slowest speed limit assigned
 if 4 <= nargin 
     temp = varargin{3}; 
     if ~isempty(temp) % if temp is not empty
-        maxVelocity = temp;
+        minVelocity = temp;
     end
 end
 
 % Does user want to specify plot_color?
-plot_color = [1 0 1]; % Default
+color_map = fcn_INTERNAL_getColorMap('jet'); % Default
 if 5 <= nargin 
     temp = varargin{4};
     if ~isempty(temp) 
-        plot_color = temp; 
+        color_map = fcn_INTERNAL_getColorMap(temp);
     end
 end
 
@@ -174,7 +173,6 @@ LLAandTime = readmatrix(csvFilename); %#ok<*CSVRD>
 time = readtable(csvFilename);
 time = time.timediff;
 
-
 LLAandTime(:,4) = arrayfun(@(a) fcn_INTERNAL_totalSeconds(a), time);
 % LLA is collected as an integer X 10^4, so convert back to standard
 % decimal format for LLA
@@ -214,19 +212,7 @@ SpeedofAV = SpeedofAV_mps*2.23694;
 speedPercent = fcn_INTERNAL_calculatePercentage(maxVelocity,minVelocity,SpeedofAV);
 
 %convert to color:
-colors = fcn_INTERNAL_assignColor(plot_color, speedPercent);
-
-
-% create speed categories
-lowerLimit = minVelocity;
-upperLimit = maxVelocity;
-numCategories = 10; % default for now, later maake this an input
-categories = fcn_INTERNAL_createCategories(lowerLimit, upperLimit, numCategories);
-
-% assign colours to speed categories
-for ith_category = 1:length(categories)
-    plot_speedColor{ith_category} = plot_color*(ith_category*0.1);
-end
+colors = fcn_INTERNAL_assignColor(color_map, speedPercent);
 
 
 %% Any debugging?
@@ -241,10 +227,6 @@ end
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% this is not yert done!!!!!!!!!!!!!!!!!!
-
-% % Plot the speeds according to their speed categories
-%for ith_coordinate = 1:length(ENU_BSM_coordinates)
 
 
 initial_points = ENU_BSM_coordinates;
@@ -255,22 +237,18 @@ fcn_PlotTestTrack_plotPointsAnywhere(...
     initial_points, input_coordinates_type, base_station_coordinates,...
     colors, MarkerSize, LLA_fig_num, ENU_fig_num);
 
-for i = 0:.01:1
-    colorbarColors(int64(i*100+1),1:3) = plot_color.*i;
-end
-
 
 figure(LLA_fig_num);
-colormap(colorbarColors)
+colormap(color_map);
 c = colorbar('Ticks',[0:.1:1],...
-         'TickLabels',{linspace(minVelocity,maxVelocity,11)})
+         'TickLabels',{linspace(minVelocity,maxVelocity,11)});
 c.Label.String = 'Speed (mph)';
 
 
 figure(ENU_fig_num);
-colormap(colorbarColors)
+colormap(color_map);
 c = colorbar('Ticks',[0:.1:1],...
-         'TickLabels',{linspace(minVelocity,maxVelocity,11)})
+         'TickLabels',{linspace(minVelocity,maxVelocity,11)});
 c.Label.String = 'Speed (mph)';
 
 
@@ -318,9 +296,12 @@ end
 
 %% fcn_INTERNAL_assignColor
 
-function color = fcn_INTERNAL_assignColor(max_color, percentages)
+function color = fcn_INTERNAL_assignColor(color_map, percentages)
+    c = color_map;
+    
     for i = 1:length(percentages)
-        color(i,1:3) = max_color.*percentages(i);
+
+        color(i,1:3) = c(max(round(size(c,1)*percentages(i)),1),1:3);
     end
 end
 
@@ -328,6 +309,7 @@ end
 
 function seconds = fcn_INTERNAL_totalSeconds(timeStr)
     % Check if the string contains hours, minutes, and seconds or just minutes and seconds
+    timeStr = string(timeStr);
     parts = split(timeStr, ':');
     numParts = length(parts);
     
@@ -410,5 +392,20 @@ for ith_array = 1:length(indicies_cell_array)
     LLA_positions_cell_array{ith_array} = LLA_data_with_nan(current_indicies,:);
 end
 end % Ends fcn_INTERNAL_prepDataForOutput
+
+function color_map = fcn_INTERNAL_getColorMap(colormap_string)
+
+    % Use user-defined colormap_string    
+    old_colormap = colormap;
+    if strcmp(colormap_string,'redtogreen')
+        new_colormap = colormap('hsv');
+        color_ordering = [new_colormap(1:85,:); [0 1 0]];
+    else
+        color_ordering = colormap(colormap_string);
+    end
+    color_map = color_ordering;
+    
+
+end
 
 

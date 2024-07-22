@@ -31,7 +31,6 @@ fig_num = 177;
 %% Test Track
 csvFile = 'Test Track1.csv'; % Path to your CSV file
 
-% base station in pittsburg
 reference_latitude = [];
 reference_longitude = [];
 reference_altitude= [];
