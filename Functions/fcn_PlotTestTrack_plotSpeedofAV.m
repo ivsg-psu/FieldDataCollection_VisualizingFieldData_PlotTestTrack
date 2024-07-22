@@ -117,11 +117,11 @@ if 4 <= nargin
 end
 
 % Does user want to specify plot_color?
-color_map = fcn_INTERNAL_getColorMap('jet'); % Default
+plot_color = 'jet' % Default
 if 5 <= nargin 
     temp = varargin{4};
     if ~isempty(temp) 
-        color_map = fcn_INTERNAL_getColorMap(temp);
+        color_map = temp;
     end
 end
 
@@ -200,19 +200,21 @@ for ith_coordinate = 1:NumLength
     timeatpt1 = Time_BSMs(ith_coordinate,:);
     timeatpt2 = Time_BSMs(ith_coordinate+1,:);
     if timeatpt2 == timeatpt1
-        timeatpt2 = timeatpt2+.1;
+        timeatpt2 = timeatpt2+.2;
     end
     SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
 end
 
 % convert speed from m/s tp mph 
 SpeedofAV = SpeedofAV_mps*2.23694;
-%Calculate percentage
 
-speedPercent = fcn_INTERNAL_calculatePercentage(maxVelocity,minVelocity,SpeedofAV);
+%SpeedofAV = smoothdata(SpeedofAV,'movmedian',10)
 
-%convert to color:
-colors = fcn_INTERNAL_assignColor(color_map, speedPercent);
+figure;
+plot(SpeedofAV)
+figure;
+plot(smoothdata(SpeedofAV,'movmedian',10))
+
 
 
 %% Any debugging?
@@ -229,26 +231,17 @@ colors = fcn_INTERNAL_assignColor(color_map, speedPercent);
 
 
 
-initial_points = ENU_BSM_coordinates;
-input_coordinates_type = "ENU";
-colors(length(colors)+1,1:3)=colors(length(colors),1:3);
-MarkerSize = [];
-fcn_PlotTestTrack_plotPointsAnywhere(...
-    initial_points, input_coordinates_type, base_station_coordinates,...
-    colors, MarkerSize, LLA_fig_num, ENU_fig_num);
+fcn_PlotTestTrack_plotPointsColorMap(ENU_BSM_coordinates,SpeedofAV, ...
+    base_station_coordinates,maxVelocity,minVelocity,plot_color,LLA_fig_num,ENU_fig_num)
 
 
 figure(LLA_fig_num);
-colormap(color_map);
-c = colorbar('Ticks',[0:.1:1],...
-         'TickLabels',{linspace(minVelocity,maxVelocity,11)});
+
 c.Label.String = 'Speed (mph)';
 
 
 figure(ENU_fig_num);
-colormap(color_map);
-c = colorbar('Ticks',[0:.1:1],...
-         'TickLabels',{linspace(minVelocity,maxVelocity,11)});
+
 c.Label.String = 'Speed (mph)';
 
 

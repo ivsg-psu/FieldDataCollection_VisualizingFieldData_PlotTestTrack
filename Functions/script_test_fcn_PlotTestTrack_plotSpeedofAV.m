@@ -56,3 +56,20 @@ ENU_fig_num = 202;
 
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
+
+%% Test Track
+csvFilename = 'Test Track2.csv'; % Path to your CSV file
+
+reference_latitude = 40.8637;
+reference_longitude = -77.8359;
+reference_altitude= 344.189;
+base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
+
+maxVelocity = 85;
+minVelocity = 15;
+plot_color = 'jet';
+LLA_fig_num = 301;
+ENU_fig_num = 302;
+
+SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
+       csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
