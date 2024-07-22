@@ -208,16 +208,25 @@ end
 SpeedofAV_mps = SpeedofAV_mps';
 
 % Find the indices of rows with any element above 50
-rowsToDelete = any(SpeedofAV_mps > 25, 2); % the mph should not go beyong 50
+rowsToDelete = any(SpeedofAV_mps > 25, 2); % the mph should not go beyond 50
 
 % Delete those rows from the matrix
 SpeedofAV_mps(rowsToDelete, :) = [];
 
+SpeedofAV_mps_cutshort = SpeedofAV_mps(10:end-10,:);
+% Find the indices of rows with any element equal to zero
+rowsToDeleteforzeros = any(SpeedofAV_mps_cutshort < 0.45, 2); % the mph should not go to zero once the vehicle has started
+
+% Delete those rows from the matrix
+SpeedofAV_mps_cutshort(rowsToDeleteforzeros, :) = [];
+
+final_SpeedofAV_mps = [SpeedofAV_mps(1:10); SpeedofAV_mps_cutshort; SpeedofAV_mps(end-10:end)];
+
 % add a last point to make the arrays of equal sizes
-SpeedofAV_mps(end+1) = SpeedofAV_mps(end);
+final_SpeedofAV_mps(end+1) = final_SpeedofAV_mps(end);
 
 % convert speed from m/s tp mph 
-AVSpeed = SpeedofAV_mps*2.23694;
+AVSpeed = final_SpeedofAV_mps*2.23694;
 
 % calculate station coordiantes
 NumLength = length(ENU_coordinates)-1;
@@ -230,6 +239,10 @@ for ith_coordinate = 1:NumLength
 end
 
 StationCoordinates(rowsToDelete, :) = [];
+
+StationCoordinates_cutshort = StationCoordinates(10:end-10);
+StationCoordinates_cutshort(rowsToDeleteforzeros, :) = [];
+final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshort; StationCoordinates(end-10:end)];
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
@@ -247,7 +260,7 @@ StationCoordinates(rowsToDelete, :) = [];
 
 figure (fig_num); % Create a figure, % TO DO: optional input fig_num
 clf;
-plot(StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
+plot(final_StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
 title('Station vs Speed plot');
 xlabel('Station Coordinates in m');
 ylabel('Speed in mph');
