@@ -16,8 +16,16 @@ base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts,
 
 baseLat = reference_latitude_pitts;
 baseLon = reference_longitude_pitts;
+baseAlt = reference_altitude_pitts;
+laneWidth = [];
+left_color = [];
+right_color= [];
+center_color = [];
+lane_color = [];
 fig_num = 177;
-fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, baseLat,baseLon, fig_num);
+[LLA_leftLane,LLA_rightLane, LLA_centerOfLane] = fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, ...
+                                                baseLat,baseLon, baseAlt,laneWidth, left_color,...
+                                                right_color,center_color,lane_color,fig_num);
 
 
 %% Test Track
@@ -31,5 +39,13 @@ base_station_coordinates = [reference_latitude, reference_longitude, reference_a
 
 baseLat = reference_latitude;
 baseLon = reference_longitude;
+baseAlt = reference_altitude;
+laneWidth = [];
+left_color = [];
+right_color= [];
+center_color = [];
+lane_color = [];
 fig_num = 200;
-fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, baseLat,baseLon, fig_num);
+[LLA_leftLane,LLA_rightLane, LLA_centerOfLane] = fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, ...
+                                                baseLat,baseLon, baseAlt,laneWidth, left_color,...
+                                                right_color,center_color,lane_color,fig_num);

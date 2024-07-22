@@ -1,11 +1,12 @@
-function fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, varargin)
+function [LLA_leftLane, LLA_rightLane, LLA_centerLane] = fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, varargin)
 %% fcn_PlotTestTrack_plotLaneBoundingBox
 %
 % create a plot of the lanes with a bounding box appearing under the lanes.
 %
 % FORMAT:
 %
-%       [LeftLaneX, LeftLaneY, RightLaneX, RightLaneY] = fcn_PlotTestTrack_laneBoundingBox(csvFile, (baseLat,baseLon, fig_num))
+%       [LLA_leftLane, LLA_rightLane, LLA_centerLane] = fcn_PlotTestTrack_laneBoundingBox(csvFile, ...
+%                      (baseLat,baseLon,baseAlt,laneWidth, left_color, right_color, center_color, lane_color, fig_num))
 %
 % INPUTS:
 %
@@ -22,12 +23,27 @@ function fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, varargin)
 %
 %      baseLon: Longitude of the base location. Default is -77.8359.
 %
+%      baseAlt: Altitude of the base location. Default is 344.189.
 %
-%      fig_num: figure number
+%      laneWidth: Width of the lane in meters. Default is 3.6
+%
+%      left_color: Color of the left lane lines in the plot. Default is [0 0 1]
+%
+%      right_color: Color of the left lane lines in the plot. Default is [0 1 1]
+%
+%      center_color: Color of the left lane lines in the plot. Default is [1 0 0]
+%
+%      lane_color: Color of the left lane lines in the plot. Default is [1 0 1]
+%
+%      fig_num: figure number. Default is 100.
 %
 % OUTPUTS:
 %
-%      
+%      LLA_leftLane: Latitude and Longitude of the left side lane lines.
+%
+%      LLA_rightLane: Latitude and longitude of the right side lane lines.
+%
+%      LLA_centerLane: Latitude and longitude of the center of the lane.
 %
 % DEPENDENCIES:
 %
@@ -69,10 +85,9 @@ end
 
 if flag_check_inputs == 1
     % Are there the right number of inputs?
-    narginchk(1,6);
+    narginchk(1,10);
 
 end
-
 
 % Default base location coordinates (PSU test track)
 baseLat = 40.8637; % default
@@ -92,20 +107,64 @@ if 3 <= nargin
     end
 end
 
-% fig_num
-fig_num = 100; % Default
+baseAlt = 344.189;% default
+% Default base location coordinates (PSU test track)
 if 4 <= nargin
     temp = varargin{3};
     if ~isempty(temp)
-        fig_num = temp;
+        baseAlt = temp;
     end
 end
 
-% Setup figures if there is debugging
-if flag_do_debug
-    fig_debug = 9999;
-else
-    fig_debug = []; %#ok<*NASGU>
+laneWidth = 3.6;% default
+% Default LaneWidth (3.6 meter)
+if 5 <= nargin
+    temp = varargin{4};
+    if ~isempty(temp)
+        laneWidth = temp;
+    end
+end
+
+
+left_color = [0 0 1]; % default 
+if 6 <= nargin
+    temp = varargin{5};
+    if ~isempty(temp)
+        left_color = temp;
+    end
+end
+
+right_color = [0 1 1]; % default 
+if 7 <= nargin
+    temp = varargin{6};
+    if ~isempty(temp)
+        right_color = temp;
+    end
+end
+
+center_color = [1 0 0]; % default 
+if 8 <= nargin
+    temp = varargin{7};
+    if ~isempty(temp)
+        AV_color = temp;
+    end
+end
+
+lane_color = [1 0 1]; % default 
+if 9 <= nargin
+    temp = varargin{8};
+    if ~isempty(temp)
+        AV_color = temp;
+    end
+end
+
+% fig_num
+fig_num = 100; % Default
+if 10 <= nargin
+    temp = varargin{end};
+    if ~isempty(temp)
+        fig_num = temp;
+    end
 end
 %% Write main code for plotting
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -117,25 +176,22 @@ end
 %  |_|  |_|\__,_|_|_| |_|
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-baseAlt = 344.189; % TO DO: make this also an optional input
-car_length = 14;
-car_width = 6;
-left_color = [];
-right_color = [];
-AV_color = [];
-[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
-    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+
+
+
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_CenterLaneX, ENU_CenterLaneY] ...
+    = fcn_PlotTestTrack_calculateLaneLines(csvFile, ...
+      baseLat,baseLon,baseAlt,laneWidth);
 
 ENU_RightLane = [ENU_RightLaneX ENU_RightLaneY (ENU_RightLaneX*0)];
 ENU_LeftLane = [ENU_LeftLaneX ENU_LeftLaneY (ENU_LeftLaneX*0)];
+ENU_CenterLane = [ENU_CenterLaneX ENU_CenterLaneY (ENU_CenterLaneX*0)];
 
 gps_object = GPS(baseLat,baseLon,baseAlt);
 
 LLA_leftLane = gps_object.ENU2WGSLLA(ENU_LeftLane);
 LLA_rightLane = gps_object.ENU2WGSLLA(ENU_RightLane);
-
-plot_color = [0 1 1];
+LLA_centerLane = gps_object.ENU2WGSLLA(ENU_CenterLane);
 
 
 
@@ -153,21 +209,46 @@ plot_color = [0 1 1];
 
 
 figure (fig_num); 
-hold on;
+clf;
+
+h_geoplot = geoplot(baseLat, baseLon, '*','Color',lane_color,'Linewidth',3,'Markersize',10);
+h_parent = get(h_geoplot,'Parent');
+set(h_parent,'ZoomLevel',17);
+set(h_parent,'MapCenter',[baseLat baseLon]);
+
+try
+    geobasemap satellite
+catch
+    geobasemap openstreetmap
+end
+geotickformat -dd;
+
+hold on
 prevIdx= 0;
 for ith_data = 1:length(LLA_leftLane)
-    if ~isnan(LLA_leftLane(ith_data,1))
-        if prevIdx > 0
+    if ~isnan(LLA_leftLane(ith_data,1)) %finds indexes of coordinates that exist
+        if prevIdx > 0 %plots the bounding box if there are 2 unique indexes of coordinates that contain different lats and longs.
             if ~(all(LLA_rightLane(prevIdx,:) == LLA_rightLane(ith_data,:)) || all(LLA_rightLane(prevIdx,:)==LLA_leftLane(ith_data,:)) )
-                fcn_INTERNAL_plotOneLane(LLA_rightLane(prevIdx,:),LLA_rightLane(ith_data,:), LLA_leftLane(prevIdx,:),LLA_leftLane(ith_data,:),plot_color,1)
+                fcn_INTERNAL_plotOneLane(LLA_rightLane(prevIdx,:),LLA_rightLane(ith_data,:), LLA_leftLane(prevIdx,:),LLA_leftLane(ith_data,:),lane_color,left_color,right_color)
+                
             end
         end
         prevIdx = ith_data;
     end
     
 end
-hold off;
 
+%sets up variables for legend
+qw{1} = geoplot(LLA_centerLane(1,1),LLA_centerLane(1,2), 'Color',lane_color,'LineWidth',1); % lane color
+qw{2} = geoplot(LLA_leftLane(prevIdx,1), LLA_leftLane(prevIdx,2), 'Color',left_color,'LineWidth',1); %left lane color
+qw{3} = geoplot(LLA_rightLane(prevIdx,1), LLA_rightLane(prevIdx,2), 'Color',right_color,'LineWidth',1); % right lane color
+
+%Also plots the center of the lane.
+qw{4} = geoplot(LLA_centerLane(:,1),LLA_centerLane(:,2),'Color',center_color,'LineWidth',1); %center lane color
+
+legend([qw{:}], {'Lane Box', 'Left Lane', 'Right Lane', 'Center Lane'}, 'location', 'best');
+
+hold off
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
@@ -186,26 +267,32 @@ end
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 %% fcn_INTERNAL_plotOneLane
-function fcn_INTERNAL_plotOneLane(LLA_right1, LLA_right2, LLA_left1, LLA_left2, plot_color,line_width)
+function fcn_INTERNAL_plotOneLane(LLA_right1, LLA_right2, LLA_left1, LLA_left2, plot_color,left_color,right_color)
 
 % Calculate the box to plot?
 if ~isempty(LLA_right1) && ~isempty(LLA_left1)
-   %boundaryLLA = [LLA_right1; flipud(LLA_left1); LLA_right1(1,:)];
+    %corners of box
     boundaryLLA = [LLA_right1; LLA_right2; LLA_left2; LLA_left1; LLA_right1;];
+
+    %sides of the lane
+    right = [LLA_right1; LLA_right2;LLA_right1;];
+    left = [LLA_left1; LLA_left2; LLA_left1;];
 
     LLA_data_to_plot = boundaryLLA;
 
-    % Create the geoshape
+    % Create the geoshapes
     laneShape = geopolyshape(LLA_data_to_plot(:,1),LLA_data_to_plot(:,2));
+    leftLane = geopolyshape(left(:,1),left(:,2));
+    rightLane = geopolyshape(right(:,1),right(:,2));
 
-    
-
-
-    gp = geoplot(laneShape,'FaceColor',plot_color,'EdgeColor',plot_color,'Linewidth',line_width,'FaceAlpha',1);
+    %plot the slightly transparent background of lane
+    gp = geoplot(laneShape,'FaceColor',plot_color,'EdgeColor',plot_color,'Linewidth',1,'FaceAlpha',1);
     gp.EdgeAlpha = 0;
     gp.FaceAlpha = .35;
-    % geoplot(LLA_data_to_plot(:,1)+offset_Lat,LLA_data_to_plot(:,2)+offset_Lon, '-','Color',plot_color,'Linewidth',line_width,'Markersize',sizeOfMarkers);
-    % geoplot(LLA_data_to_plot(:,1)+offset_Lat,LLA_data_to_plot(:,2)+offset_Lon, '.','Color',plot_color,'Linewidth',line_width,'Markersize',round(sizeOfMarkers*2));
-    % geoplot(LLA_data_to_plot(:,1)+offset_Lat,LLA_data_to_plot(:,2)+offset_Lon, '.','Color',[0 0 0],'Linewidth',line_width,'Markersize',round(sizeOfMarkers*0.5));
+
+    %plot the sides of the lane
+    geoplot(leftLane, 'EdgeColor',left_color,'LineWidth',1);
+    geoplot(rightLane,'EdgeColor',right_color,'LineWidth',1);
 end
 end
+
