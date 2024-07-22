@@ -162,7 +162,7 @@ ENU_trace = [];
 
 % get ENU
 ENU_data_with_nan = [];
-[ENU_positions_cell_array, LLA_positions_cell_array] = ...
+[ENU_positions_cell_array, ~] = ...
     fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,LLA_Trace);
 
 ENU_trace = ENU_positions_cell_array{1};
@@ -218,11 +218,11 @@ end
 % retrun each variable into non repeatable number
 ULatLong_RepTime = unique(LocationOBU,'rows','stable');
 t1 = unique(t);
-position = [];
+Position = 0;
 
 %IF statement is used to check which variable has the smallest length
 if (length(ULatLong_RepTime(:,1)) < length(t1))
-  [logicalIndices, indices] = ismember(ULatLong_RepTime,LocationOBU,'rows');  % find indices
+  [~, indices] = ismember(ULatLong_RepTime,LocationOBU,'rows');  % find indices
 
     % return all variable in same size
     ULatLong = LocationOBU(indices,:);
@@ -235,12 +235,13 @@ if (length(ULatLong_RepTime(:,1)) < length(t1))
         East1 = East(n+1)-East(n);
         North1 = North(n+1)-North(n);
         delta_t = t_real(n+1)-t_real(n);
-        distance = sqrt(East1^2+North1^2);
-        speed(n) = abs(distance/delta_t);
-        position(n,:) = [East1,North1];
+        displacement = sqrt(East1^2+North1^2);
+        speed(n) = abs(displacement/delta_t);
+        Position = Position + displacement;
+        New_position(n) = Position;
     end
 else
-    [logicalIndices, indices] = ismember(t1,t); % find indices
+    [~, indices] = ismember(t1,t); % find indices
 
     % return all variable in same size
     ULatLong = LocationOBU(indices,:);
@@ -253,9 +254,10 @@ else
         East1 = East(n+1)-East(n);
         North1 = North(n+1)-North(n);
         delta_t = t_real(n+1)-t_real(n);
-        distance = sqrt(East1^2+North1^2);
-        speed(n) = abs(distance/delta_t);
-        position(n,:) = [East1,North1];
+        displacement = sqrt(East1^2+North1^2);
+        speed(n) = abs(displacement/delta_t);
+        Position = Position + displacement;
+        New_position(n) = Position;
     end
 end
 %% Any debugging?
@@ -271,13 +273,9 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Plotting
 speed_mph = speed * 2.23694;
-colors = speed;
-scatter3(position(:,1),position(:,2),speed,20,colors);
-xlabel('East')
-ylabel('Nort')
-zlabel('speed')
-colormap('jet'); % You can use 'viridis' if you have it, or other colormaps
-colorbar; % Add a color bar to show the color mapping
+plot(New_position,speed);
+xlabel('Position (m)')
+ylabel('Speed (mph)')
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
