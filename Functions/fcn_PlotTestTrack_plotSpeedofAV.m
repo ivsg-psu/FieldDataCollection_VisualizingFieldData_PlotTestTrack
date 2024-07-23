@@ -231,7 +231,7 @@ colors = fcn_INTERNAL_assignColor(color_map, speedPercent);
 
 initial_points = ENU_BSM_coordinates;
 input_coordinates_type = "ENU";
-colors(length(colors)+1,1:3)=colors(length(colors),1:3);
+colors(length(colors)+1,1:3)=colors(length(colors),1:3); % assign the size of the vector first
 MarkerSize = [];
 fcn_PlotTestTrack_plotPointsAnywhere(...
     initial_points, input_coordinates_type, base_station_coordinates,...

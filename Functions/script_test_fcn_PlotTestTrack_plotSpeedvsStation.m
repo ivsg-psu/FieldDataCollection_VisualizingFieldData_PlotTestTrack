@@ -34,6 +34,8 @@ fig_num = [];
 
 [AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 
+% add median filter to get rid of spikes
+% plot NaNs for station coordinates > 5m apart
 %% Basic example 2 - RSU range test at Pittsburg with time
 
 csvFile = 'Pittsburgh_3.csv';
