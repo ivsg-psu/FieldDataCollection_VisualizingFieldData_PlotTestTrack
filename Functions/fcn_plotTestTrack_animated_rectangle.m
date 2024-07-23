@@ -113,7 +113,9 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
     lat = data(:, 1) / 10000000;
     lon = data(:, 2) / 10000000;
     elv = data(:, 3);
-    time = data(:, 4);
+    
+    % Read the converted time values
+    time = convertTimeToSeconds(data(:, 4));
     
     % Initialize plot
     figure;
@@ -184,4 +186,42 @@ end
         coords = R * [lat_coords - center_lat; lon_coords - center_lon];
         lat_rot = coords(1, :) + center_lat;
         lon_rot = coords(2, :) + center_lon;
+    end
+    
+    function [time_in_seconds] = convertTimeToSeconds(time_column)
+        % Initialize an array to hold the converted time values in seconds
+        time_in_seconds = zeros(length(time_column), 1);
+        
+        % Loop through each row in the table
+        for i = 1:length(time_column)
+            % Extract the time string
+            time_str = num2str(time_column(i));
+            
+            % Split the time string into minutes and seconds
+            parts = split(time_str, ':');
+            
+            % Check if parts contains two elements
+            if length(parts) ~= 2
+                error('Time string does not contain minutes and seconds in the expected format.');
+            end
+     
+            minutes = str2double(parts{1});
+            
+            % Split the seconds part into whole seconds and fractional seconds
+            seconds_parts = split(parts{2}, '.');
+            
+            % Check if seconds_parts contains two elements
+            if length(seconds_parts) ~= 2
+                error('Seconds part does not contain both whole and fractional seconds.');
+            end
+            
+            seconds = str2double(seconds_parts{1});
+            fractions = str2double(['0.' seconds_parts{2}]);
+            
+            % Convert the time to seconds
+            total_seconds = minutes * 60 + seconds + fractions;
+            
+            % Store the result in the array
+            time_in_seconds(i) = total_seconds;
+        end
     end
