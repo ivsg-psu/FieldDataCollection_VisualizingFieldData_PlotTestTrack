@@ -22,7 +22,7 @@ close all;
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
-%% Basic example 1 - RSU range test at Pittsburg with time
+%% Basic example 1 - Speed Plot of Pittsburgh_2
 
 csvFilename = 'Pittsburgh_2_11_07_2024.csv';
 
@@ -40,7 +40,9 @@ ENU_fig_num = 102;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-%% Test Track
+length(SpeedofAV);
+
+%% Basic example 2 - Speed Plot of TestTrack 1
 csvFilename = 'Test Track1.csv'; % Path to your CSV file
 
 reference_latitude = 40.8637;
@@ -57,7 +59,8 @@ ENU_fig_num = 202;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-%% Test Track
+length(SpeedofAV);
+%% Basic example 3 - Speed Plot of TestTrack 2
 csvFilename = 'Test Track2.csv'; % Path to your CSV file
 
 reference_latitude = 40.8637;
@@ -73,3 +76,42 @@ ENU_fig_num = 302;
 
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
+
+length(SpeedofAV);
+
+%% Basic example 4 - Speed Plot of TestTrack 1 with differentplot color
+csvFilename = 'Test Track1.csv'; % Path to your CSV file
+
+reference_latitude = 40.8637;
+reference_longitude = -77.8359;
+reference_altitude= 344.189;
+base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
+
+maxVelocity = 30;
+minVelocity = 1;
+plot_color = 'spring';
+LLA_fig_num = 401;
+ENU_fig_num = 402;
+
+SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
+       csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
+
+length(SpeedofAV);
+%% Basic example 5 - Speed Plot of TestTrack 2 with different max velocities and plot color
+csvFilename = 'Test Track2.csv'; % Path to your CSV file
+
+reference_latitude = 40.8637;
+reference_longitude = -77.8359;
+reference_altitude= 344.189;
+base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
+
+maxVelocity = 50;
+minVelocity = 10;
+plot_color = 'winter';
+LLA_fig_num = 501;
+ENU_fig_num = 502;
+
+SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
+       csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
+
+length(SpeedofAV);

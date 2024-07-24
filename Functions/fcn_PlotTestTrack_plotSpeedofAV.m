@@ -121,7 +121,7 @@ plot_color = 'jet' % Default
 if 5 <= nargin 
     temp = varargin{4};
     if ~isempty(temp) 
-        color_map = temp;
+        plot_color = temp;
     end
 end
 
@@ -208,12 +208,6 @@ end
 % convert speed from m/s tp mph 
 SpeedofAV = SpeedofAV_mps*2.23694;
 
-%SpeedofAV = smoothdata(SpeedofAV,'movmedian',10)
-
-figure;
-plot(SpeedofAV)
-figure;
-plot(smoothdata(SpeedofAV,'movmedian',10))
 
 
 

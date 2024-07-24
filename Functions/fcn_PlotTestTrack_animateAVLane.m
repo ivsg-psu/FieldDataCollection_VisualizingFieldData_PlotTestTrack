@@ -193,6 +193,8 @@ time = LLAandTime(:, 4);
 % convert LLA to ENU
 ENU_coordinates = gps_object.WGSLLA2ENU(lat,lon,elv,baseLat,baseLon,baseAlt);
 
+ENU_coordinates = unique(ENU_coordinates,'rows','stable');
+
 % last point
 Num_length = length(ENU_coordinates)-1;
 
