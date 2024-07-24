@@ -231,32 +231,35 @@ end % Ends main function for fcn_PlotTestTrack_plot
 function fcn_INTERNAL_plotSinglePoint(plot_color, MarkerSize, ...
     LLA_coordinates, ENU_coordinates, base_station_coordinates, ...
     LLA_fig_num, ENU_fig_num)
+nanArray = NaN(size(LLA_coordinates,1),1);
 
 % LLA plot?
 if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
     if ~isempty(LLA_coordinates)
-
-        figure(LLA_fig_num);
-        %clf;
-        h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
-        h_parent =  get(h_geoplot,'Parent');
-        set(h_parent);
-        try
-            geobasemap satellite
-
-        catch
-            geobasemap openstreetmap
-        end
-        geotickformat -dd
+        hold on
+        f = figure(LLA_fig_num);
+        if f.Tag ~= "1"
+            h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
+            h_parent =  get(h_geoplot,'Parent');
+            set(h_parent);
+            
+            try
+                geobasemap satellite
+    
+            catch
+                geobasemap openstreetmap
+            end
+            geotickformat -dd
+            end
+            f.Tag = "1"
+        hold off
         hold on
     end
-    if length(plot_color) == length(LLA_coordinates)
-        for i = 1:length(LLA_coordinates)
-            geoplot(LLA_coordinates(i,1), LLA_coordinates(i,2), '.','Color',plot_color(i,1:3),'Markersize',MarkerSize);
-        end
-    else
-        geoplot(LLA_coordinates(:,1), LLA_coordinates(:,2), '.','Color',plot_color,'Markersize',MarkerSize);
-    end
+
+        gp = geoplot(nanArray(:),nanArray(:), '.','Color',plot_color,'Markersize',MarkerSize);
+        
+        set(gp,"XData",LLA_coordinates(:,1));
+        set(gp,"YData",LLA_coordinates(:,2));
     title(sprintf('LLA Coordinates'));
 end
 
@@ -265,20 +268,19 @@ end
 if exist('ENU_fig_num','var') && ~isempty(ENU_fig_num)
 
     if ~isempty(ENU_coordinates)
-        figure(ENU_fig_num);
-        clf;
-        axis equal;
         hold on;
+        f = figure(ENU_fig_num);
+        
+        axis equal;
+        
         
 
-        if length(plot_color) == length(LLA_coordinates)
-            for i = 1:length(LLA_coordinates)
-                plot(ENU_coordinates(i,1),ENU_coordinates(i,2),'.','Color',plot_color(i,1:3),'MarkerSize',MarkerSize);
-            end
-        else
-            plot(ENU_coordinates(:,1),ENU_coordinates(:,2),'.','Color',plot_color,'MarkerSize',MarkerSize);
-        end
-        
+
+            p = plot(nanArray(:),nanArray(:),'.','Color',plot_color,'MarkerSize',MarkerSize);
+
+            set(p,"XData",ENU_coordinates(:,1));
+            set(p,"YData",ENU_coordinates(:,2));
+
         title(sprintf('ENU coordinates'));
     end
 end
@@ -304,7 +306,7 @@ if isempty(ENU_data_with_nan) && isempty(LLA_data_with_nan)
 elseif isempty(ENU_data_with_nan)
     ENU_data_with_nan  = gps_object.WGSLLA2ENU(LLA_data_with_nan(:,1), LLA_data_with_nan(:,2), LLA_data_with_nan(:,3));
 elseif isempty(LLA_data_with_nan)
-    LLA_data_with_nan =  gps_object.ENU2WGSLLA(ENU_data_with_nan');
+    LLA_data_with_nan =  gps_object.ENU2WGSLLA(ENU_data_with_nan);
 end
 
 

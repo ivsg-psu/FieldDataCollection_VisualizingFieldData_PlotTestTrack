@@ -163,15 +163,15 @@ end
 % Prep for GPS conversions
 % The true location of the track base station is [40.86368573°,
 % -77.83592832°, 344.189 m] for the default
-gps_object = GPS(reference_latitude,reference_longitude,reference_altitude); % Load the GPS class
+gps_object = GPS(base_station_coordinates(1),base_station_coordinates(2),base_station_coordinates(3)); % Load the GPS class
 
-
+LLA_coordinates = gps_object.ENU2WGSLLA(ENU_coordinates);
 
 %Calculate percentage
 percent = fcn_INTERNAL_calculatePercentage(maxValue,minValue,values);
 
 %convert to color:
-colors = fcn_INTERNAL_assignColor(color_map, percent);
+[colors,sizes] = fcn_INTERNAL_assignColor(color_map, percent, LLA_coordinates);
 
 
 %% Any debugging?
@@ -186,29 +186,59 @@ colors = fcn_INTERNAL_assignColor(color_map, percent);
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+f = figure(LLA_fig_num);
+
+h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
+h_parent =  get(h_geoplot,'Parent');
+set(h_parent);
 
 
-initial_points = ENU_coordinates;
-input_coordinates_type = "ENU";
-colors(length(colors)+1,1:3)=colors(length(colors),1:3);
-MarkerSize = [];
-fcn_PlotTestTrack_plotPointsAnywhere(...
-    initial_points, input_coordinates_type, base_station_coordinates,...
-    colors, MarkerSize, LLA_fig_num, ENU_fig_num);
+try
+    geobasemap satellite
+
+catch
+    geobasemap openstreetmap
+end
+geotickformat -dd
+
+set(f,"Tag", "1");
+
+maxLat = max(LLA_coordinates(:,1));
+minLat = min(LLA_coordinates(:,1));
+
+maxLong = max(LLA_coordinates(:,2));
+minLong = min(LLA_coordinates(:,2));
 
 
+geolimits("manual");
+geolimits([minLat maxLat], [minLong maxLong]);
+
+
+
+
+for i = 1:size(colors,1)
+    hold on;
+    if sizes(i)>1
+    input_coordinates_type = "LLA";
+    MarkerSize = [];
+    fcn_PlotTestTrack_plotPointsAnywhere(...
+        reshape(colors(i,2:sizes(i),1:3),sizes(i)-1,3), input_coordinates_type, base_station_coordinates,...
+        reshape(colors(i,1,1:3),1,3), MarkerSize, LLA_fig_num, ENU_fig_num);
+    end
+    
+end
+hold off;
 figure(LLA_fig_num);
 colormap(color_map);
 c = colorbar('Ticks',[0:.1:1],...
          'TickLabels',{linspace(minValue,maxValue,11)});
-c.Label.String = 'Speed (mph)';
 
 
 figure(ENU_fig_num);
 colormap(color_map);
 c = colorbar('Ticks',[0:.1:1],...
          'TickLabels',{linspace(minValue,maxValue,11)});
-c.Label.String = 'Speed (mph)';
+
 
 
 
@@ -245,12 +275,13 @@ end
 
 %% fcn_INTERNAL_assignColor
 
-function color = fcn_INTERNAL_assignColor(color_map, percentages)
-    c = color_map;
-    
+function [color, sizes] = fcn_INTERNAL_assignColor(color_map, percentages,coordinates)
+    color(:,1,1:3) = color_map;
+    sizes = ones(size(color,1),1);
     for i = 1:length(percentages)
-
-        color(i,1:3) = c(max(round(size(c,1)*percentages(i)),1),1:3);
+        idx = max(round(size(color_map,1)*percentages(i)),1);
+        sizes(idx) = sizes(idx)+1;
+        color(idx,sizes(idx),1:3) = coordinates(i,1:3);
     end
 end
 
