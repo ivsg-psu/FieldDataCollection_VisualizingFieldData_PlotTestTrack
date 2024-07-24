@@ -40,6 +40,41 @@ ENU_fig_num = 102;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
+%% Basic example 2 - RSU range test at PA-288 with time
+
+csvFilename = 'PA_288_1.csv';
+
+reference_latitute = 40.8471670113384;
+reference_longitude = -80.26182223666619;
+reference_altitude = 327.428;
+
+base_station_coordinates = [reference_latitute, reference_longitude, reference_altitude];
+maxVelocity = [];
+minVelocity = [];
+plot_color = 'jet';
+LLA_fig_num = 101;
+ENU_fig_num = 102;
+
+SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
+        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
+
+%% Basic example 2 - RSU range test at Falling waters with time
+
+csvFilename = 'site2_3.csv';
+
+reference_latitute = 39.9882008;
+reference_longitude =  -79.4210206;
+reference_altitude = 327.428;
+
+base_station_coordinates = [reference_latitute, reference_longitude, reference_altitude];
+maxVelocity = [];
+minVelocity = [];
+plot_color = 'jet';
+LLA_fig_num = 301;
+ENU_fig_num = 302;
+
+SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
+        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 %% Test Track
 csvFilename = 'Test Track1.csv'; % Path to your CSV file
 

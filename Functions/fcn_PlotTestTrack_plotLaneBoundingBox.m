@@ -52,7 +52,7 @@ function [LLA_leftLane, LLA_rightLane, LLA_centerLane] = fcn_PlotTestTrack_plotL
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_PlotTestTrack_laneBoundingBox.m
+%       script_test_fcn_PlotTestTrack_plotLaneBoundingBox.m
 %
 % This function was written on 2024_07_18 by Joseph Baker
 % --Start to write the function 

@@ -190,11 +190,13 @@ delta_station = [0; sum(diff(ENU_coordinates_noUnique).^2,2).^0.5];
 speed = [0; delta_station]/apparent_delta_t;
 
 figure(557);
-plot(speed(3000:end));
+plot(speed(3200:end));
+title('Speed in m/s');
 
-
+inferred_time_index_secs = inferred_time_index/10;
 figure(2727)
-plot(inferred_time_index(1:3000), apparent_delay(1:3000),'k.');
+plot(inferred_time_index_secs(1:3000), apparent_delay(1:3000),'k.');
+title('Plot of delay in BSM messages vs time in secs');
 
 % Find unique rows based on the first two columns
 [~, uniqueIdx] = unique(LocationandTimeOBU(:, 1:2), 'rows', 'stable');
@@ -235,7 +237,7 @@ SpeedofAV_mps(rowsToDelete, :) = [];
 
 SpeedofAV_mps_cutshort = SpeedofAV_mps(10:end-10,:);
 % Find the indices of rows with any element equal to zero
-rowsToDeleteforzeros = any(SpeedofAV_mps_cutshort < 0.45, 2); % the mph should not go to zero once the vehicle has started
+rowsToDeleteforzeros = any(SpeedofAV_mps_cutshort < 0.005, 2); % the mph should not go to zero once the vehicle has started
 
 % Delete those rows from the matrix
 SpeedofAV_mps_cutshort(rowsToDeleteforzeros, :) = [];
@@ -281,6 +283,10 @@ final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshor
 figure (fig_num); % Create a figure, % TO DO: optional input fig_num
 clf;
 plot(final_StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
+figure(fig_num+5);
+plot(smoothdata(final_StationCoordinates(:,1),'movmedian',10),AVSpeed, "Color",plot_color,"Marker",".");
+%plot(smoothdata(SpeedofAV,'movmedian',10))
+
 title('Station vs Speed plot');
 xlabel('Station Coordinates in m');
 ylabel('Speed in mph');

@@ -138,13 +138,15 @@ catch
     geobasemap openstreetmap;
 end
 hold on;
+geotickformat -dd;
 
 % Plot the circle generated from RSU data on the geoplot
 theta = linspace(0, 2*pi, 100); % Generate theta values
 radius_in_degrees = radius / 111000; % Convert radius from meters to degrees
 circle_lat = lla_coords(1) + radius_in_degrees * cos(theta); % Calculate latitude values
 circle_lon = lla_coords(2) + radius_in_degrees * sin(theta) ./ cosd(lla_coords(1)); % Calculate longitude values
-geoplot(circle_lat, circle_lon, 'Color', plot_color, 'LineWidth', 1.5);
+geoplot(circle_lat, circle_lon, 'Color', plot_color, 'LineWidth', 0.5);
+%legend('RSU Location', 'Expected Range of RSU');
 
 % Plot the RSU coordinates on the ENU plot
 hold off;
@@ -158,4 +160,6 @@ hold off;
 xlabel('East (m)');
 ylabel('North (m)');
 axis equal;
+%legend('RSU Location', 'Expected Range of RSU','OBU Location when BSM was sent', 'Start of test location','End of test location');
+
 end

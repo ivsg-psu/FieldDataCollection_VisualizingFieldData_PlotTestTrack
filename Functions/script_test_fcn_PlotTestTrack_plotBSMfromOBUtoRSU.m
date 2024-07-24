@@ -378,3 +378,183 @@ radius = 1000;
 plot_color = [0 1 1];
 MarkerSize = 10;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+
+%% PPT figure Pittsburg
+
+% Pittsburg Stattion Coordinates
+reference_latitute = 40.44181017;
+reference_longitude = -79.76090840;
+reference_altitude = 327.428;
+
+rsu_coordinates_lla = [40.43073, -79.87261, 0];
+
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+radius = 1000;
+
+plot_color = [1 1 0];
+MarkerSize = [];
+fig_num = 124;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename_one = 'PittsburgTestStartMiddlePart1.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color_one = [1 0 1];
+fig_num = 124;
+[LLA_BSM_coordinates_one, ENU_BSM_coordinates_onw, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename_one, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color_one,fig_num);
+legend('RSU Location', 'Expected Range of RSU','OBU Location when BSM was sent', 'Start of test location','End of test location');
+
+%% PPT figure PA-288
+
+
+% Pittsburg Stattion Coordinates
+reference_latitute = 40.44181017;
+reference_longitude = -79.76090840;
+reference_altitude = 327.428;
+
+rsu_coordinates_lla = [40.84673063449941, -80.25869681168975, 0];
+
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+radius = 1000;
+
+plot_color = [1 1 0];
+MarkerSize = [];
+fig_num = 225;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename_one = 'PA_288_4_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color_one = [1 0 1];
+[LLA_BSM_coordinates_one, ENU_BSM_coordinates_onw, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename_one, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color_one,fig_num);
+legend('RSU Location', 'Expected Range of RSU','OBU Location when BSM was sent', 'Start of test location','End of test location');
+
+%% PPT figure Falling Waters
+
+% Pittsburg Stattion Coordinates
+reference_latitute = 40.44181017;
+reference_longitude = -79.76090840;
+reference_altitude = 327.428;
+
+rsu_coordinates_lla = [39.9882008, -79.4210206, 0];
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+radius = 1000;
+
+plot_color = [1 1 0];
+MarkerSize = [];
+fig_num = 325;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename_one = 'site2_3_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color_one = [1 0 1];
+[LLA_BSM_coordinates_one, ENU_BSM_coordinates_onw, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename_one, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color_one,fig_num);
+%legend('RSU Location', 'Expected Range of RSU','OBU Location when BSM was sent', 'Start of test location','End of test location');
+
+%% PPT Test Track 3 locations
+
+% The true location of the track base station is [40.86368573°, -77.83592832°, 344.189 m].
+reference_latitude = 40.86368573;
+reference_longitude = -77.83592832;
+reference_altitude = 344.189;
+
+% RSU at Pendulum test
+
+rsu_coordinates_lla = [40.864860, -77.830381, 0];
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+radius = 1000;
+
+plot_color = [1 1 0];
+MarkerSize = [];
+fig_num = 325;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename_one = 'Pendulum50ft.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color_one ='y';
+[LLA_BSM_coordinates_one, ENU_BSM_coordinates_onw, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename_one, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color_one,fig_num);
+
+% The true location of the track base station is [40.86368573°, -77.83592832°, 344.189 m].
+reference_latitude = 40.86368573;
+reference_longitude = -77.83592832;
+reference_altitude = 344.189;
+
+% RSU at End Bridge
+
+rsu_coordinates_lla = [40.864134, -77.837205, 0];
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+radius = 1000;
+
+plot_color = [0 1 1];
+MarkerSize = [];
+fig_num = 325;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename_one = 'end bridge.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color_one ='c';
+[LLA_BSM_coordinates_one, ENU_BSM_coordinates_onw, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename_one, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color_one,fig_num);
+
+% RSU at Loading Dock
+
+rsu_coordinates_lla = [40.863140, -77.834939, 0];
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+radius = 1000;
+
+plot_color = [1 0 1];
+MarkerSize = [];
+fig_num = 325;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename_one = '50ft.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+plot_color_one ='m';
+[LLA_BSM_coordinates_one, ENU_BSM_coordinates_onw, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename_one, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,plot_color_one,fig_num);
+legend('RSU at Pendulum 50ft', 'RSU Range at Pendulum','Plot of BSMs for Pendulum RSU',...
+    'RSU at End Bridge 20ft', 'RSU Range at End Bridge','Plot of BSMs for End Bridge RSU',...
+    'RSU at Loading Dock 50ft', 'RSU Range at Loading Dock','Plot of BSMs for Loading Dock RSU');
+
