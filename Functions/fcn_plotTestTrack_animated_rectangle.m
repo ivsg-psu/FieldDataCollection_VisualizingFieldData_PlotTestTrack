@@ -100,20 +100,36 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
 %  |_|  |_|\__,_|_|_| |_|
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% read data off the csv file as a table
+LLAandTime = readtable(csvFile,"ReadRowNames",false); %#ok<*CSVRD>
+
+% assigning columns
+LatitudeofAV = LLAandTime(:,1);
+LatitudeofAV = LatitudeofAV{:,:};
+
+LongitudeofAV = LLAandTime(:,2);
+LongitudeofAV = LongitudeofAV{:,:};
+
+AltitudeofAV = LLAandTime(:,3);
+AltitudeofAV = AltitudeofAV{:,:};
+
+TimeDiff= LLAandTime(:,4);
+TimeDiff = TimeDiff{:,:};
     
-    % Read the CSV file
-    data = readmatrix(csvFile);
-    
+time_in_seconds = seconds(TimeDiff);
+
+
+
     % Check if the input matrix has four columns
-    if size(data, 2) ~= 4
+    if size(LLAandTime, 2) ~= 4
         error('The CSV file must contain exactly four columns: latitude, longitude, elevation, and time.');
     end
     
     % Extract latitude, longitude, elevation, and time values
-    lat = data(:, 1) / 10000000;
-    lon = data(:, 2) / 10000000;
-    elv = data(:, 3);
-    time = data(:, 4);
+    lat = LatitudeofAV/10000000;
+    lon = LongitudeofAV/10000000;
+    elv = AltitudeofAV/10;
+   
     
     % Initialize plot
     figure;
@@ -152,7 +168,7 @@ function fcn_plotTestTrack_animated_rectangle(csvFile, car_width, car_length, ba
         
         % Pause to simulate real-time plotting
         if i > 1
-            pause_duration = (time(i) - time(i-1));
+            pause_duration = (time_in_seconds(i) - time_in_seconds(i-1));
             pause(pause_duration);  % Pause for the calculated duration
         end
     end
@@ -185,3 +201,41 @@ end
         lat_rot = coords(1, :) + center_lat;
         lon_rot = coords(2, :) + center_lon;
     end
+    
+%     function [time_in_seconds] = convertTimeToSeconds(time_column)
+%         % Initialize an array to hold the converted time values in seconds
+%         time_in_seconds = zeros(length(time_column), 1);
+%         
+%         % Loop through each row in the table
+%         for i = 1:length(time_column)
+%             % Extract the time string
+%             time_str = num2str(time_column(i));
+%             
+%             % Split the time string into minutes and seconds
+%             parts = split(time_str, ':');
+%             
+%             % Check if parts contains two elements
+%             if length(parts) ~= 2
+%                 error('Time string does not contain minutes and seconds in the expected format.');
+%             end
+%      
+%             minutes = str2double(parts{1});
+%             
+%             % Split the seconds part into whole seconds and fractional seconds
+%             seconds_parts = split(parts{2}, '.');
+%             
+%             % Check if seconds_parts contains two elements
+%             if length(seconds_parts) ~= 2
+%                 error('Seconds part does not contain both whole and fractional seconds.');
+%             end
+%             
+%             seconds = str2double(seconds_parts{1});
+%             fractions = str2double(['0.' seconds_parts{2}]);
+%             
+%             % Convert the time to seconds
+%             total_seconds = minutes * 60 + seconds + fractions;
+%             
+%             % Store the result in the array
+%             time_in_seconds(i) = total_seconds;
+%         end
+%     end

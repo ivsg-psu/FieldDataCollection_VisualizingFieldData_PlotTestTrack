@@ -175,10 +175,30 @@ AltitudeofAV = AltitudeofAV{:,:};
 TimeDiff= LLAandTime(:,4);
 TimeDiff = TimeDiff{:,:};
 
-LocationandTimeOBU = [LatitudeofAV LongitudeofAV AltitudeofAV];
+LocationandTimeOBU = [LatitudeofAV/10000000 LongitudeofAV/10000000 AltitudeofAV/10000000];
+
+ENU_coordinates_noUnique = gps_object.WGSLLA2ENU(LocationandTimeOBU(:,1),LocationandTimeOBU(:,2),LocationandTimeOBU(:,3),baseLat,baseLon,baseAlt);
+
+time_in_sec = seconds(TimeDiff);
+time_in_sec = time_in_sec - time_in_sec(1,:);
+apparent_delta_t = 0.1;
+time_index = round(time_in_sec/apparent_delta_t);
+inferred_time_index = (1:length(time_index))' - 1;
+apparent_delay = inferred_time_index - 10*time_in_sec;
+TimeandENU = [inferred_time_index time_index time_in_sec apparent_delay (ENU_coordinates_noUnique - ENU_coordinates_noUnique(1,:))];
+delta_station = [0; sum(diff(ENU_coordinates_noUnique).^2,2).^0.5];
+speed = [0; delta_station]/apparent_delta_t;
+
+figure(557);
+plot(speed(3000:end));
+
+
+figure(2727)
+plot(inferred_time_index(1:3000), apparent_delay(1:3000),'k.');
 
 % Find unique rows based on the first two columns
 [~, uniqueIdx] = unique(LocationandTimeOBU(:, 1:2), 'rows', 'stable');
+
 
 % Extract the unique rows from the original matrix
 uniqueRows = LocationandTimeOBU(uniqueIdx, :);

@@ -223,11 +223,8 @@ SpeedofAV = SpeedofAV_mps*2.23694;
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
 fcn_PlotTestTrack_plotPointsColorMap(ENU_BSM_coordinates,SpeedofAV, ...
     base_station_coordinates,maxVelocity,minVelocity,plot_color,LLA_fig_num,ENU_fig_num)
-
 
 figure(LLA_fig_num);
 
