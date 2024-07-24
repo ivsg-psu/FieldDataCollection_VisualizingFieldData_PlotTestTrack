@@ -322,19 +322,6 @@ fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, refer
 
 %%  Site 2 test 2
 
-csv_filename ='site2_2_noTime.csv';
-flag_plot_spokes = 0;
-flag_plot_hubs = 0;
-flag_plot_LLA = 1;
-flag_plot_ENU = 0;
-flag_plot_STH = 0;
-Plot_color = [0 0 1];
-fig_num = 666;
-
-[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
-       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
-      flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
-
 reference_latitute = 40.84673063449941;
 reference_longitude = -80.25869681168975;
 reference_altitude = 327.428;
@@ -345,25 +332,24 @@ gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
 rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
 
 radius = 1000;
-plot_color = [0 1 1];
+plot_color = [1 0 1];
 MarkerSize = 10;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
 
-
-%%  Site 2 test 3
-
-csv_filename ='site2_3_noTime.csv';
+csv_filename ='site2_2_noTime.csv';
 flag_plot_spokes = 0;
 flag_plot_hubs = 0;
 flag_plot_LLA = 1;
 flag_plot_ENU = 0;
 flag_plot_STH = 0;
-Plot_color = [0 0 1];
-fig_num = 777;
+Plot_color = [1 0 1];
+fig_num = 666;
 
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+%%  Site 2 test 3
 
 reference_latitute = 40.84673063449941;
 reference_longitude = -80.25869681168975;
@@ -375,10 +361,26 @@ gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
 rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
 
 radius = 1000;
-plot_color = [0 1 1];
+plot_color =[0 1 1];
 MarkerSize = 10;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
 
+csv_filename ='site2_3_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+Plot_color = [0 1 1];
+fig_num = 666;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+
+
+legend( 'Falling Water Site 1 RSU location', 'Falling Water Site 1 RSU Range','Falling water Site 1 BSM locations', 'Falling Water Site 2 RSU location', 'Falling Water Site 2 RSU Range','Falling water Site 2 BSM locations');
 
 %% PPT figure Pittsburg
 
@@ -558,3 +560,65 @@ legend('RSU at Pendulum 50ft', 'RSU Range at Pendulum','Plot of BSMs for Pendulu
     'RSU at End Bridge 20ft', 'RSU Range at End Bridge','Plot of BSMs for End Bridge RSU',...
     'RSU at Loading Dock 50ft', 'RSU Range at Loading Dock','Plot of BSMs for Loading Dock RSU');
 
+%% PPT Fallwing Waters both sites
+
+% site 2 test 2
+reference_latitute = 40.84673063449941;
+reference_longitude = -80.25869681168975;
+reference_altitude = 327.428;
+
+rsu_coordinates_lla = [39.9952318, -79.4455219, 0];
+
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+radius = 1000;
+plot_color = [1 0 1];
+MarkerSize = 10;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename ='site2_2_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+Plot_color = [1 0 1];
+fig_num = 666;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+%  Site 2 test 3
+
+reference_latitute = 40.84673063449941;
+reference_longitude = -80.25869681168975;
+reference_altitude = 327.428;
+
+rsu_coordinates_lla = [39.9882008, -79.4210206, 0];
+
+gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+radius = 1000;
+plot_color =[0 1 1];
+MarkerSize = 10;
+fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
+
+csv_filename ='site2_3_noTime.csv';
+flag_plot_spokes = 0;
+flag_plot_hubs = 0;
+flag_plot_LLA = 1;
+flag_plot_ENU = 0;
+flag_plot_STH = 0;
+Plot_color = [0 1 1];
+fig_num = 666;
+
+[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
+      flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+
+
+legend( 'Falling Water Site 1 RSU location', 'Falling Water Site 1 RSU Range','Falling water Site 1 BSM locations', 'Falling Water Site 2 RSU location', 'Falling Water Site 2 RSU Range','Falling water Site 2 BSM locations');
