@@ -190,44 +190,43 @@ delta_station = [0; sum(diff(ENU_coordinates_noUnique).^2,2).^0.5];
 speed = [0; delta_station]/apparent_delta_t;
 
 figure(557);
-plot(speed(3200:end));
-title('Speed in m/s');
+speed_milesperhour = speed*2.23694;
+plot(speed_milesperhour(3200:end));
+title('Speed in mph');
 
 inferred_time_index_secs = inferred_time_index/10;
 figure(2727)
 plot(inferred_time_index_secs(1:3000), apparent_delay(1:3000),'k.');
 title('Plot of delay in BSM messages vs time in secs');
 
-% Find unique rows based on the first two columns
-[~, uniqueIdx] = unique(LocationandTimeOBU(:, 1:2), 'rows', 'stable');
-
-
-% Extract the unique rows from the original matrix
-uniqueRows = LocationandTimeOBU(uniqueIdx, :);
-
-% Extract latitude, longitude, elevation, and time values, here we get time
-% as NaNs
-lat = uniqueRows(:,1)/10000000;
-lon = uniqueRows(:,2)/10000000;
-elv = uniqueRows(:,3)/10000000;
-time = TimeDiff(uniqueIdx, :);
-
-% convert LLA to ENU
-ENU_coordinates = gps_object.WGSLLA2ENU(lat,lon,elv,baseLat,baseLon,baseAlt);
+% % Find unique rows based on the first two columns
+% [~, uniqueIdx] = unique(LocationandTimeOBU(:, 1:2), 'rows', 'stable');
+% 
+% 
+% % Extract the unique rows from the original matrix
+% uniqueRows = LocationandTimeOBU(uniqueIdx, :);
+% 
+% % Extract latitude, longitude, elevation, and time values, here we get time
+% % as NaNs
+% lat = uniqueRows(:,1)/10000000;
+% lon = uniqueRows(:,2)/10000000;
+% elv = uniqueRows(:,3)/10000000;
+% time = TimeDiff(uniqueIdx, :);
+% 
+% % convert LLA to ENU
+% ENU_coordinates = gps_object.WGSLLA2ENU(lat,lon,elv,baseLat,baseLon,baseAlt);
 
 % get the speed based on the X,Y and timeinterval
 % get speed
-NumLength = length(ENU_coordinates)-1;
+NumLength = length(ENU_coordinates_noUnique)-1;
+SpeedofAV_mps = zeros(NumLength+1,1);
 for ith_coordinate = 1:NumLength
-    point1 = ENU_coordinates(ith_coordinate,1:2);
-    point2 = ENU_coordinates(ith_coordinate+1,1:2);
-    timeatpt1 = time(ith_coordinate,:);
-    timeatpt2 = time(ith_coordinate+1,:);
-    SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
+    point1 = ENU_coordinates_noUnique(ith_coordinate,1:2);
+    point2 = ENU_coordinates_noUnique(ith_coordinate+1,1:2);
+    timeatpt1 = inferred_time_index(ith_coordinate,:);
+    timeatpt2 = inferred_time_index(ith_coordinate+1,:);
+    SpeedofAV_mps(ith_coordinate,1) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
 end
-
-% correct orientation of matrix
-SpeedofAV_mps = SpeedofAV_mps';
 
 % Find the indices of rows with any element above 50
 rowsToDelete = any(SpeedofAV_mps > 25, 2); % the mph should not go beyond 50
@@ -245,23 +244,26 @@ SpeedofAV_mps_cutshort(rowsToDeleteforzeros, :) = [];
 final_SpeedofAV_mps = [SpeedofAV_mps(1:10); SpeedofAV_mps_cutshort; SpeedofAV_mps(end-10:end)];
 
 % add a last point to make the arrays of equal sizes
-final_SpeedofAV_mps(end+1) = final_SpeedofAV_mps(end);
+%final_SpeedofAV_mps(end+1) = final_SpeedofAV_mps(end);
 
 % convert speed from m/s tp mph 
 AVSpeed = final_SpeedofAV_mps*2.23694;
 
 % calculate station coordiantes
-NumLength = length(ENU_coordinates)-1;
+NumLength = length(ENU_coordinates_noUnique)-1;
 StationCoordinates  = zeros(NumLength+1,1);
+distance_between_SC = zeros(NumLength+1,1);
 for ith_coordinate = 1:NumLength
-    point1 = ENU_coordinates(ith_coordinate,1:2);
-    point2 = ENU_coordinates(ith_coordinate+1,1:2);
+    point1 = ENU_coordinates_noUnique(ith_coordinate,1:2);
+    point2 = ENU_coordinates_noUnique(ith_coordinate+1,1:2);
     distance = norm(point2 - point1);
     StationCoordinates(ith_coordinate+1,1) = StationCoordinates(ith_coordinate,1) +  distance;
+    distance_between_SC(ith_coordinate+1,1) = StationCoordinates(ith_coordinate+1,1)-StationCoordinates(ith_coordinate,1);
 end
 
-StationCoordinates(rowsToDelete, :) = [];
+StationCoordinates(distance_between_SC > 2) = NaN;
 
+StationCoordinates(rowsToDelete, :) = [];
 StationCoordinates_cutshort = StationCoordinates(10:end-10);
 StationCoordinates_cutshort(rowsToDeleteforzeros, :) = [];
 final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshort; StationCoordinates(end-10:end)];
@@ -283,11 +285,14 @@ final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshor
 figure (fig_num); % Create a figure, % TO DO: optional input fig_num
 clf;
 plot(final_StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
-figure(fig_num+5);
-plot(smoothdata(final_StationCoordinates(:,1),'movmedian',10),AVSpeed, "Color",plot_color,"Marker",".");
-%plot(smoothdata(SpeedofAV,'movmedian',10))
-
 title('Station vs Speed plot');
+xlabel('Station Coordinates in m');
+ylabel('Speed in mph');
+
+figure(fig_num+5);
+clf;
+plot(smoothdata(final_StationCoordinates(:,1),'movmedian',30),AVSpeed, "Color",plot_color,"Marker",".");
+title('Station vs Speed plot smooth');
 xlabel('Station Coordinates in m');
 ylabel('Speed in mph');
 
@@ -384,6 +389,6 @@ function speed = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2)
     timeInterval = timeatpt2-timeatpt1;
 
     % Calculate the speed
-    time_interval_sec = seconds(timeInterval);
-    speed = distance / time_interval_sec;
+    %time_interval_sec = seconds(timeInterval);
+    speed = distance / timeInterval;
 end
