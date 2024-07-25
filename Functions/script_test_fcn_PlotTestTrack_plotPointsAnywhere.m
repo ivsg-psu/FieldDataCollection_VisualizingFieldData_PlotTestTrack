@@ -128,4 +128,47 @@ ENU_fig_num = 401;
 assert(length(LLA_coordinates) == length(ENU_coordinates))
 
 
+% FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
+initial_points =  [
+40.8637701, -77.8363725, 0
+]; % RSU location in State College
+
+input_coordinates_type = "LLA";
+
+% base station in State College
+reference_latitude_state = 40.8637;
+reference_longitude_state = -77.8359;
+reference_altitude_state = 344.189;
+base_station_coordinates = [reference_latitude_state, reference_longitude_state, reference_altitude_state];
+plot_color = [1 1 0];
+MarkerSize = 20;
+LLA_fig_num = 123;
+ENU_fig_num = 456;
+
+[~, ~]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+    initial_points, input_coordinates_type, base_station_coordinates,...
+    plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
+
+%% Basic example 5 - input  LLA coordinates and plot points in both LLA and ENU (specify optional inputs)
+
+% FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
+initial_points =  [
+40.8467098, -80.2589062, 0
+]; % RSU location in pittsburg
+
+input_coordinates_type = "LLA";
+
+% base station in pittsburg
+reference_latitude_pitts = 40.44181017;
+reference_longitude_pitts = -79.76090840;
+reference_altitude_pitts = 327.428;
+base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts, reference_altitude_pitts];
+plot_color = [1 1 0];
+MarkerSize = 20;
+LLA_fig_num = 123;
+ENU_fig_num = 456;
+
+[LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+    initial_points, input_coordinates_type, base_station_coordinates,...
+    plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
 

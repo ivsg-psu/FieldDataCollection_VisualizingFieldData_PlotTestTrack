@@ -209,6 +209,17 @@ end
 SpeedofAV = SpeedofAV_mps*2.23694;
 
 
+%SpeedofAV = smoothdata(SpeedofAV,'movmedian',10)
+
+figure;
+plot(SpeedofAV)
+title('Speed of AV in mph');
+figure;
+plot(smoothdata(SpeedofAV,'movmedian',10))
+title('Speed of AV in mph after filtering and smoothing');
+
+
+
 
 
 %% Any debugging?
