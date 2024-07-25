@@ -154,7 +154,7 @@ lane_color = [1 0 1]; % default
 if 9 <= nargin
     temp = varargin{8};
     if ~isempty(temp)
-        AV_color = temp;
+        lane_color = temp;
     end
 end
 

@@ -6,7 +6,6 @@
 % 2024_07_15
 % -- first write of the code
 
-close all;
 
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -34,6 +33,9 @@ fig_num = [];
 
 [AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 
+assert(length(AVSpeed) == 22)
+assert(length(StationCoordinates) == 763)
+
 % add median filter to get rid of spikes
 % plot NaNs for station coordinates > 5m apart
 %% Basic example 2 - RSU range test at Pittsburg with time
@@ -49,6 +51,7 @@ fig_num = [];
 [AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 
 
+
 %% Basic example 3 - RSU range test at PA_288 with time
 
 csvFile = 'PA_288_2.csv';
@@ -60,3 +63,4 @@ plot_color = [];
 fig_num = [];
 
 [AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
+

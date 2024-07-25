@@ -6,8 +6,7 @@
 %      -- first write of the code
 
 
-close all
-clc
+
 
 %% Basic test case - no Nans
 test_data = rand(10,2);

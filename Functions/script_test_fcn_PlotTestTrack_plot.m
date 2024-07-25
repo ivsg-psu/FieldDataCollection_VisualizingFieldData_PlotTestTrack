@@ -6,7 +6,7 @@
 % 2023_03_25
 % -- first write of the code
 
-close all;
+
 
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -43,7 +43,7 @@ Trace_coordinates = 1.0e+02 * [
 ];
 
 input_coordinates_type = "ENU";
-[~, ~, ~] = fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
 
 %% Basic example 2 - input LLA coordinates and plot a trace in only LLA coordinates
 % FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
@@ -62,7 +62,7 @@ Trace_coordinates = 1.0e+02 *[
 ];
 
 input_coordinates_type = "LLA";
-[LLA_trace, ENU_trace, STH_trace] = fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
 
 %% Basic example 3 - input STH coordinates and plot a trace in only LLA coordinates
 %
@@ -79,7 +79,7 @@ Trace_coordinates = 1.0e+02 * [
     -1.142946654037681  -1.337823833081837
     ];
 input_coordinates_type = "STH";
-[LLA_trace, ENU_trace, STH_trace] = fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
 
 %% Basic example 4 - input ENU coordinates and plot a trace in only ENU
 

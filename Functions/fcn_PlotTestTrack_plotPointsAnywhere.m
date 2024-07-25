@@ -173,7 +173,7 @@ if input_coordinates_type == "LLA"
     % get ENU
     ENU_data_with_nan = [];
     [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-        fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,initial_points);
+        fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,initial_points,base_station_coordinates);
 
     ENU_coordinates = ENU_positions_cell_array{1};
 
@@ -183,7 +183,7 @@ elseif input_coordinates_type == "ENU"
     % get LLA
     LLA_data_with_nan = [];
     [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-        fcn_INTERNAL_prepDataForOutput(initial_points,LLA_data_with_nan);
+        fcn_INTERNAL_prepDataForOutput(initial_points,LLA_data_with_nan,base_station_coordinates);
 
     LLA_coordinates = LLA_positions_cell_array{1};
 
@@ -239,6 +239,7 @@ if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
         hold on
         f = figure(LLA_fig_num);
         if f.Tag ~= "1"
+            hold off
             h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
             h_parent =  get(h_geoplot,'Parent');
             set(h_parent);
@@ -252,7 +253,7 @@ if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
             geotickformat -dd
             end
             f.Tag = "1"
-        hold off
+        
         hold on
     end
 
@@ -289,16 +290,14 @@ end % Ends fcn_INTERNAL_plotSingleTrace
 
 %% fcn_INTERNAL_prepDataForOutput
 function [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-    fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,LLA_data_with_nan)
+    fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,LLA_data_with_nan,base_station_coordinates)
 % This function breaks data into sub-arrays if separated by NaN, and as
 % well fills in ENU data if this is empty via LLA data, or vice versa
 
 % Prep for GPS conversions
 % The true location of the track base station is [40.86368573°, -77.83592832°, 344.189 m].
-reference_latitude = 40.86368573;
-reference_longitude = -77.83592832;
-reference_altitude = 344.189;
-gps_object = GPS(reference_latitude,reference_longitude,reference_altitude); % Load the GPS class
+
+gps_object = GPS(base_station_coordinates(1),base_station_coordinates(2),base_station_coordinates(3)); % Load the GPS class
 
 
 if isempty(ENU_data_with_nan) && isempty(LLA_data_with_nan)

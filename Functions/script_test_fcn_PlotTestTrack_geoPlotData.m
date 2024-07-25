@@ -7,7 +7,6 @@
 % 2023_06_07 
 % -- first write of the code
 
-close all;
 
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -44,7 +43,6 @@ fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
 % if the figure has data inside it, and if not, it will prepare the figure
 % the same way as a new figure.
 
-close all; % Force all figures to close (would like to just force our figure, but can't figure out how to do this)
 
 % Fill in some dummy data (East curve from scenario 1_1)
 

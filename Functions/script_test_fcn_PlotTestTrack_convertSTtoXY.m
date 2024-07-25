@@ -4,9 +4,7 @@
 % Revision history
 % 2023_07_11 - vbw5054@psu.edu
 
-%% Set up the workspace
-close all
-clc
+
 
 %% Basic example 1
 % very simple points : [2,2]
@@ -18,6 +16,7 @@ v_unit = v_bar/v_bar_magnitude;
 ENU_points = [2,2];
 fig_num = 1001;
 ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
+assert(length(ST_points)==2)
 % assert(abs(station- 2*2^0.5)<1E-10);
 % assert(isequal(transverse,0));
 % 
@@ -40,7 +39,7 @@ ENU_points = [2,2];
 fig_num = 1002;
 [station, transverse] = fcn_PlotTestTrack_getXYtoStationTransverse(ENU_points,v_unit,fig_num);
 assert(abs(station - 2)<1E-10);
-assert(abs(transverse + 2)<1E-10);
+assert(abs(transverse + 2)<1E-10);w
 
 %% Basic example 3
 % very simple points : [2,2]

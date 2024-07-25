@@ -10,7 +10,7 @@
 % -- fixed variable names to try to be consistent in use of "traces" rather
 % than "lanes" or "markers"
 
-close all;
+
 
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
