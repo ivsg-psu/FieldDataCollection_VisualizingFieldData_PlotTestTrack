@@ -6,7 +6,7 @@
 % 2024_06_02
 % -- first write of the code
 
-close all;
+
 
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,31 +25,27 @@ close all;
 %% Basic example 1 - RSU range test at the pendulum for 50ft
 
 csv_filename = 'Pendulum50ft.csv';
-flag_plot_spokes = 1;
-flag_plot_hubs = 1;
-flag_plot_LLA = 1;
-flag_plot_ENU = 0;
-flag_plot_STH = 0;
-plot_color = [];
-fig_num = 11;
+
 
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = ...
     fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
     csv_filename);
+
+assert(length(LLA_BSM_coordinates) == 2211)
+assert(length(ENU_BSM_coordinates) == 2211)
+assert(length(STH_BSM_coordinates) == 2211)
 %%  Basic example 2 - RSU range test at the bridge tower for 30ft
 
 csv_filename = 'Bridge20ft.csv';
-flag_plot_spokes = 1;
-flag_plot_hubs = 1;
-flag_plot_LLA = 1;
-flag_plot_ENU = 0;
-flag_plot_STH = 0;
-plot_color = [];
 fig_num = [];
 
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = ...
     fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
     csv_filename,fig_num);
+
+assert(length(LLA_BSM_coordinates) == 1343)
+assert(length(ENU_BSM_coordinates) == 1343)
+assert(length(STH_BSM_coordinates) == 1343)
 
 %%  Basic example 3 - RSU range test at the loading doack tower for 20ft, plot spokes and hubs
 
@@ -66,6 +62,10 @@ fig_num = 122;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
 
+assert(length(LLA_BSM_coordinates) == 1591)
+assert(length(ENU_BSM_coordinates) == 1591)
+assert(length(STH_BSM_coordinates) == 1591)
+
 %%  Basic example 4 - RSU range test at the loading doack tower for 20ft, do not plot spokes and hubs
 
 csv_filename ='PittsburgTestMiddle.csv';
@@ -81,6 +81,10 @@ fig_num = 123;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
 
+assert(length(LLA_BSM_coordinates) == 1270)
+assert(length(ENU_BSM_coordinates) == 1270)
+assert(length(STH_BSM_coordinates) == 1270)
+
 %% 5
 
 csv_filename_one = 'PittsburgTestStartMiddlePart1.csv';
@@ -94,12 +98,20 @@ plot_color_one = [1 0 0];
 plot_color_two = [1 1 0];
 fig_num = 124;
 figure(fig_num);
-[LLA_BSM_coordinates_one, ENU_BSM_coordinates_onw, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+[LLA_BSM_coordinates_one, ENU_BSM_coordinates_one, STH_BSM_coordinates_one]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename_one, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color_one,fig_num);
 [LLA_BSM_coordinates_two, ENU_BSM_coordinates_two, STH_BSM_coordinates_two]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename_two, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color_two,fig_num);
+
+assert(length(LLA_BSM_coordinates_one) == 1769)
+assert(length(ENU_BSM_coordinates_one) == 1769)
+assert(length(STH_BSM_coordinates_one) == 1769)
+
+assert(length(LLA_BSM_coordinates_two) == 1270)
+assert(length(ENU_BSM_coordinates_two) == 1270)
+assert(length(STH_BSM_coordinates_two) == 1270)
 
 %%  Basic example 6 - RSU range test at Pittsburg with time 10/07/2024
 
@@ -116,6 +128,10 @@ fig_num = 444;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
 
+assert(length(LLA_BSM_coordinates) == 1458)
+assert(length(ENU_BSM_coordinates) == 1458)
+assert(length(STH_BSM_coordinates) == 1458)
+
 %%  Basic example 7 - RSU range test at Pittsburg with time 10/07/2024
 
 csv_filename ='Pittsburgh_1_(Ended_Early)_noTime.csv';
@@ -130,6 +146,10 @@ fig_num = 444;
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
+
+assert(length(LLA_BSM_coordinates) == 932)
+assert(length(ENU_BSM_coordinates) == 932)
+assert(length(STH_BSM_coordinates) == 932)
 
 %%  Basic example 8 - RSU range test at Pittsburg with time 10/07/2024
 
@@ -146,6 +166,10 @@ fig_num = 444;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,plot_color,fig_num);
 
+assert(length(LLA_BSM_coordinates) == 2281)
+assert(length(ENU_BSM_coordinates) == 2281)
+assert(length(STH_BSM_coordinates) == 2281)
+
 %%  Basic example 9 - RSU range test at Pittsburg with time 10/07/2024
 
 csv_filename ='Pittsburgh_2_11_07_2024_noTime.csv';
@@ -160,6 +184,10 @@ fig_num = 444;
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+assert(length(LLA_BSM_coordinates) == 5989)
+assert(length(ENU_BSM_coordinates) == 5989)
+assert(length(STH_BSM_coordinates) == 5989)
 
 reference_latitute = 40.44181017;
 reference_longitude = -79.76090840;
@@ -190,6 +218,10 @@ fig_num = 444;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
 
+assert(length(LLA_BSM_coordinates) == 1440)
+assert(length(ENU_BSM_coordinates) == 1440)
+assert(length(STH_BSM_coordinates) == 1440)
+
 reference_latitute = 40.8471670113384;
 reference_longitude = -80.26182223666619;
 reference_altitude = 327.428;
@@ -218,6 +250,10 @@ fig_num = 444;
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+assert(length(LLA_BSM_coordinates) == 640)
+assert(length(ENU_BSM_coordinates) == 640)
+assert(length(STH_BSM_coordinates) == 640)
 
 reference_latitute = 40.846818264181195;
 reference_longitude = -80.2619054293138;
@@ -248,6 +284,10 @@ fig_num = 245;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
 
+assert(length(LLA_BSM_coordinates) == 1742)
+assert(length(ENU_BSM_coordinates) == 1742)
+assert(length(STH_BSM_coordinates) == 1742)
+
 reference_latitute = 40.84673063449941;
 reference_longitude = -80.25869681168975;
 reference_altitude = 327.428;
@@ -277,40 +317,15 @@ fig_num = 446;
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
 
+assert(length(LLA_BSM_coordinates) == 1605)
+assert(length(ENU_BSM_coordinates) == 1605)
+assert(length(STH_BSM_coordinates) == 1605)
+
 reference_latitute = 40.84673063449941;
 reference_longitude = -80.25869681168975;
 reference_altitude = 327.428;
 
 rsu_coordinates_lla = [40.84673063449941 -80.25869681168975 0];
-
-gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
-rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
-
-radius = 1000;
-plot_color = [0 1 1];
-MarkerSize = 10;
-fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize, fig_num);
-
-%%  Site 2 test 1
-
-csv_filename ='site2_1_noTime.csv';
-flag_plot_spokes = 0;
-flag_plot_hubs = 0;
-flag_plot_LLA = 1;
-flag_plot_ENU = 0;
-flag_plot_STH = 0;
-Plot_color = [0 0 1];
-fig_num = 555;
-
-[LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
-       csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
-      flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
-
-reference_latitute = 40.84673063449941;
-reference_longitude = -80.25869681168975;
-reference_altitude = 327.428;
-
-rsu_coordinates_lla = [39.9952318 -79.4455219 0];
 
 gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
 rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
@@ -334,6 +349,10 @@ fig_num = 666;
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+assert(length(LLA_BSM_coordinates) == 688)
+assert(length(ENU_BSM_coordinates) == 688)
+assert(length(STH_BSM_coordinates) == 688)
 
 reference_latitute = 40.84673063449941;
 reference_longitude = -80.25869681168975;
@@ -364,6 +383,10 @@ fig_num = 777;
 [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
        csv_filename, flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
       flag_plot_ENU,flag_plot_STH,Plot_color,fig_num);
+
+assert(length(LLA_BSM_coordinates) == 752)
+assert(length(ENU_BSM_coordinates) == 752)
+assert(length(STH_BSM_coordinates) == 752)
 
 reference_latitute = 40.84673063449941;
 reference_longitude = -80.25869681168975;

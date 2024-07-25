@@ -6,7 +6,6 @@
 % 2023_08_15 
 % -- first write of the code
 
-close all;
 
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

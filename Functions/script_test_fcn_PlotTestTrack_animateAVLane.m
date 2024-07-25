@@ -17,9 +17,35 @@ car_length = 14;
 left_color = [];
 right_color = [];
 AV_color = [];
-[~, ~, ~, ~] ...
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
       baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+
+assert(length(ENU_LeftLaneX)== 743)
+assert(length(ENU_LeftLaneY)== 743)
+assert(length(ENU_RightLaneX)== 743)
+assert(length(ENU_RightLaneY)== 743)
+
+%% test 2
+csvFile = 'Test Track2.csv'; % Path to your CSV file
+
+baseLat = [];
+baseLon = [];
+baseAlt = []; 
+fig_num = [];
+car_width = 6; 
+car_length = 14;
+left_color = [];
+right_color = [];
+AV_color = [];
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+
+assert(length(ENU_LeftLaneX)== 679)
+assert(length(ENU_LeftLaneY)== 679)
+assert(length(ENU_RightLaneX)== 679)
+assert(length(ENU_RightLaneY)== 679)
 
 %% Pittsburg test 10/07/2024
 csvFile = 'Pittsburgh_1_(Ended_Early).csv'; % Path to your CSV file
@@ -38,9 +64,14 @@ right_color = [1 1 0];
 AV_color = [0 1 1];
 car_width = 6; 
 car_length = 14;
-[~, ~, ~, ~] ...
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
       baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+
+assert(length(ENU_LeftLaneX)== 270)
+assert(length(ENU_LeftLaneY)== 270)
+assert(length(ENU_RightLaneX)== 270)
+assert(length(ENU_RightLaneY)== 270)
 
 % add assertion here to check the length of the variable oputputs of the
 % function and make sur ethat the length is equal to the length of the LLA
@@ -62,9 +93,14 @@ right_color = [1 1 0];
 AV_color = [0 1 1];
 car_width = 6; 
 car_length = 14;
-[~, ~, ~, ~] ...
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
       baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+
+assert(length(ENU_LeftLaneX)== 440)
+assert(length(ENU_LeftLaneY)== 440)
+assert(length(ENU_RightLaneX)== 440)
+assert(length(ENU_RightLaneY)== 440)
 
 %% Pittsburg test 11/07/2024
 csvFile = 'Pittsburgh_2_11_07_2024.csv'; % Path to your CSV file
@@ -89,6 +125,11 @@ car_length = 14;
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
       baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+
+assert(length(ENU_LeftLaneX)== 552)
+assert(length(ENU_LeftLaneY)== 552)
+assert(length(ENU_RightLaneX)== 552)
+assert(length(ENU_RightLaneY)== 552)
 
 
 rsu_coordinates_lla = [40.43073, -79.87261 0];

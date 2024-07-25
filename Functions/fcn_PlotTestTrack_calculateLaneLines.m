@@ -189,8 +189,8 @@ ENU_LeftLaneX = LeftLaneX';
 ENU_LeftLaneY = LeftLaneY';
 ENU_RightLaneX = RightLaneX';
 ENU_RightLaneY = RightLaneY';
-ENU_LaneCenterX = ENU_coordinates(:,1);
-ENU_LaneCenterY = ENU_coordinates(:,2);
+ENU_LaneCenterX = ENU_coordinates(1:length(LeftLaneX),1);
+ENU_LaneCenterY = ENU_coordinates(1:length(LeftLaneX),2);
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _

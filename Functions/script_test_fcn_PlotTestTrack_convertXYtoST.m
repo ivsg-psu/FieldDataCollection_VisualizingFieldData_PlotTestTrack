@@ -4,9 +4,7 @@
 % Revision history
 % 2023_07_10 - vbw5054@psu.edu
 
-%% Set up the workspace
-close all
-clc
+
 
 % % calculation
 % MarkerCluster = fcn_PlotTestTrack_MarkerDataTemplate();
@@ -46,7 +44,7 @@ v_unit = v_bar/v_bar_magnitude;
 
 ENU_points = [2,2];
 fig_num = 1002;
-[ST_points(:,1), ST_points(:,2)] = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
+ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 assert(abs(ST_points(:,1) - 2)<1E-10);
 assert(abs(ST_points(:,2) + 2)<1E-10);
 
@@ -66,9 +64,9 @@ ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 Transform_point = [1  0]; % 90 degree line segment
 v_unit2 = fcn_PlotTestTrack_convertXYtoST(Transform_point,v_unit,fig_num);
 
-[X_recalc, Y_recalc] = fcn_PlotTestTrack_convertXYtoST(ST_points,v_unit2,fig_num);
-assert(isequal(X_recalc,2))
-assert(isequal(Y_recalc,2))
+points_recalc(:,:) = fcn_PlotTestTrack_convertXYtoST(ST_points,v_unit2,fig_num);
+assert(isequal(points_recalc(1,1),2))
+assert(isequal(points_recalc(1,2),2))
 
 
 %% Basic example 4
@@ -84,6 +82,8 @@ v_unit = v_bar/v_bar_magnitude;
 ENU_points = [2,2; 2 -1];
 ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 
+assert(length(ST_points) == 2)
+
 %% Basic example 5
 % very simple points : [2,2]
 fig_num = 1005;
@@ -96,13 +96,8 @@ v_unit = v_bar/v_bar_magnitude;
 ENU_points = [2,2; 2 -1];
 ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
 
-%% Basic example 6 
-% very simple points : [2,2]
-ENU_points = [2 2;4 4];
-fig_num = 1002;
-theta = 5;
-R = [cosd(theta) -sind(theta); sind(theta) cosd(theta)];
-v_unit = ENU_points*R;
-ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
+assert(length(ST_points) == 2)
+
+
 
 

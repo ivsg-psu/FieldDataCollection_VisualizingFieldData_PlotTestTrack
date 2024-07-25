@@ -260,6 +260,8 @@ else
         New_position(n) = Position;
     end
 end
+
+position = New_position;
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _

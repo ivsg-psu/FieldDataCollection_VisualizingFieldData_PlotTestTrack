@@ -7,7 +7,6 @@
 % 2023_07_20
 % -- first write of the code
 
-close all;
 
 %% Fill in data for testing
 % Load the first marker cluster - call it by name

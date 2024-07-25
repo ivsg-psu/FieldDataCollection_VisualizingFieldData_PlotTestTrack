@@ -6,8 +6,6 @@
 % 2023_07_08
 % -- first write of the code
 
-close all;
-
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -50,6 +48,8 @@ ENU_fig_num = [];
     initial_points, input_coordinates_type, base_station_coordinates,...
     plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
 
+assert(length(LLA_coordinates) == length(ENU_coordinates))
+
 %% Basic example 2 - input LLA coordinates and plot points in both LLA and ENU coordinates (do not specify any opyional inputs)
 
 
@@ -79,6 +79,8 @@ ENU_fig_num = [];
     initial_points, input_coordinates_type, base_station_coordinates,...
     plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
 
+assert(length(LLA_coordinates) == length(ENU_coordinates))
+
 %% Basic example 3 - input  LLA coordinates and plot points in both LLA and ENU (specify optional inputs)
 
 % FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
@@ -101,6 +103,29 @@ ENU_fig_num = 456;
 [LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
     initial_points, input_coordinates_type, base_station_coordinates,...
     plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
+
+assert(length(LLA_coordinates) == length(ENU_coordinates))
+
+%% Basic example 4 - input  ENU coordinates and plot points in both LLA and ENU
+
+% FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
+initial_points = 10* [-5:1:5;-5:1:5;-5:1:5]';
+
+input_coordinates_type = "ENU";
+reference_latitude_pitts = 40.44181017;
+reference_longitude_pitts = -79.76090840;
+reference_altitude_pitts = 327.428;
+base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts, reference_altitude_pitts];
+plot_color = [1 0 1];
+MarkerSize = [];
+LLA_fig_num = 400;
+ENU_fig_num = 401;
+
+[LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+    initial_points, input_coordinates_type, base_station_coordinates,...
+    plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
+
+assert(length(LLA_coordinates) == length(ENU_coordinates))
 
 
 
