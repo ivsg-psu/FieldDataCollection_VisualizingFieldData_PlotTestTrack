@@ -98,7 +98,6 @@ ENU_fig_num = 402;
 fcn_PlotTestTrack_plotPointsColorMap(...
         ENU_coordinates, values , base_station_coordinates, maxValue, minValue, plot_color, LLA_fig_num, ENU_fig_num);
 
-length(SpeedofAV);
 %% Basic example 5 - Random scatter of points over pittsburgh site
 
 

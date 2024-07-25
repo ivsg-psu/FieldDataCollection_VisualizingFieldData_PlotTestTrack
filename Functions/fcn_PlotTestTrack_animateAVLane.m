@@ -18,8 +18,8 @@ function [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY]...
 %                    longitude, altitude, and time of the location
 %                    at which the OBU sent out the BSM message to the RSU
 %                    that was in range. The code assumes latitude in first
-%                    column, longitude in second, altitude in third, and 
-%                    time in fourth. 
+%                    column, longitude in second, altitude in third, and
+%                    time in fourth.
 %       car_length: The length of car (The unit have to be in Feet)
 %
 %       car_width: The width of car (The unit have to be in Feet)
@@ -29,7 +29,7 @@ function [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY]...
 %
 %      baseLon: Longitude of the base location. Default is -77.8359.
 %
-%      baseAlt: Altitude of the base location. Default is []. 
+%      baseAlt: Altitude of the base location. Default is [].
 %
 %      left_color: color of the left lane boundary
 %
@@ -37,9 +37,13 @@ function [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY]...
 %
 %      AV_color: color of the AV
 %
+%      name_of_movfile: string that will be the name of the output
+%      animation file. If a string is not supplied, the video will not be
+%      saved
+%
 %      fig_num: figure number
 %
-%     
+%
 % OUTPUTS:
 %
 %      [LeftLaneX, LeftLaneY, RightLaneX, RightLaneY]: XY coordinates of
@@ -55,11 +59,11 @@ function [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY]...
 %       script_test_fcn_PlotTestTrack_animateAVLane.m
 %
 % This function was written on 2024_07_10 by Vaishnavi Wagh
-% --Start to write the function 
+% --Start to write the function
 % Questions or comments? vbw5054@psu.edu
 
 % Revision History
-% 2024_07_10 V. Wagh 
+% 2024_07_10 V. Wagh
 % -- started writing function from fcn_PlotTestTrack_LineWithBoundaryWithTime
 % by Jiabao Zhao, jpz5469@psu.edu
 % -- fixed animation issue of car and the rectangle direction on 2024_0_18
@@ -92,7 +96,7 @@ end
 
 if flag_check_inputs == 1
     % Are there the right number of inputs?
-    narginchk(3,10);
+    narginchk(3,11);
 
 end
 
@@ -123,7 +127,7 @@ if 6 <= nargin
     end
 end
 
-left_color = [0 0 1]; % deafult 
+left_color = [0 0 1]; % deafult
 if 7 <= nargin
     temp = varargin{4};
     if ~isempty(temp)
@@ -131,7 +135,7 @@ if 7 <= nargin
     end
 end
 
-right_color = [0 1 1]; % deafult 
+right_color = [0 1 1]; % deafult
 if 8 <= nargin
     temp = varargin{5};
     if ~isempty(temp)
@@ -139,7 +143,7 @@ if 8 <= nargin
     end
 end
 
-AV_color = [1 0 1]; % deafult 
+AV_color = [1 0 1]; % deafult
 if 9 <= nargin
     temp = varargin{6};
     if ~isempty(temp)
@@ -147,9 +151,17 @@ if 9 <= nargin
     end
 end
 
+name_of_movfile = ''; % default is to not save a mov file
+if 10 <= nargin
+    temp = varargin{7};
+    if ~isempty(temp)
+        name_of_movfile = temp;
+    end
+end
+
 % fig_num
 fig_num = 100; % Default
-if 10 <= nargin
+if 11 <= nargin
     temp = varargin{end};
     if ~isempty(temp)
         fig_num = temp;
@@ -176,12 +188,12 @@ end
 gps_object = GPS(baseLat,baseLon,baseAlt); % Load the GPS class
 
 % Read csv file
-LLAandTime = readmatrix(csvFile); % Read the CSV file 
+LLAandTime = readmatrix(csvFile); % Read the CSV file
 
 % Check CSV file
-   if size(LLAandTime, 2) ~= 4
+if size(LLAandTime, 2) ~= 4
     error('The CSV file must contain exactly four columns: latitude, longitude, elevation, and time.'); % Check if the input matrix has four columns
-   end
+end
 
 % Extract latitude, longitude, elevation, and time values, here we get time
 % as NaNs
@@ -244,9 +256,29 @@ ENU_RightLaneY = RightLaneY';
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% before opeaning up a figure, lets start to capture the frames for an
+% animation if the user has entered a name for the mov file
+
+if ~isempty(name_of_movfile)
+    % Define the number of frames for the video
+    numFrames = Num_length;
+
+    % Specify the folder where you want to save the video
+    outputFolder = 'C:\Users\vaish\Desktop\PSU\Research\VisualizingFieldData\FieldDataCollection_VisualizingFieldData_PlotTestTrack\Data'; % Replace with your desired path
+
+    % Create the full file path
+    outputFileName = fullfile(outputFolder, sprintf('%s',name_of_movfile'));
+
+    % Create a VideoWriter object
+    video = VideoWriter(outputFileName, 'MPEG-4'); % Use 'Uncompressed AVI' for uncompressed format
+    video.FrameRate = 30; % Set the frame rate
+
+    % Open the video writer object to start writing
+    open(video);
+
+end
 figure (fig_num); % Create a figure
 clf;
-
 
 % Plot the base station i.e the RSU in this case with the same colour as the AV.
 % This sets up the figure for
@@ -262,9 +294,8 @@ catch
 end
 geotickformat -dd;
 
-
 % plot original data i.e centerline and rectangle of car
-hold on
+hold on;
 h_center = geoplot(lat, lon, "Color",AV_color, "LineWidth", 3);
 h_left = geoplot(LLA_LeftLane(:, 1), LLA_LeftLane(:, 2), "Color",left_color, "LineWidth", 3);
 h_right = geoplot(LLA_RightLane(:, 1), LLA_RightLane(:, 2), "Color",right_color, "LineWidth", 3);
@@ -290,7 +321,7 @@ for ith_coordinate = 1:Num_length
     Vector = [lat(ith_coordinate+1)-lat(ith_coordinate), lon(ith_coordinate+1)-lon(ith_coordinate)];
     magnitude = sum(Vector.^2,2).^0.5;
     unitVtor = Vector./magnitude;
-    %Calculate the unit vector that is perpendicular to the direction of 
+    %Calculate the unit vector that is perpendicular to the direction of
     % the car
     perpVector = [unitVtor(2), -unitVtor(1)];
     scaled_perpVector = perpVector * (car_width_deg/2);
@@ -300,21 +331,40 @@ for ith_coordinate = 1:Num_length
     New_point_right = center + scaled_perpVector;
     New_point_front = center + unitVtor.*(car_length_deg/2);
     New_point_back = center - unitVtor.*(car_length_deg/2);
-    % Find the points of the four corners of the car 
+    % Find the points of the four corners of the car
     Left_bottom_corner = New_point_back - scaled_perpVector;
     Left_top_corner = New_point_front - scaled_perpVector;
     Right_bottom_corner = New_point_back + scaled_perpVector;
     Right_top_corner = New_point_front + scaled_perpVector;
-    %Coordination of the rectangle 
+    %Coordination of the rectangle
     x = [Left_bottom_corner(1),Right_bottom_corner(1),Right_top_corner(1),Left_top_corner(1),Left_bottom_corner(1)];
     y = [Left_bottom_corner(2),Right_bottom_corner(2),Right_top_corner(2),Left_top_corner(2),Left_bottom_corner(2)];
     set(h_rect,'XData',x,'YData',y)
     % Pause to control the speed of the animation
     pause(0.1);
+
+    if ~isempty(name_of_movfile)
+    % Get the current frame as an image
+    frame = getframe(gcf);
+
+    % Write the frame to the video
+    writeVideo(video, frame);
+    end
+
 end
+
 legend([h_center, h_left, h_right, h_rect], {'Center Lane', 'Left Lane', 'Right Lane', 'Car'}, 'Location', 'best');
 hold off;
 
+if ~isempty(name_of_movfile)
+    % Close the video writer object
+    close(video);
+
+    % Close the figure
+    close(gcf);
+
+    fprintf('Video saved as %s\n',name_of_movfile);
+end
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
@@ -347,7 +397,7 @@ magnitude_vector_to_calculate = sum(vector_to_calculate.^2,2).^0.5;
 % Compute the unit vector
 unit_vector = vector_to_calculate./magnitude_vector_to_calculate;
 
- if ~isnan(unit_vector)
+if ~isnan(unit_vector)
 
     % Find a vector perpendicular to the unit vector
     % Rotating 90 degrees clockwise: [x; y] -> [y; -x]
@@ -362,10 +412,10 @@ unit_vector = vector_to_calculate./magnitude_vector_to_calculate;
     % Output the coordinates of the new point
     X_new = new_point(1);
     Y_new = new_point(2);
- else
+else
     X_new = NaN;
     Y_new = NaN;
- end
+end
 
 end
 

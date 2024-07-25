@@ -5,7 +5,7 @@
 % This function was written on 2024_07_10 by Vaishnavi Wagh vbw5054@psu.edu
 
 
-%% test 1
+%% test 1 save the animation plot as a mov file
 csvFile = 'Test Track1.csv'; % Path to your CSV file
 
 baseLat = [];
@@ -17,16 +17,17 @@ car_length = 14;
 left_color = [];
 right_color = [];
 AV_color = [];
+name_of_movfile = 'TestTrack1';
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,fig_num);
 
 assert(length(ENU_LeftLaneX)== 743)
 assert(length(ENU_LeftLaneY)== 743)
 assert(length(ENU_RightLaneX)== 743)
 assert(length(ENU_RightLaneY)== 743)
 
-%% test 2
+%% test 2 % 
 csvFile = 'Test Track2.csv'; % Path to your CSV file
 
 baseLat = [];
@@ -38,9 +39,10 @@ car_length = 14;
 left_color = [];
 right_color = [];
 AV_color = [];
+name_of_movfile = [];
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,fig_num);
 
 assert(length(ENU_LeftLaneX)== 679)
 assert(length(ENU_LeftLaneY)== 679)
@@ -62,11 +64,12 @@ fig_num = 123;
 left_color = [1 0 0];
 right_color = [1 1 0];
 AV_color = [0 1 1];
+name_of_movfile = [];
 car_width = 6; 
 car_length = 14;
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,fig_num);
 
 assert(length(ENU_LeftLaneX)== 270)
 assert(length(ENU_LeftLaneY)== 270)
@@ -93,9 +96,10 @@ right_color = [1 1 0];
 AV_color = [0 1 1];
 car_width = 6; 
 car_length = 14;
+name_of_movfile = [];
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,fig_num);
 
 assert(length(ENU_LeftLaneX)== 440)
 assert(length(ENU_LeftLaneY)== 440)
@@ -122,9 +126,10 @@ right_color = [1 1 0];
 AV_color = [0 1 1];
 car_width = 6; 
 car_length = 14;
+name_of_movfile = [];
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,fig_num);
 
 assert(length(ENU_LeftLaneX)== 552)
 assert(length(ENU_LeftLaneY)== 552)
@@ -165,9 +170,10 @@ right_color = [1 1 0];
 AV_color = [0 1 1];
 car_width = 6; 
 car_length = 14;
+name_of_movfile = [];
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,fig_num);
 
 
 rsu_coordinates_lla = [40.43073, -79.87261 0];
@@ -206,9 +212,10 @@ right_color = [1 1 0];
 AV_color = [0 1 1];
 car_width = 6; 
 car_length = 14;
+name_of_movfile = [];
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
-      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,fig_num);
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,fig_num);
 
 
 rsu_coordinates_lla = [40.43073, -79.87261 0];
