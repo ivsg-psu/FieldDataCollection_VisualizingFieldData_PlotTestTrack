@@ -193,17 +193,80 @@ ENU_BSM_coordinates = ENU_positions_cell_array{1};
 Time_BSMs = LLAandTime(:,4);
 
 % get speed
+
+
+newPoints = [];
+newTimes = [];
+map = [];
+
+
 NumLength = length(ENU_BSM_coordinates)-1;
+for ith_coordinate = 2:NumLength
+    point1 = ENU_BSM_coordinates(ith_coordinate-1,1:2);
+    point2 = ENU_BSM_coordinates(ith_coordinate,1:2);
+    point3 = ENU_BSM_coordinates(ith_coordinate+1);
+    if point1 == point2
+        
+        %point2 = (point1+point3)/2
+
+        %ENU_BSM_coordinates(ith_coordinate+1,(1:2)) = point2(1:2)
+        
+    end
+    if ~(point1 == point2)
+        newPoints(size(newPoints,1)+1,:) = ENU_BSM_coordinates(ith_coordinate-1,:);
+        newTimes(length(newTimes)+1,:) = Time_BSMs(ith_coordinate-1,:);
+        map(length(map)+1,1) = ith_coordinate;
+        if(size(newPoints,1) ~= size(newTimes,1))
+            size(newPoints)
+        end
+    end
+end
+
+ENU_BSM_coordinates = newPoints;
+Time_BSMs = newTimes;
+
+NumLength = length(ENU_BSM_coordinates)-1;
+
+enuDiff(2:length(diff(ENU_BSM_coordinates(:,1)))+1,1) = sqrt(sum((diff(ENU_BSM_coordinates(:,1:2)).^2)'))';
+enuDiff(1) = 0
+enuDiff(length(a)+1) = 0;
+
+timeDiff(2:length(diff(Time_BSMs))+1,1) = diff(Time_BSMs);
+timeDiff(1) = 0;
+timeDiff(length(timeDiff)+1) = 0;
+
 for ith_coordinate = 1:NumLength
     point1 = ENU_BSM_coordinates(ith_coordinate,1:2);
     point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2);
     timeatpt1 = Time_BSMs(ith_coordinate,:);
     timeatpt2 = Time_BSMs(ith_coordinate+1,:);
-    if timeatpt2 == timeatpt1
-        timeatpt2 = timeatpt2+.2;
+    if(ith_coordinate == 174)
+        timeatpt1 = timeatpt1 - (timeDiff(174)-.1)
     end
-    SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
+
+    if(ith_coordinate == 586)
+        timeatpt1 = timeatpt1 - (timeDiff(586)-.1)
+    end
+    if abs(timeatpt2 -timeatpt1) < .1
+        timeatpt2 = timeatpt1+.1;
+    end
+    if ~(point1 == point2)
+        SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
+    end
 end
+
+ith_coordinate = 242
+troublePoints = ENU_BSM_coordinates(ith_coordinate-5:ith_coordinate+5, :);
+
+point1 = ENU_BSM_coordinates(ith_coordinate,1:2)
+    point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2)
+    timeatpt1 = Time_BSMs(ith_coordinate,:)
+    timeatpt2 = Time_BSMs(ith_coordinate+1,:)
+    if abs(timeatpt2 -timeatpt1) < .1
+        timeatpt2 = timeatpt1+.1
+    end
+
+        fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2) * 2.23694
 
 % convert speed from m/s tp mph 
 SpeedofAV = SpeedofAV_mps*2.23694;
@@ -211,12 +274,27 @@ SpeedofAV = SpeedofAV_mps*2.23694;
 
 %SpeedofAV = smoothdata(SpeedofAV,'movmedian',10)
 
+
+
 figure;
-plot(SpeedofAV)
+hold on
+plot(enuDiff);
+plot(timeDiff);
+hold off
+title("Enu Diff and Time Diff")
+ylim([-1,5]);
+figure;
+hold on
+plot(SpeedofAV);
+plot(a);
+plot(timeDiff);
+hold off
 title('Speed of AV in mph');
-figure;
-plot(smoothdata(SpeedofAV,'movmedian',10))
-title('Speed of AV in mph after filtering and smoothing');
+ylim([0,45]);
+%figure;
+%p = plot(smoothdata(SpeedofAV,'movmean',3));
+%ylim([0,45]);
+%title('Speed of AV in mph after filtering and smoothing');
 
 
 
@@ -302,7 +380,7 @@ end
 
 %% fcn_INTERNAL_totalSeconds
 
-function seconds = fcn_INTERNAL_totalSeconds(timeStr)
+function totalSeconds = fcn_INTERNAL_totalSeconds(timeStr)
     % Check if the string contains hours, minutes, and seconds or just minutes and seconds
     timeStr = string(timeStr);
     parts = split(timeStr, ':');
