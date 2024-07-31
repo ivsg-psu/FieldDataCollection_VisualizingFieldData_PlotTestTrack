@@ -94,6 +94,9 @@ if 3 <= nargin
     temp = varargin{1};
     if ~isempty(temp)
         base_station_coordinates = temp;
+        reference_latitude= base_station_coordinates(1);
+        reference_longitude= base_station_coordinates(2);
+        reference_altitude = base_station_coordinates(3);
     end
 end
 

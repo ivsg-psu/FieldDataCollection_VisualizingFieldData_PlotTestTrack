@@ -95,6 +95,9 @@ if 2 <= nargin
     temp = varargin{1};
     if ~isempty(temp)
         base_station_coordinates = temp;
+        reference_latitude= base_station_coordinates(1);
+        reference_longitude= base_station_coordinates(2);
+        reference_altitude = base_station_coordinates(3);
     end
 end
 
@@ -174,6 +177,7 @@ time = readtable(csvFilename);
 time = time.timediff;
 
 LLAandTime(:,4) = arrayfun(@(a) fcn_INTERNAL_totalSeconds(a), time);
+LLAandTime = sortrows(LLAandTime,4,"ascend");
 % LLA is collected as an integer X 10^4, so convert back to standard
 % decimal format for LLA
 BSMs_LLA_corrected = [LLAandTime(:,1)/10000000 LLAandTime(:,2)/10000000 LLAandTime(:,3)];
@@ -185,7 +189,7 @@ ENU_BSM_coordinates =[];
 % convert LLA to ENU
 ENU_data_with_nan = [];
 [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-    fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,BSMs_LLA_corrected);
+    fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,BSMs_LLA_corrected,base_station_coordinates);
 
 ENU_BSM_coordinates = ENU_positions_cell_array{1};
 
@@ -229,31 +233,48 @@ NumLength = length(ENU_BSM_coordinates)-1;
 
 enuDiff(2:length(diff(ENU_BSM_coordinates(:,1)))+1,1) = sqrt(sum((diff(ENU_BSM_coordinates(:,1:2)).^2)'))';
 enuDiff(1) = 0
-enuDiff(length(a)+1) = 0;
+enuDiff(length(enuDiff)+1) = 0;
+enuDiff2(2:length(diff(enuDiff))+1,1) = abs(diff(enuDiff));
 
 timeDiff(2:length(diff(Time_BSMs))+1,1) = diff(Time_BSMs);
-timeDiff(1) = 0;
-timeDiff(length(timeDiff)+1) = 0;
+timeDiff(1) = .1;
+timeDiff(length(timeDiff)+1) = .1;
+
+figure;
+hold on
+plot(enuDiff2);
+
+plot(timeDiff);
+hold off
+title("Enu Diff and Time Diff")
+ylim([-1,5]);
+spikeprev = 0;
+for ith_coordinate = 2:NumLength+1
+    newtimeDiff(ith_coordinate,1) = timeDiff(ith_coordinate);
+    if timeDiff(ith_coordinate) <.5
+        
+        if enuDiff2(ith_coordinate,1)<.1 || spikeprev == 1;
+            newtimeDiff(ith_coordinate) = .1;
+            spikeprev = 0;
+        else
+            newtimeDiff(ith_coordinate) = max(max(timeDiff(ith_coordinate-1:ith_coordinate)),.1);
+            spikeprev = 1;
+        end
+    end
+    Time_BSMs(ith_coordinate) = Time_BSMs(ith_coordinate-1)+newtimeDiff(ith_coordinate);
+end
+timeDiff = newtimeDiff;
 
 for ith_coordinate = 1:NumLength
     point1 = ENU_BSM_coordinates(ith_coordinate,1:2);
     point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2);
     timeatpt1 = Time_BSMs(ith_coordinate,:);
     timeatpt2 = Time_BSMs(ith_coordinate+1,:);
-    if(ith_coordinate == 174)
-        timeatpt1 = timeatpt1 - (timeDiff(174)-.1)
-    end
-
-    if(ith_coordinate == 586)
-        timeatpt1 = timeatpt1 - (timeDiff(586)-.1)
-    end
-    if abs(timeatpt2 -timeatpt1) < .1
-        timeatpt2 = timeatpt1+.1;
-    end
     if ~(point1 == point2)
         SpeedofAV_mps(ith_coordinate) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
     end
 end
+
 
 ith_coordinate = 242
 troublePoints = ENU_BSM_coordinates(ith_coordinate-5:ith_coordinate+5, :);
@@ -262,7 +283,7 @@ point1 = ENU_BSM_coordinates(ith_coordinate,1:2)
     point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2)
     timeatpt1 = Time_BSMs(ith_coordinate,:)
     timeatpt2 = Time_BSMs(ith_coordinate+1,:)
-    if abs(timeatpt2 -timeatpt1) < .1
+    if abs(timeatpt2 -timeatpt1) < .5
         timeatpt2 = timeatpt1+.1
     end
 
@@ -286,11 +307,12 @@ ylim([-1,5]);
 figure;
 hold on
 plot(SpeedofAV);
-plot(a);
-plot(timeDiff);
 hold off
 title('Speed of AV in mph');
 ylim([0,45]);
+
+
+
 %figure;
 %p = plot(smoothdata(SpeedofAV,'movmean',3));
 %ylim([0,45]);
@@ -314,6 +336,9 @@ ylim([0,45]);
 
 fcn_PlotTestTrack_plotPointsColorMap(ENU_BSM_coordinates,SpeedofAV, ...
     base_station_coordinates,maxVelocity,minVelocity,plot_color,LLA_fig_num,ENU_fig_num)
+
+
+
 
 figure(LLA_fig_num);
 
@@ -433,15 +458,15 @@ end
 
 %% fcn_INTERNAL_prepDataForOutput
 function [ENU_positions_cell_array, LLA_positions_cell_array] = ...
-    fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,LLA_data_with_nan)
+    fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,LLA_data_with_nan,base_station_coordinates)
 % This function breaks data into sub-arrays if separated by NaN, and as
 % well fills in ENU data if this is empty via LLA data, or vice versa
 
 % Prep for GPS conversions
 % The true location of the track base station is [40.86368573°, -77.83592832°, 344.189 m].
-reference_latitude = 40.86368573;
-reference_longitude = -77.83592832;
-reference_altitude = 344.189;
+reference_latitude= base_station_coordinates(1);
+        reference_longitude= base_station_coordinates(2);
+        reference_altitude = base_station_coordinates(3);
 gps_object = GPS(reference_latitude,reference_longitude,reference_altitude); % Load the GPS class
 
 
