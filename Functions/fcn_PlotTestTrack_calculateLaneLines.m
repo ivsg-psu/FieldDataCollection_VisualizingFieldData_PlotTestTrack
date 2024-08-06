@@ -1,5 +1,5 @@
 function [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
-    = calculateLaneLines(csvFile,varargin)
+    = fcn_PlotTestTrack_calculateLaneLines(csvFile,varargin)
 %% fcn_PlotTestTrack_calculateLaneLines
 % returns the left lane, right lane, and center of lane coordinates in ENU
 %

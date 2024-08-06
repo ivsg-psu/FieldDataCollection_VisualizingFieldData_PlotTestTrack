@@ -1,4 +1,4 @@
-% script_test_fcn_circleCenterFromThreePoints - this is is a script written
+%% script_test_fcn_circleCenterFromThreePoints - this is is a script written
 % to test the function: fcn_circleCenterFromThreePoints.m.
 %
 % Revision history:
@@ -25,8 +25,8 @@ fcn_circleCenterFromThreePoints(x,y,1);
 
 
 %% Example 3, create more circles by left clicking
-x = [1; -1;]
-y = [1; -1;]
+x = [1; -1;];
+y = [1; -1;];
 button = 1;
 while sum(button) <=1   % read ginputs until a mouse right-button occurs   
     % Get a new point and redo plot
@@ -34,17 +34,3 @@ while sum(button) <=1   % read ginputs until a mouse right-button occurs
     fcn_circleCenterFromThreePoints(x,y,1);     
 end
 
-
-%% Example 4, create more points by left clicking.
-x = [1; -1;]
-y = [1; -1;]
-button = 1;
-while sum(button) <=1   % read ginputs until a mouse right-button occurs
-    % Shift points down to prep for next input
-    x(1:end-1) = x(2:end);
-    y(1:end-1) = y(2:end);
-    
-    % Get a new point and redo plot
-    [x(end),y(end),button] = ginput(1);
-    fcn_circleCenterFromThreePoints(x,y,1);     
-end

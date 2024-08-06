@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_geoPlotData.m
+%% script_test_fcn_PlotTestTrack_geoPlotData.m
 % This is a script to exercise the function: fcn_PlotTestTrack_geoPlotData.m
 % This function was written on 2023_06_07 by S. Brennan, sbrennan@psu.edu
 % and Vaishnavi Wagh, vbw5054@psu.edu
@@ -113,24 +113,52 @@ fcn_PlotTestTrack_geoPlotData(empty_data,plot_color,plot_text,fig_num);
 
 % Now call the function again to plot data into an existing figure to check
 % that this works
+plot_data = [ 
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0];
+data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
 fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
 
 %% Basic example 5
 % Plot data with user-given color
 
 % fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
-plot_data = data_array; % reuse data from before
+plot_data = [ 
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0]; % reuse data from before
 plot_color = [0 0 1]; % Make it blue!
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 555; % Give a figure number to make it plot it the figure
-fcn_PlotTestTrack_geoPlotData(plot_data,plot_color,plot_text,fig_num);
+data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
 
 %% Basic example 6
 % Plot data with text
 
 % fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
-plot_data = data_array; % reuse data from before
+plot_data = [ 
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0]; % first 8 rows from data3
 plot_color = []; % Make it empty to use default
 plot_text = 'Test'; % Make it empty to NOT put text on
 fig_num = 666; % Give a figure number to make it plot it the figure
-fcn_PlotTestTrack_geoPlotData(plot_data,plot_color,plot_text,fig_num);
+data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);

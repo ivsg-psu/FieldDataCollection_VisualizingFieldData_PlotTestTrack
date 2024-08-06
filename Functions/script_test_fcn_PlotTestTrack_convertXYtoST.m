@@ -1,4 +1,4 @@
-%script_test_fcn_PlotTestTrack_convertXYtoST
+%% script_test_fcn_PlotTestTrack_convertXYtoST
 % tests fcn_PlotTestTrack_convertXYtoST.m
 
 % Revision history

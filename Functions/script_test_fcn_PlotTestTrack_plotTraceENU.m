@@ -173,16 +173,3 @@ flag_plot_headers_and_tailers = 0;
 fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 
 title(sprintf('Fig %.0d: showing flag_plot_headers_and_tailers',fig_num), 'Interpreter','none');
-
-
-
-
-%% Failure cases follow
-if 1==0
-    %% Bad input name
-    bad_lane_marker_name = 'this is bad';
-    [LLA_positions_cell_array, ENU_positions_cell_array] = ...
-        fcn_PlotTestTrack_loadTrace(bad_lane_marker_name);
-
-    %%
-end

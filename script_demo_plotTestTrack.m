@@ -1,6 +1,6 @@
-%% Introduction to and Purpose of the Load Work Zone Code
-% This is a demonstration script to show the primary functionality of the
-% Load Work Zone (LoadWZ) library.
+%% Introduction to and Purpose of the Plot Test Track Code
+% This is a strter script to show the primary functionality of the
+% PlotTestTrack library.
 %
 % This is the explanation of the code that can be found by running
 %       script_demo_plotTestTrack.m

@@ -41,6 +41,9 @@ function [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY]...
 %      animation file. If a string is not supplied, the video will not be
 %      saved
 %
+%      path_to_save_video: the filepath that specifies where the video
+%      should be saved. Recommended to save in the Data Folder of the repo.
+%
 %      fig_num: figure number
 %
 %
@@ -96,7 +99,7 @@ end
 
 if flag_check_inputs == 1
     % Are there the right number of inputs?
-    narginchk(3,11);
+    narginchk(3,12);
 
 end
 
@@ -156,6 +159,14 @@ if 10 <= nargin
     temp = varargin{7};
     if ~isempty(temp)
         name_of_movfile = temp;
+    end
+end
+
+path_to_save_video = ''; % default is to not save a mov file
+if 11 <= nargin
+    temp = varargin{8};
+    if ~isempty(temp)
+        path_to_save_video = temp;
     end
 end
 
@@ -260,11 +271,15 @@ ENU_RightLaneY = RightLaneY';
 % animation if the user has entered a name for the mov file
 
 if ~isempty(name_of_movfile)
+
+    if isempty(path_to_save_video)
+        error('Give a path to save the video');
+    end
     % Define the number of frames for the video
     numFrames = Num_length;
 
     % Specify the folder where you want to save the video
-    outputFolder = 'C:\Users\vaish\Desktop\PSU\Research\VisualizingFieldData\FieldDataCollection_VisualizingFieldData_PlotTestTrack\Data'; % Replace with your desired path
+    outputFolder = path_to_save_video; % Replace with your desired path
 
     % Create the full file path
     outputFileName = fullfile(outputFolder, sprintf('%s',name_of_movfile'));

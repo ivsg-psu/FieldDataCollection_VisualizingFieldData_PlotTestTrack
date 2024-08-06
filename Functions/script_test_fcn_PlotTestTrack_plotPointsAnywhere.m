@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_plotPointsAnywhere.m
+%% script_test_fcn_PlotTestTrack_plotPointsAnywhere.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotPointsAnywhere.m
 % This function was written on 2023_07_08 by V. Wagh, vbw5054@psu.edu
 
@@ -172,3 +172,4 @@ ENU_fig_num = 456;
     initial_points, input_coordinates_type, base_station_coordinates,...
     plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
 
+assert(length(LLA_coordinates) == length(ENU_coordinates))

@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_breakArrayByNans
+%% script_test_fcn_PlotTestTrack_breakArrayByNans
 % Tests fcn_PlotTestTrack_breakArrayByNans
        
 % Revision history:

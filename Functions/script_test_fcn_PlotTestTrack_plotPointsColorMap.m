@@ -45,8 +45,8 @@ reference_longitude = -77.8359;
 reference_altitude= 344.189;
 base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
 
-ENU_coordinates = [[-100:1:100]; [-100:1:100]; [-100:1:100]]';
-values = [-100:1:100];
+ENU_coordinates = [-100:1:100; -100:1:100; -100:1:100]';
+values = -100:1:100;
 maxValue = 100;
 minValue = -100;
 plot_color = 'jet';
@@ -64,13 +64,13 @@ reference_longitude = -77.8359;
 reference_altitude= 344.189;
 base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
 
- t = 2*pi*[0:.01:1];
+ t = 2*pi*(0:.01:1);
  x = 50.*cos(t);
  y = 50.*sin(t);
 
 
 ENU_coordinates = [x; y; ones(1,length(x))]';
-values = [0:.5:50];
+values = 0:.5:50;
 maxValue = 40;
 minValue = 10;
 plot_color = 'spring';
@@ -87,8 +87,8 @@ reference_longitude = -77.8359;
 reference_altitude= 344.189;
 base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
 
-ENU_coordinates = [[-100:1:100]; [-100:1:100]; [-100:1:100]]';
-values = [-100:1:100];
+ENU_coordinates = [-100:1:100; -100:1:100; -100:1:100]';
+values = -100:1:100;
 maxValue = 20;
 minValue = -20;
 plot_color = 'jet';

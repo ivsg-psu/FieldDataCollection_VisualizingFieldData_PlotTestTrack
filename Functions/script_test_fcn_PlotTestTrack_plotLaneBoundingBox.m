@@ -125,11 +125,11 @@ right_color= [0 1 1];
 center_color = [1 0 0];
 lane_color = [0 0 0];
 fig_num = 500;
-[LLA_leftLane,LLA_rightLane, LLA_centerOfLane] = fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, ...
+[LLA_leftLane,LLA_rightLane, LLA_centerOfLane] = fcn_PlotTestTrack_plotLaneBoundingBox(csvFilename, ...
                                                 baseLat,baseLon, baseAlt,laneWidth, left_color,...
                                                 right_color,center_color,lane_color,fig_num);
 
-assert(length(LLA_leftLane) == 754)
-assert(length(LLA_rightLane) == 754)
-assert(length(LLA_centerOfLane) == 754)
+assert(length(LLA_leftLane) == 713)
+assert(length(LLA_rightLane) == 713)
+assert(length(LLA_centerOfLane) == 713)
 
