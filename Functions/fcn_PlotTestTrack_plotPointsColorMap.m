@@ -233,13 +233,13 @@ end
 hold off;
 figure(LLA_fig_num);
 colormap(color_map);
-c = colorbar('Ticks',[0:.1:1],...
+c = colorbar('Ticks',0:.1:1,...
          'TickLabels',{linspace(minValue,maxValue,11)});
 
 
 figure(ENU_fig_num);
 colormap(color_map);
-c = colorbar('Ticks',[0:.1:1],...
+c = colorbar('Ticks',0:.1:1,...
          'TickLabels',{linspace(minValue,maxValue,11)});
 
 
@@ -269,6 +269,7 @@ end % Ends main function for fcn_PlotTestTrack_plot
 %% fcn_INTERNAL_calculatePercentage
 
 function percentage = fcn_INTERNAL_calculatePercentage(max_speed, min_speed, input_speed)
+percentage = zeros(1,length(input_speed));
     for i = 1:length(input_speed)
         input_speed(i);
         usable_speed = min(max_speed, max(min_speed, input_speed(i)));

@@ -1,4 +1,4 @@
-%% script_test_fcn_circleCenterFromThreePoints - this is is a script written
+%% script_test_fcn_PlotTestTrack_circleCenterFromThreePoints - this is is a script written
 % to test the function: fcn_circleCenterFromThreePoints.m.
 %
 % Revision history:

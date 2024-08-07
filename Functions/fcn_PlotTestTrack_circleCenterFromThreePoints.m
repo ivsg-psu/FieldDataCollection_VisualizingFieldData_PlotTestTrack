@@ -1,5 +1,5 @@
-function [xc,yc,radii] = fcn_circleCenterFromThreePoints(x,y,varargin)
-% FCN_circleCenterFromThreePoints calculates the center of a circle from
+function [xc,yc,radii] = fcn_PlotTestTrack_circleCenterFromThreePoints(x,y,varargin)
+%% fcn_PlotTestTrack_circleCenterFromThreePoints calculates the center of a circle from
 % three points given as vectors in x and y
 % Format: 
 % [xc,yc,radii] = fcn_circleCenterFromThreePoints(x,y,(fig_num))
@@ -59,17 +59,17 @@ function [xc,yc,radii] = fcn_circleCenterFromThreePoints(x,y,varargin)
 flag_max_speed = 0;
 if (nargin==3 && isequal(varargin{end},-1))
     flag_do_debug = 0; % Flag to plot the results for debugging
-    flag_check_inputs = 0; % Flag to perform input checking
+    flag_check_inputs = 0; %#ok<NASGU>  % Flag to perform input checking
     flag_max_speed = 1;
 else
     % Check to see if we are externally setting debug mode to be "on"
     flag_do_debug = 0; % Flag to plot the results for debugging
-    flag_check_inputs = 1; % Flag to perform input checking
+    flag_check_inputs = 1;%#ok<NASGU>  % Flag to perform input checking  
     MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS");
     MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG = getenv("MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG)
         flag_do_debug = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_DO_DEBUG);
-        flag_check_inputs  = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS);
+        flag_check_inputs  = str2double(MATLABFLAG_PLOTTESTTRACK_FLAG_CHECK_INPUTS); %#ok<NASGU> 
     end
 end
 
@@ -98,15 +98,15 @@ if 0==flag_max_speed
     % Are there the right number of inputs?
     narginchk(2,3);
 end
-
+do_debug = 0;
 % Does user want to show the plots?
 if 0==flag_max_speed && 3 == nargin
     fig_num = varargin{1};
     figure(fig_num);
     do_debug = 1;
 else
-    if do_debug
-        fig = figure; %% create new figure with next default index
+    if do_debug  
+        fig = figure; % %% create new figure with next default index
     end
 end
 

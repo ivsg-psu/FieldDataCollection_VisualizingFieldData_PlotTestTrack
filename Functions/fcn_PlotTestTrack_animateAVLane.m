@@ -220,7 +220,8 @@ ENU_coordinates = unique(ENU_coordinates,'rows','stable');
 
 % last point
 Num_length = length(ENU_coordinates)-1;
-
+LeftLaneX = zeros(1,Num_length);
+LeftLaneY = zeros(1,Num_length);
 % get the new lane boundary points for left lane
 for ith_coordinate = 1:Num_length
 
@@ -231,7 +232,8 @@ for ith_coordinate = 1:Num_length
     distance = -1.8288; % TO DO: have this as an optional input
     [LeftLaneX(ith_coordinate), LeftLaneY(ith_coordinate)] = fcn_INTERNAL_calcPerpendicularPoint(X1, Y1, X2, Y2, distance);
 end
-
+RightLaneX = zeros(1,Num_length);
+RightLaneY = zeros(1,Num_length);
 % get the new lane boundary points for right lane
 for ith_coordinate = 1:Num_length
 

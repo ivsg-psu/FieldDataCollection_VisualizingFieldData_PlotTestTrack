@@ -252,7 +252,7 @@ STH_BSM_coordinates = [];
 
 % convert LLA to ENU
 ENU_data_with_nan = [];
-[ENU_positions_cell_array, LLA_positions_cell_array] = ...
+[ENU_positions_cell_array, ~] = ...
     fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,BSMs_LLA_corrected);
 
 ENU_BSM_coordinates = ENU_positions_cell_array{1};

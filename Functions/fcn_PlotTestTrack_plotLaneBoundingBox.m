@@ -60,7 +60,7 @@ function [LLA_leftLane, LLA_rightLane, LLA_centerLane] = fcn_PlotTestTrack_plotL
 
 
 flag_do_debug = 0; % Flag to show the results for debugging
-flag_do_plots = 0; % % Flag to plot the final results
+flag_do_plots = 0; %#ok<NASGU> % % Flag to plot the final results
 flag_check_inputs = 1; % Flag to perform input checking
 
 if flag_do_debug
@@ -68,7 +68,7 @@ if flag_do_debug
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
     debug_fig_num = 34838;
 else
-    debug_fig_num = [];
+    debug_fig_num = []; %#ok<NASGU> 
 end
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -146,7 +146,7 @@ center_color = [1 0 0]; % default
 if 8 <= nargin
     temp = varargin{7};
     if ~isempty(temp)
-        AV_color = temp;
+        center_color = temp;
     end
 end
 

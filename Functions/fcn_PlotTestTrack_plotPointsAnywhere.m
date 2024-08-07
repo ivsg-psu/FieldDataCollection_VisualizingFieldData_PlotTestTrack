@@ -102,7 +102,7 @@ plot_color = [1 0 1]; % Default
 if 4 <= nargin % 4th variable input of the entire function
     temp = varargin{2}; % 2nd variable input of the optional inputs is assigned to the temp variable
     if ~isempty(temp) % if temp is not empty
-        plot_color = temp; % make plot_color to be same as temp 
+        plot_color = temp; % make plot_color to be same as temp
     end
 end
 
@@ -172,7 +172,7 @@ if input_coordinates_type == "LLA"
 
     % get ENU
     ENU_data_with_nan = [];
-    [ENU_positions_cell_array, LLA_positions_cell_array] = ...
+    [ENU_positions_cell_array, ~] = ...
         fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,initial_points,base_station_coordinates);
 
     ENU_coordinates = ENU_positions_cell_array{1};
@@ -182,7 +182,7 @@ elseif input_coordinates_type == "ENU"
     ENU_coordinates = initial_points;
     % get LLA
     LLA_data_with_nan = [];
-    [ENU_positions_cell_array, LLA_positions_cell_array] = ...
+    [~, LLA_positions_cell_array] = ...
         fcn_INTERNAL_prepDataForOutput(initial_points,LLA_data_with_nan,base_station_coordinates);
 
     LLA_coordinates = LLA_positions_cell_array{1};
@@ -243,24 +243,24 @@ if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
             h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
             h_parent =  get(h_geoplot,'Parent');
             set(h_parent);
-            
+
             try
                 geobasemap satellite
-    
+
             catch
                 geobasemap openstreetmap
             end
             geotickformat -dd
-            end
-            f.Tag = "1"
-        
+        end
+        f.Tag = "1";
+
         hold on
     end
 
-        gp = geoplot(nanArray(:),nanArray(:), '.','Color',plot_color,'Markersize',MarkerSize);
-        
-        set(gp,"XData",LLA_coordinates(:,1));
-        set(gp,"YData",LLA_coordinates(:,2));
+    gp = geoplot(nanArray(:),nanArray(:), '.','Color',plot_color,'Markersize',MarkerSize);
+
+    set(gp,"XData",LLA_coordinates(:,1));
+    set(gp,"YData",LLA_coordinates(:,2));
     title(sprintf('LLA Coordinates'));
 end
 
@@ -271,16 +271,16 @@ if exist('ENU_fig_num','var') && ~isempty(ENU_fig_num)
     if ~isempty(ENU_coordinates)
         hold on;
         f = figure(ENU_fig_num);
-        
+
         axis equal;
-        
-        
 
 
-            p = plot(nanArray(:),nanArray(:),'.','Color',plot_color,'MarkerSize',MarkerSize);
 
-            set(p,"XData",ENU_coordinates(:,1));
-            set(p,"YData",ENU_coordinates(:,2));
+
+        p = plot(nanArray(:),nanArray(:),'.','Color',plot_color,'MarkerSize',MarkerSize);
+
+        set(p,"XData",ENU_coordinates(:,1));
+        set(p,"YData",ENU_coordinates(:,2));
 
         title(sprintf('ENU coordinates'));
     end

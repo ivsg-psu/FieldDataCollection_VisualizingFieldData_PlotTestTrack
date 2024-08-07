@@ -55,7 +55,7 @@ function [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_Lane
 
 
 flag_do_debug = 0; % Flag to show the results for debugging
-flag_do_plots = 0; % % Flag to plot the final results
+%flag_do_plots = 0; % % Flag to plot the final results
 flag_check_inputs = 1; % Flag to perform input checking
 
 if flag_do_debug
@@ -63,7 +63,7 @@ if flag_do_debug
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
     debug_fig_num = 34838;
 else
-    debug_fig_num = [];
+    %debug_fig_num = [];
 end
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -147,14 +147,15 @@ LLAandTime = readmatrix(csvFile); % Read the CSV file
 lat = LLAandTime(:, 1)/10000000;
 lon = LLAandTime(:, 2)/10000000;
 elv = LLAandTime(:, 3);
-time = LLAandTime(:, 4);
+%time = LLAandTime(:, 4);
 
 % convert LLA to ENU
 ENU_coordinates = gps_object.WGSLLA2ENU(lat,lon,elv,baseLat,baseLon,baseAlt);
 
 % last point
 Num_length = length(ENU_coordinates)-1;
-
+LeftLaneX = zeros(1,Num_length);
+LeftLaneY = zeros(1,Num_length);
 % get the new lane boundary points for left lane
 for ith_coordinate = 1:Num_length
 
@@ -165,7 +166,8 @@ for ith_coordinate = 1:Num_length
     distance = -laneWidth/2; % TO DO: have this as an optional input
     [LeftLaneX(ith_coordinate), LeftLaneY(ith_coordinate)] = fcn_INTERNAL_calcPerpendicularPoint(X1, Y1, X2, Y2, distance);
 end
-
+RightLaneX = zeros(1,Num_length);
+RightLaneY = zeros(1,Num_length);
 % get the new lane boundary points for right lane
 for ith_coordinate = 1:Num_length
 
@@ -182,8 +184,14 @@ RightLane = [RightLaneX' RightLaneY' (RightLaneX*0)'];
 LeftLane = [LeftLaneX' LeftLaneY' (LeftLaneX*0)'];
 
 % convert LLA to ENU
+
 LLA_LeftLane = gps_object.ENU2WGSLLA(LeftLane');
 LLA_RightLane = gps_object.ENU2WGSLLA(RightLane');
+
+if 1 == 0
+    disp(LLA_LeftLane);
+    disp(LLA_RightLane);
+end
 
 ENU_LeftLaneX = LeftLaneX';
 ENU_LeftLaneY = LeftLaneY';
@@ -191,6 +199,7 @@ ENU_RightLaneX = RightLaneX';
 ENU_RightLaneY = RightLaneY';
 ENU_LaneCenterX = ENU_coordinates(1:length(LeftLaneX),1);
 ENU_LaneCenterY = ENU_coordinates(1:length(LeftLaneX),2);
+
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
