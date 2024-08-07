@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_plotSpeedofAV.m
+%% script_test_fcn_PlotTestTrack_plotSpeedofAV.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotSpeedofAV.m
 % This function was written on 2024_07_14 by V. Wagh, vbw5054@psu.edu
 
@@ -21,6 +21,8 @@
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
+% since the function does not have any output excaept plots, we do not have asserts in
+% the examples
 %% Basic example 1 - square around the base station
 reference_latitude = 40.8637;
 reference_longitude = -77.8359;

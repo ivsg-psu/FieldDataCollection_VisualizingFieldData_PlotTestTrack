@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_plotTraceENU.m
+%% script_test_fcn_PlotTestTrack_plotTraceENU.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotTraceENU.m
 % This function was written on 2023_07_20 by S. Brennan, sbrennan@psu.edu
 
@@ -109,6 +109,12 @@ ENU_positions_cell_array{5} =  1.0e+02 *[
    4.525806593920000   1.867642539130000   0.254812259350000
    4.485891020010000   1.948186043530000   0.255902659702000
    4.420143114050000   2.050532875340000   0.257284028077000];
+
+
+
+% Save the matrix to a .mat file with the given filename
+save('ExampleArray.mat','ENU_positions_cell_array');
+
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
@@ -122,16 +128,18 @@ ENU_positions_cell_array{5} =  1.0e+02 *[
 %                                                      |_|          
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
-
-fig_num = 0; % Initialize the figure number count
+% function only plots, has no outputs
 
 %% BASIC example 1 - showing plot of entire cell array
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 1;
 plot_color = [];
 line_width = [];
 flag_plot_headers_and_tailers = [];
 
+% load from data
+Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
+ENU_positions_cell_array = Array.ENU_positions_cell_array;
 % Plot LLA cell array
 fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 
@@ -140,10 +148,13 @@ title(sprintf('Fig %.0d: showing plot of entire cell array in ENU',fig_num), 'In
 
 %% BASIC example 2 - showing plot of entire cell arra
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 2;
 plot_color = [];
-
+line_width = [];
+flag_plot_headers_and_tailers = [];
 % Plot ENU results by each cell
+Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
+ENU_positions_cell_array = Array.ENU_positions_cell_array;
 for ith_data = 1:length(ENU_positions_cell_array)
     ENU_data_to_plot = ENU_positions_cell_array{ith_data};
     fcn_PlotTestTrack_plotTraceENU(ENU_data_to_plot, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
@@ -153,10 +164,11 @@ title(sprintf('Fig %.0d: showing plot of entire cell array in ENU',fig_num),'Int
 
 %% BASIC example 3 - showing plot_color
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 3;
 plot_color = [0 0 1];
 line_width = 5;
-
+Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
+ENU_positions_cell_array = Array.ENU_positions_cell_array;
 % Plot ENU cell array
 fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 
@@ -164,11 +176,12 @@ title(sprintf('Fig %.0d: showing plot_color',fig_num), 'Interpreter','none');
 
 %% BASIC example 4 - showing flag_plot_headers_and_tailers, otherwise same as Ex 3
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 4;
 plot_color = [0 0 1];
 line_width = 5;
 flag_plot_headers_and_tailers = 0;
-
+Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
+ENU_positions_cell_array = Array.ENU_positions_cell_array;
 % Plot ENU cell array
 fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
 

@@ -1,4 +1,4 @@
-function [AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, varargin)
+function [AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, varargin)
 %% fcn_PlotTestTrack_animateAVLane
 % create a plot of speed vs Station coordinates by taking the LLA and time
 % from the csv file as an input
@@ -189,16 +189,17 @@ TimeandENU = [inferred_time_index time_index time_in_sec apparent_delay (ENU_coo
 delta_station = [0; sum(diff(ENU_coordinates_noUnique).^2,2).^0.5];
 speed = [0; delta_station]/apparent_delta_t;
 
-figure(557);
-speed_milesperhour = speed*2.23694;
-plot(speed_milesperhour(3200:end));
-title('Speed in mph');
+if 1 == 0
+    figure(557);
+    speed_milesperhour = speed*2.23694;
+    plot(speed_milesperhour(3200:end));
+    title('Speed in mph');
 
-inferred_time_index_secs = inferred_time_index/10;
-figure(2727)
-plot(inferred_time_index_secs(1:3000), apparent_delay(1:3000),'k.');
-title('Plot of delay in BSM messages vs time in secs');
-
+    inferred_time_index_secs = inferred_time_index/10;
+    figure(2727)
+    plot(inferred_time_index_secs(1:3000), apparent_delay(1:3000),'k.');
+    title('Plot of delay in BSM messages vs time in secs');
+end
 % % Find unique rows based on the first two columns
 % [~, uniqueIdx] = unique(LocationandTimeOBU(:, 1:2), 'rows', 'stable');
 % 
@@ -228,26 +229,29 @@ for ith_coordinate = 1:NumLength
     SpeedofAV_mps(ith_coordinate,1) = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2);
 end
 
-% Find the indices of rows with any element above 50
-rowsToDelete = any(SpeedofAV_mps > 25, 2); % the mph should not go beyond 50
+% testing a different method to get rid of the extreme values
+if 1 == 0
+    % Find the indices of rows with any element above 50
+    rowsToDelete = any(SpeedofAV_mps > 25, 2); % the mph should not go beyond 50
 
-% Delete those rows from the matrix
-SpeedofAV_mps(rowsToDelete, :) = [];
+    % Delete those rows from the matrix
+    SpeedofAV_mps(rowsToDelete, :) = [];
 
-SpeedofAV_mps_cutshort = SpeedofAV_mps(10:end-10,:);
-% Find the indices of rows with any element equal to zero
-rowsToDeleteforzeros = any(SpeedofAV_mps_cutshort < 0.005, 2); % the mph should not go to zero once the vehicle has started
+    SpeedofAV_mps_cutshort = SpeedofAV_mps(10:end-10,:);
+    % Find the indices of rows with any element equal to zero
+    rowsToDeleteforzeros = any(SpeedofAV_mps_cutshort < 0.005, 2); % the mph should not go to zero once the vehicle has started
 
-% Delete those rows from the matrix
-SpeedofAV_mps_cutshort(rowsToDeleteforzeros, :) = [];
+    % Delete those rows from the matrix
+    SpeedofAV_mps_cutshort(rowsToDeleteforzeros, :) = [];
+    %SpeedofAV_mps_cutshort_NoExtremes = fcn_INTERNAL_removeExtremeValues(SpeedofAV_mps_cutshort);
+    final_SpeedofAV_mps = [SpeedofAV_mps(1:10); SpeedofAV_mps_cutshort; SpeedofAV_mps(end-10:end)];
 
-final_SpeedofAV_mps = [SpeedofAV_mps(1:10); SpeedofAV_mps_cutshort; SpeedofAV_mps(end-10:end)];
-
-% add a last point to make the arrays of equal sizes
-%final_SpeedofAV_mps(end+1) = final_SpeedofAV_mps(end);
+    % add a last point to make the arrays of equal sizes
+    %final_SpeedofAV_mps(end+1) = final_SpeedofAV_mps(end);
+end
 
 % convert speed from m/s tp mph 
-AVSpeed = final_SpeedofAV_mps*2.23694;
+AVSpeed = SpeedofAV_mps*2.23694; %final_SpeedofAV_mps*2.23694;
 
 % calculate station coordiantes
 NumLength = length(ENU_coordinates_noUnique)-1;
@@ -261,12 +265,22 @@ for ith_coordinate = 1:NumLength
     distance_between_SC(ith_coordinate+1,1) = StationCoordinates(ith_coordinate+1,1)-StationCoordinates(ith_coordinate,1);
 end
 
+% testing a different method to get rid of the extreme values
+if 1 == 0
 StationCoordinates(distance_between_SC > 2) = NaN;
-
 StationCoordinates(rowsToDelete, :) = [];
 StationCoordinates_cutshort = StationCoordinates(10:end-10);
 StationCoordinates_cutshort(rowsToDeleteforzeros, :) = [];
 final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshort; StationCoordinates(end-10:end)];
+end
+
+% putting speed and AV Speed, station coordinates and distance between
+% station coordinates in one matrix
+Speed_SC_Distance = [SpeedofAV_mps StationCoordinates distance_between_SC];
+NoExtremes_Speed_SC_Distance = fcn_INTERNAL_modifyMatrix(Speed_SC_Distance);
+
+AVSpeed_mph = NoExtremes_Speed_SC_Distance(:,1)*2.23694;
+NoExtremes_SC = NoExtremes_Speed_SC_Distance(:,2);
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____       _
@@ -284,15 +298,22 @@ final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshor
 
 figure (fig_num); % Create a figure, % TO DO: optional input fig_num
 clf;
-plot(final_StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
+plot(NoExtremes_SC(:,1),AVSpeed_mph, "Color",plot_color,"Marker",".");
 title('Station vs Speed plot');
 xlabel('Station Coordinates in m');
 ylabel('Speed in mph');
 
 figure(fig_num+5);
 clf;
-plot(smoothdata(final_StationCoordinates(:,1),'movmedian',30),AVSpeed, "Color",plot_color,"Marker",".");
+plot(smoothdata(NoExtremes_SC(:,1),'movmedian',30),AVSpeed_mph, "Color",plot_color,"Marker",".");
 title('Station vs Speed plot smooth');
+xlabel('Station Coordinates in m');
+ylabel('Speed in mph');
+
+figure(fig_num+10);
+clf;
+plot(StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
+title('Station vs Speed plot uncorrected');
 xlabel('Station Coordinates in m');
 ylabel('Speed in mph');
 
@@ -313,72 +334,6 @@ end
 %
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
-%% fcn_INTERNAL_calcPerpendicularPoint
-function [X_new, Y_new] = fcn_INTERNAL_calcPerpendicularPoint(X1, Y1, X2, Y2, distance)
-
-% Input points
-point_start = [X1, Y1];
-point_end = [X2, Y2];
-
-% Compute the vector from point_start to point_end
-vector_to_calculate = point_end - point_start;
-magnitude_vector_to_calculate = sum(vector_to_calculate.^2,2).^0.5;
-
-% Compute the unit vector
-unit_vector = vector_to_calculate./magnitude_vector_to_calculate;
-
- if ~isnan(unit_vector)
-
-    % Find a vector perpendicular to the unit vector
-    % Rotating 90 degrees clockwise: [x; y] -> [y; -x]
-    perpendicular_vector = [unit_vector(2), -unit_vector(1)];
-
-    % Scale the perpendicular vector by the desired distance
-    scaled_perpendicular_vector = perpendicular_vector * distance;
-
-    % Compute the new point by adding the scaled perpendicular vector to point_start
-    new_point = point_start + scaled_perpendicular_vector;
-
-    % Output the coordinates of the new point
-    X_new = new_point(1);
-    Y_new = new_point(2);
- else
-    X_new = NaN;
-    Y_new = NaN;
- end
-
-end
-
-%% fcn_INTERNAL_parseTimeStrings
-function [matrixBeforeColon, matrixBetweenColons, remainingStrings] = fcn_INTERNAL_parseTimeStrings(timeStrings)
-    % Initialize matrices and cell array
-    matrixBeforeColon = [];
-    matrixBetweenColons = [];
-    remainingStrings = {};
-
-    for i = 1:length(timeStrings)
-        str = timeStrings{i};
-        colons = strfind(str, ':');
-        
-        % Ensure there are at least two colons in the string
-        if length(colons) >= 2
-            % Extract numbers before the first colon
-            numBefore = str2double(str(1:colons(1)-1));
-            matrixBeforeColon = [matrixBeforeColon; numBefore];
-            
-            % Extract numbers between the first and second colons
-            numBetween = str2double(str(colons(1)+1:colons(2)-1));
-            matrixBetweenColons = [matrixBetweenColons; numBetween];
-            
-            % Extract the remaining string after the second colon
-            remainingStr = str(colons(2)+1:end);
-            remainingStrings{end+1} = remainingStr;
-        else
-            % Handle case where there are less than two colons
-            disp(['Invalid format: ', str]);
-        end
-    end
-end
 
 %% fcn_INTERNAL_calcSpeed
 function speed = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2)
@@ -392,3 +347,65 @@ function speed = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2)
     %time_interval_sec = seconds(timeInterval);
     speed = distance / timeInterval;
 end
+%% fcn_INTERNAL_modifyMatrix
+function B = fcn_INTERNAL_modifyMatrix(A)
+ % Calculate the mean and standard deviation of the first column
+    mu = mean(A(:, 1), 'omitnan');
+    sigma = std(A(:, 1), 'omitnan');
+    
+    % Define the threshold for extreme values (e.g., 3 standard deviations)
+    threshold = 3 * sigma;
+    
+    % Create a copy of the input matrix
+    B = A;
+    
+    % Find elements in the first column that are extreme values
+    extremeIndices = abs(A(:, 1) - mu) > threshold;
+    
+    % Replace extreme values in the first column with NaN
+    B(extremeIndices, 1) = NaN;
+    
+    % Find rows with values > 2 in the third column
+    valueRows = A(:, 3) > 2;
+    
+    % Replace the value in the first column with NaN for these rows
+    B(valueRows, 1) = NaN;
+    
+    % Find rows with values less than 0.5 in the first column
+    lowValueRows = A(:, 1) < 0.05;
+    
+    % Delete rows with low values in the first column
+    B(lowValueRows, :) = [];
+end
+
+%% Unused Function
+% %% fcn_INTERNAL_parseTimeStrings
+% function [matrixBeforeColon, matrixBetweenColons, remainingStrings] = fcn_INTERNAL_parseTimeStrings(timeStrings)
+%     % Initialize matrices and cell array
+%     matrixBeforeColon = [];
+%     matrixBetweenColons = [];
+%     remainingStrings = {};
+% 
+%     for i = 1:length(timeStrings)
+%         str = timeStrings{i};
+%         colons = strfind(str, ':');
+%         
+%         % Ensure there are at least two colons in the string
+%         if length(colons) >= 2
+%             % Extract numbers before the first colon
+%             numBefore = str2double(str(1:colons(1)-1));
+%             matrixBeforeColon = [matrixBeforeColon; numBefore];
+%             
+%             % Extract numbers between the first and second colons
+%             numBetween = str2double(str(colons(1)+1:colons(2)-1));
+%             matrixBetweenColons = [matrixBetweenColons; numBetween];
+%             
+%             % Extract the remaining string after the second colon
+%             remainingStr = str(colons(2)+1:end);
+%             remainingStrings{end+1} = remainingStr;
+%         else
+%             % Handle case where there are less than two colons
+%             disp(['Invalid format: ', str]);
+%         end
+%     end
+% end

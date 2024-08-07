@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_plotSpeedofAV.m
+%% script_test_fcn_PlotTestTrack_plotSpeedofAV.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotSpeedofAV.m
 % This function was written on 2024_07_14 by V. Wagh, vbw5054@psu.edu
 
@@ -38,7 +38,7 @@ ENU_fig_num = 102;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==5988);
+assert(length(SpeedofAV)==599);
 
 %% Basic example 2 - RSU range test at PA-288 with time
 
@@ -58,6 +58,7 @@ ENU_fig_num = 102;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
+assert(length(SpeedofAV)==991);
 %% Basic example 2 - RSU range test at Falling waters with time
 
 csvFilename = 'site2_3.csv';
@@ -76,7 +77,7 @@ ENU_fig_num = 302;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-length(SpeedofAV);
+assert(length(SpeedofAV)==513);
 %% Basic example 2 - Speed Plot of TestTrack 1
 
 csvFilename = 'Test Track1.csv'; % Path to your CSV file
@@ -95,7 +96,7 @@ ENU_fig_num = 202;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==754);
+assert(length(SpeedofAV)==742);
 %% Basic example 3 - Speed Plot of TestTrack 2
 csvFilename = 'Test Track2.csv'; % Path to your CSV file
 
@@ -113,7 +114,7 @@ ENU_fig_num = 302;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==713);
+assert(length(SpeedofAV)==680);
 
 %% Basic example 4 - Speed Plot of TestTrack 1 with differentplot color
 csvFilename = 'Test Track1.csv'; % Path to your CSV file
@@ -132,7 +133,7 @@ ENU_fig_num = 402;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==754);
+assert(length(SpeedofAV)==742);
 %% Basic example 5 - Speed Plot of TestTrack 2 with different max velocities and plot color
 csvFilename = 'Test Track2.csv'; % Path to your CSV file
 
@@ -150,4 +151,4 @@ ENU_fig_num = 502;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==713);
+assert(length(SpeedofAV)==680);

@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_plotSpeedvsStation.m
+%% script_test_fcn_PlotTestTrack_plotSpeedvsStation.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotSpeedvsStation.m
 % This function was written on 2024_07_15 by V. Wagh, vbw5054@psu.edu
 
@@ -31,10 +31,10 @@ baseAlt = 327.428;
 plot_color = [];
 fig_num = [];
 
-[AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
+[AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 
-assert(length(AVSpeed) == 22)
-assert(length(StationCoordinates) == 763)
+assert(length(AVSpeed_mph) == 642)
+assert(length(NoExtremes_SC) == 642)
 
 % add median filter to get rid of spikes
 % plot NaNs for station coordinates > 5m apart
@@ -48,9 +48,10 @@ baseAlt = 327.428;
 plot_color = [];
 fig_num = [];
 
-[AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
+[AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 
-
+assert(length(AVSpeed_mph) == 780)
+assert(length(NoExtremes_SC) == 780)
 
 %% Basic example 3 - RSU range test at PA_288 with time
 
@@ -59,8 +60,10 @@ csvFile = 'PA_288_2.csv';
 baseLat = 40.44181017;
 baseLon = -79.76090840;
 baseAlt = 327.428;
-plot_color = [];
-fig_num = [];
+plot_color = [1 1 0];
+fig_num = 4567;
 
-[AVSpeed, StationCoordinates] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
+[AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 
+assert(length(AVSpeed_mph) == 631)
+assert(length(NoExtremes_SC) == 631)

@@ -1,3 +1,13 @@
+%% script_test_fcn_PlotTestTrack_rangeRSU_circle.m
+% This is a script to exercise the function: fcn_PlotTestTrack_rangeRSU_circle.m
+% This function was written on 2024_07_10 by V. Wagh, vbw5054@psu.edu
+
+% Revision history:
+% 2024_07_10
+% -- first write of the code
+
+
+
 %% Pittsburg Stattion Coordinates
 reference_latitute = 40.44181017;
 reference_longitude = -79.76090840;

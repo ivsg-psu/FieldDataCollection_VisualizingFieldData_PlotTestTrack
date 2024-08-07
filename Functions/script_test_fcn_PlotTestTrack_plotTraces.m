@@ -1,4 +1,4 @@
-% script_test_fcn_PlotTestTrack_plotTraces.m
+%% script_test_fcn_PlotTestTrack_plotTraces.m
 % This is a script to exercise the function: fcn_PlotTestTrack_plotTraces.m
 % This function was written on 2023_03_25 by V. Wagh, vbw5054@psu.edu
 
@@ -21,9 +21,6 @@
 %                                                      |_|
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
-
-hard_coded_reference_unit_tangent_vector_outer_lanes   = [0.793033249943519   0.609178351949592];
-hard_coded_reference_unit_tangent_vector_LC_south_lane = [0.794630317120972   0.607093616431785];
 
 %% Basic example 1 - input  ENU coordinates and plot a trace in only LLA (do not specify any figure number)
 
@@ -107,6 +104,8 @@ STH_fig_num = [];
 reference_unit_tangent_vector =[];
 flag_plot_headers_and_tailers =[];
 flag_plot_points =[];
+hard_coded_reference_unit_tangent_vector_outer_lanes   = [0.793033249943519   0.609178351949592];
+hard_coded_reference_unit_tangent_vector_LC_south_lane = [0.794630317120972   0.607093616431785];
 fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
     plot_color,line_width,...
     LLA_fig_num,ENU_fig_num,STH_fig_num,reference_unit_tangent_vector,...

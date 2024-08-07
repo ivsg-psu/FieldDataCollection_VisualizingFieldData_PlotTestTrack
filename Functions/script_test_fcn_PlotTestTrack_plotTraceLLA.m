@@ -107,6 +107,10 @@ LLA_positions_cell_array{5} = 1.0e+02 *[
    0.408654398172712  -0.778306076688765   3.697979999465836
    0.408655319771976  -0.778306856443722   3.699360000198093  
 ];
+
+% Save the matrix to a .mat file with the given filename
+save('ExampleArray.mat','LLA_positions_cell_array','-append');
+
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
@@ -121,15 +125,17 @@ LLA_positions_cell_array{5} = 1.0e+02 *[
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
-fig_num = 0; % Initialize the figure number count
 
 %% BASIC example 1 - showing plot of entire cell arra
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 1;
 plot_color = [];
 line_width = [];
 flag_plot_headers_and_tailers = [];
 flag_plot_points = [];
+
+Array = load("Data\ExampleArray.mat","LLA_positions_cell_array");
+LLA_positions_cell_array = Array.LLA_positions_cell_array;
 
 % Plot LLA cell array
 fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
@@ -139,8 +145,14 @@ title(sprintf('Fig %.0d: showing plot of entire cell array in LLA',fig_num),'Int
 
 %% BASIC example 2 - showing plot of entire cell arra
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 2;
 plot_color = [];
+line_width = [];
+flag_plot_headers_and_tailers = [];
+flag_plot_points = [];
+
+Array = load("Data\ExampleArray.mat","LLA_positions_cell_array");
+LLA_positions_cell_array = Array.LLA_positions_cell_array;
 
 % Plot LLA results by each cell
 for ith_data = 1:length(LLA_positions_cell_array)
@@ -152,9 +164,13 @@ title(sprintf('Fig %.0d: showing plot of entire cell array in LLA',fig_num),'Int
 
 %% BASIC example 3 - showing plot_color and line width (blue, 5)
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 3;
 plot_color = [0 0 1];
 line_width = 5;
+flag_plot_headers_and_tailers = [];
+flag_plot_points = [];
+Array = load("Data\ExampleArray.mat","LLA_positions_cell_array");
+LLA_positions_cell_array = Array.LLA_positions_cell_array;
 
 % Plot LLA cell array
 fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
@@ -163,19 +179,16 @@ title(sprintf('Fig %.0d: showing plot_color and line width',fig_num),'Interprete
 
 %% BASIC example 4 - flag_plot_headers_and_tailers = 0, but same as Example 3
 % Load the first marker cluster - call it by name
-fig_num = fig_num + 1;
+fig_num = 4;
 plot_color = [0 0 1];
 line_width = 5;
 flag_plot_headers_and_tailers = 0;
+flag_plot_points = [];
+Array = load("Data\ExampleArray.mat","LLA_positions_cell_array");
+LLA_positions_cell_array = Array.LLA_positions_cell_array;
 
 % Plot LLA cell array
 fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
 
 title(sprintf('Fig %.0d: showing effect of flag_plot_headers_and_tailers',fig_num),'Interpreter','none');
 
-
-
-%% Failure cases follow
-if 1==0
-    %%
-end

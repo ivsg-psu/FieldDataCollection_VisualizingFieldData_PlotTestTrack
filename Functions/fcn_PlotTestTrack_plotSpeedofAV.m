@@ -120,7 +120,7 @@ if 4 <= nargin
 end
 
 % Does user want to specify plot_color?
-plot_color = 'jet' % Default
+plot_color = 'jet'; % Default
 if 5 <= nargin 
     temp = varargin{4};
     if ~isempty(temp) 
@@ -188,7 +188,7 @@ ENU_BSM_coordinates =[];
 
 % convert LLA to ENU
 ENU_data_with_nan = [];
-[ENU_positions_cell_array, LLA_positions_cell_array] = ...
+[ENU_positions_cell_array, ~] = ...
     fcn_INTERNAL_prepDataForOutput(ENU_data_with_nan,BSMs_LLA_corrected,base_station_coordinates);
 
 ENU_BSM_coordinates = ENU_positions_cell_array{1};
@@ -199,12 +199,13 @@ Time_BSMs = LLAandTime(:,4);
 % get speed
 
 
-newPoints = [];
-newTimes = [];
-map = [];
+
 
 
 NumLength = length(ENU_BSM_coordinates)-1;
+newPoints = zeros(1,3);
+newTimes =  zeros(1,1);
+map = zeros(1,1);
 for ith_coordinate = 2:NumLength
     point1 = ENU_BSM_coordinates(ith_coordinate-1,1:2);
     point2 = ENU_BSM_coordinates(ith_coordinate,1:2);
@@ -231,8 +232,18 @@ Time_BSMs = newTimes;
 
 NumLength = length(ENU_BSM_coordinates)-1;
 
-enuDiff(2:length(diff(ENU_BSM_coordinates(:,1)))+1,1) = sqrt(sum((diff(ENU_BSM_coordinates(:,1:2)).^2)'))';
-enuDiff(1) = 0
+enuDiff(2:length(diff(ENU_BSM_coordinates(:,1)))+1,1) = sqrt(sum(transpose(diff(ENU_BSM_coordinates(:,1:2)).^2)))';
+
+%abc = enuDiff(2:length(diff(ENU_BSM_coordinates(:,1)))+1,1);
+% def = sqrt(sum(transpose(diff(ENU_BSM_coordinates(:,1:2)).^2)))';
+% 
+% if all(abc(:) == def(:))
+%     same = 1;
+% else
+%     same = 0;
+% end
+
+enuDiff(1) = 0;
 enuDiff(length(enuDiff)+1) = 0;
 enuDiff2(2:length(diff(enuDiff))+1,1) = abs(diff(enuDiff));
 
@@ -249,11 +260,12 @@ hold off
 title("Enu Diff and Time Diff")
 ylim([-1,5]);
 spikeprev = 0;
+newtimeDiff = zeros(length(NumLength)+1);
 for ith_coordinate = 2:NumLength+1
     newtimeDiff(ith_coordinate,1) = timeDiff(ith_coordinate);
     if timeDiff(ith_coordinate) <.5
         
-        if enuDiff2(ith_coordinate,1)<.1 || spikeprev == 1;
+        if enuDiff2(ith_coordinate,1)<.1 || spikeprev == 1
             newtimeDiff(ith_coordinate) = .1;
             spikeprev = 0;
         else
@@ -265,6 +277,7 @@ for ith_coordinate = 2:NumLength+1
 end
 timeDiff = newtimeDiff;
 
+SpeedofAV_mps = zeros(length(NumLength));
 for ith_coordinate = 1:NumLength
     point1 = ENU_BSM_coordinates(ith_coordinate,1:2);
     point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2);
@@ -276,18 +289,18 @@ for ith_coordinate = 1:NumLength
 end
 
 
-ith_coordinate = 242
+ith_coordinate = 242;
 troublePoints = ENU_BSM_coordinates(ith_coordinate-5:ith_coordinate+5, :);
 
-point1 = ENU_BSM_coordinates(ith_coordinate,1:2)
-    point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2)
-    timeatpt1 = Time_BSMs(ith_coordinate,:)
-    timeatpt2 = Time_BSMs(ith_coordinate+1,:)
+point1 = ENU_BSM_coordinates(ith_coordinate,1:2);
+    point2 = ENU_BSM_coordinates(ith_coordinate+1,1:2);
+    timeatpt1 = Time_BSMs(ith_coordinate,:);
+    timeatpt2 = Time_BSMs(ith_coordinate+1,:);
     if abs(timeatpt2 -timeatpt1) < .5
-        timeatpt2 = timeatpt1+.1
+        timeatpt2 = timeatpt1+.1;
     end
 
-        fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2) * 2.23694
+       % fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2) * 2.23694;
 
 % convert speed from m/s tp mph 
 SpeedofAV = SpeedofAV_mps*2.23694;
@@ -342,12 +355,12 @@ fcn_PlotTestTrack_plotPointsColorMap(ENU_BSM_coordinates,SpeedofAV, ...
 
 figure(LLA_fig_num);
 
-c.Label.String = 'Speed (mph)';
+%c.Label.String = 'Speed (mph)';
 
 
 figure(ENU_fig_num);
 
-c.Label.String = 'Speed (mph)';
+%c.Label.String = 'Speed (mph)';
 
 
 
@@ -382,27 +395,6 @@ function speed = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2)
     speed = distance / timeInterval;
 end
 
-%% fcn_INTERNAL_calculatePercentage
-
-function percentage = fcn_INTERNAL_calculatePercentage(max_speed, min_speed, input_speed)
-    for i = 1:length(input_speed)
-        input_speed(i);
-        usable_speed = min(max_speed, max(min_speed, input_speed(i)));
-        percentage(i) = (usable_speed - min_speed)/(max_speed-min_speed);
-    end
-end
-
-%% fcn_INTERNAL_assignColor
-
-function color = fcn_INTERNAL_assignColor(color_map, percentages)
-    c = color_map;
-    
-    for i = 1:length(percentages)
-
-        color(i,1:3) = c(max(round(size(c,1)*percentages(i)),1),1:3);
-    end
-end
-
 %% fcn_INTERNAL_totalSeconds
 
 function totalSeconds = fcn_INTERNAL_totalSeconds(timeStr)
@@ -429,32 +421,7 @@ function totalSeconds = fcn_INTERNAL_totalSeconds(timeStr)
     totalSeconds = hours * 3600 + minutes * 60 + seconds;
 end
 
-%% fcn_INTERNAL_createCategories
 
-function categories = fcn_INTERNAL_createCategories(lowerLimit, upperLimit, numCategories)
-    % Check if the number of categories is valid
-    if numCategories < 1
-        error('Number of categories must be at least 1');
-    end
-    
-    % Check if the limits are valid
-    if lowerLimit >= upperLimit
-        error('Lower limit must be less than upper limit');
-    end
-    
-    % Calculate the step size
-    stepSize = (upperLimit - lowerLimit) / numCategories;
-    
-    % Initialize the categories array
-    categories = cell(numCategories, 1);
-    
-    % Populate the categories
-    for i = 1:numCategories
-        lowerBound = lowerLimit + (i-1) * stepSize;
-        upperBound = lowerLimit + i * stepSize;
-        categories{i} = [lowerBound, upperBound];
-    end
-end
 
 %% fcn_INTERNAL_prepDataForOutput
 function [ENU_positions_cell_array, LLA_positions_cell_array] = ...
@@ -491,19 +458,67 @@ for ith_array = 1:length(indicies_cell_array)
 end
 end % Ends fcn_INTERNAL_prepDataForOutput
 
-function color_map = fcn_INTERNAL_getColorMap(colormap_string)
-
-    % Use user-defined colormap_string    
-    old_colormap = colormap;
-    if strcmp(colormap_string,'redtogreen')
-        new_colormap = colormap('hsv');
-        color_ordering = [new_colormap(1:85,:); [0 1 0]];
-    else
-        color_ordering = colormap(colormap_string);
-    end
-    color_map = color_ordering;
-    
-
-end
+%% Unused functions
+% %% fcn_INTERNAL_calculatePercentage
+% 
+% function percentage = fcn_INTERNAL_calculatePercentage(max_speed, min_speed, input_speed)
+%     for i = 1:length(input_speed)
+%         input_speed(i);
+%         usable_speed = min(max_speed, max(min_speed, input_speed(i)));
+%         percentage(i) = (usable_speed - min_speed)/(max_speed-min_speed);
+%     end
+% end
+% 
+% %% fcn_INTERNAL_assignColor
+% 
+% function color = fcn_INTERNAL_assignColor(color_map, percentages)
+%     c = color_map;
+%     
+%     for i = 1:length(percentages)
+% 
+%         color(i,1:3) = c(max(round(size(c,1)*percentages(i)),1),1:3);
+%     end
+% end
+% %% fcn_INTERNAL_createCategories
+% 
+% function categories = fcn_INTERNAL_createCategories(lowerLimit, upperLimit, numCategories)
+%     % Check if the number of categories is valid
+%     if numCategories < 1
+%         error('Number of categories must be at least 1');
+%     end
+%     
+%     % Check if the limits are valid
+%     if lowerLimit >= upperLimit
+%         error('Lower limit must be less than upper limit');
+%     end
+%     
+%     % Calculate the step size
+%     stepSize = (upperLimit - lowerLimit) / numCategories;
+%     
+%     % Initialize the categories array
+%     categories = cell(numCategories, 1);
+%     
+%     % Populate the categories
+%     for i = 1:numCategories
+%         lowerBound = lowerLimit + (i-1) * stepSize;
+%         upperBound = lowerLimit + i * stepSize;
+%         categories{i} = [lowerBound, upperBound];
+%     end
+% end
+% %% fcn_INTERNAL_getColorMap
+% function color_map = fcn_INTERNAL_getColorMap(colormap_string)
+% 
+%     % Use user-defined colormap_string    
+%     old_colormap = colormap;
+%     if strcmp(colormap_string,'redtogreen')
+%         new_colormap = colormap('hsv');
+%         color_ordering = [new_colormap(1:85,:); [0 1 0]];
+%     else
+%         color_ordering = colormap(colormap_string);
+%     end
+%     color_map = color_ordering;
+%     
+% 
+% end
 
 
