@@ -18,7 +18,7 @@ left_color = [];
 right_color = [];
 AV_color = [];
 name_of_movfile = 'TestTrack1';
-path_to_save_video = 'C:\Users\vaish\Desktop\PSU\Research\VisualizingFieldData\FieldDataCollection_VisualizingFieldData_PlotTestTrack\Data';
+path_to_save_video = '.\Data';
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...'
     = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
       baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,path_to_save_video,fig_num);
