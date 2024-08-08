@@ -30,6 +30,7 @@
         <li><a href="#fcn_plottesttrack_plotlaneboundingbox">fcn_PlotTestTrack_plotLaneBoundingBox</a></li>
         <li><a href="#fcn_plottesttrack_plotpointsanywhere">fcn_PlotTestTrack_plotPointsAnywhere</a></li>
         <li><a href="#fcn_plottesttrack_plotpointscolormap">fcn_PlotTestTrack_plotPointsColorMap</a></li>
+        <li><a href="#fcn_plottesttrack_plotrectangle">fcn_plotTestTrack_plotRectangle</a></li>
         <li><a href="#fcn_plottesttrack_plotspeedofav">fcn_PlotTestTrack_plotSpeedofAV</a></li>
         <li><a href="#fcn_plottesttrack_plotspeedvsstation">fcn_PlotTestTrack_plotSpeedvsStation</a></li>
         <li><a href="#fcn_plottesttrack_plottraceenu">fcn_PlotTestTrack_plotTraceENU</a></li>
@@ -866,6 +867,86 @@ Takes input coordinates in ENU, as well as a third value at each point, and plot
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+#### **fcn_plotTestTrack_plotRectangle**
+
+Takes the LLA coordinates of the center of rectangle as inpt along with the reference_latitude, reference_longitude, reference_altitude and plots a rectangle of the input length and width in LLA and ENU
+
+**FORMAT:**
+
+    [ENU_X, ENU_Y] = fcn_PlotTestTrack_plotRectangle(...
+       reference_latitude, reference_longitude, reference_altitude, LLA_centerPoint,...
+       LLA_second_point, (car_length,car_width,AV_color,flag_LLA,flag_ENU,fig_num)
+
+**MANDATORY INPUTS**
+
+    reference_latitude: Latitude of the base location.
+
+    reference_longitude: Longitude of the base location.
+
+    reference_altitude: Altitude of the base location.
+
+    LL_centerPoint: The Latitude and longitude coordinates of the 
+    centerpoint of the rectangle
+
+    LLA_second_point: LLA coordinates of another point so that we can get the direction of the AV (or rectangle)
+
+**OPTIONAL INPUTS**
+    
+    car_length: The length of car (The unit have to be in Feet)
+
+    car_width: The width of car (The unit have to be in Feet)
+
+    AV_color: color of the AV
+
+    flag_LLA: a 0 or 1 value depending on if the user wants to plot in
+    LLA (1) or not (0).
+
+    flag_ENU: a 0 or 1 value depending on if the user wants to plot in
+    ENU (1) or not (0).
+
+    fig_num: figure number specified by user
+
+**OUTPUTS:**
+
+    enuCorners: ENU coordinates of the corner points of the rectangle
+
+
+**DEPENDENCIES:**
+
+    (none)
+
+**EXAMPLES:**
+
+    reference_latitude = 40.86368573;
+    reference_longitude = -77.83592832;
+    reference_altitude = 344.189;
+
+    LLA_centerPoint = [40.8631116, -77.8350440,	335.9];
+    LLA_second_point = [40.8633962	-77.8351958	335.5
+    ];
+
+    car_length = [];
+    car_width = [];
+    AV_color = [];
+    flag_LLA = [];
+    flag_ENU = [];
+    fig_num = [];
+
+    [enuCorners, LLACorners] = fcn_PlotTestTrack_plotRectangle(...
+        reference_latitude, reference_longitude, reference_altitude, LLA_centerPoint,...
+        LLA_second_point,car_length,car_width,AV_color,flag_LLA,flag_ENU,fig_num);
+<pre align="center">
+  <img src=".\Images\plotrectanglella.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+<pre align="center">
+  <img src=".\Images\plotplotrectangleenu.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+    See the script:
+    script_test_fcn_PlotTestTrack_plotRectangle.m
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 #### **fcn_plotTestTrack_plotSpeedofAV**
@@ -909,6 +990,17 @@ the speed of the AV in different colours
 
 **OUTPUTS:**
 
+    SpeedofAV: a 1XN matirx with the speed of the AV in mph that 
+    correspondes to every LLA location of the AV from the BSMs sent 
+    by OBU 
+
+
+**DEPENDENCIES:**
+
+    (none)
+
+**EXAMPLES:**
+
     csvFilename = 'Test Track1.csv'; % Path to your CSV file
 
     reference_latitude = 40.8637;
@@ -935,18 +1027,6 @@ the speed of the AV in different colours
   <img src=".\Images\speedofavenu.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
   <figcaption></figcaption>
 </pre>
-
-    SpeedofAV: a 1XN matirx with the speed of the AV in mph that 
-    correspondes to every LLA location of the AV from the BSMs sent 
-    by OBU 
-
-
-**DEPENDENCIES:**
-
-    (none)
-
-**EXAMPLES:**
-
     See the script:
     script_test_fcn_PlotTestTrack_plotSpeedofAV.m
 
