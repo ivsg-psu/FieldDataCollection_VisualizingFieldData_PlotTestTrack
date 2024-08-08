@@ -162,3 +162,58 @@ plot_text = 'Test'; % Make it empty to NOT put text on
 fig_num = 666; % Give a figure number to make it plot it the figure
 data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
 fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+
+%% testing speed of function
+
+% load inputs
+plot_data = [ 
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0]; % first 8 rows from data3
+plot_color = []; % Make it empty to use default
+plot_text = 'Test'; % Make it empty to NOT put text on
+data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
+
+% Speed Test Calculation
+fig_num=[];
+REPS=5; minTimeSlow=Inf;
+tic;
+%slow mode calculation - code copied from plotVehicleXYZ
+for i=1:REPS
+tstart=tic;
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+telapsed=toc(tstart);
+minTimeSlow=min(telapsed,minTimeSlow);
+end
+averageTimeSlow=toc/REPS;
+%slow mode END
+%Fast Mode Calculation
+fig_num = -1;
+minTimeFast = Inf;
+tic;
+for i=1:REPS
+tstart = tic;
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+telapsed = toc(tstart);
+minTimeFast = min(telapsed,minTimeFast);
+end
+averageTimeFast = toc/REPS;
+%Display Console Comparison
+if 1==1
+fprintf(1,'\n\nComparison of fcn_PlotTestTrack_geoPlotData without speed setting (slow) and with speed setting (fast):\n');
+fprintf(1,'N repetitions: %.0d\n',REPS);
+fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+end
+%Assertion on averageTime NOTE: Due to the variance, there is a chance that
+%the assertion will fail.
+assert(averageTimeFast<averageTimeSlow);

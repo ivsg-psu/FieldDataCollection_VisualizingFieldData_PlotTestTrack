@@ -82,11 +82,11 @@ end
 %              |_|
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(2,3);
-
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(2,3);
+    end
 end
 
 % Tell user where we are
@@ -151,6 +151,18 @@ ENU_points = fcn_PlotTestTrack_convertXYtoST(ST_points,v_unit2,fig_num);
 
 xEast = ENU_points(:,1);
 yNorth = ENU_points(:,2); 
+
+%% Any debugging?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   _____       _
+%  |  __ \     | |
+%  | |  | | ___| |__  _   _  __ _
+%  | |  | |/ _ \ '_ \| | | |/ _` |
+%  | |__| |  __/ |_) | |_| | (_| |
+%  |_____/ \___|_.__/ \__,_|\__, |
+%                            __/ |
+%                           |___/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % plot result
 if flag_do_plots == 1

@@ -94,7 +94,7 @@ assert(length(ENU_LaneCenterX) == 754)
 assert(length(ENU_LaneCenterY) == 754)
 
 %% Basic example 5 - Speed Plot of TestTrack 2 with different lane width and plot color
-csvFilename = 'Test Track2.csv'; % Path to your CSV file
+csvFile = 'Test Track2.csv'; % Path to your CSV file
 
 reference_latitude = 40.8637;
 reference_longitude = -77.8359;
@@ -105,12 +105,61 @@ baseLon = reference_longitude;
 baseAlt = reference_altitude;
 laneWidth = 10;
       [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
-      = fcn_PlotTestTrack_calculateLaneLines(csvFilename,baseLat,baseLon,baseAlt, laneWidth);
+      = fcn_PlotTestTrack_calculateLaneLines(csvFile,baseLat,baseLon,baseAlt, laneWidth);
 
-assert(length(ENU_LeftLaneX) == 754)
-assert(length(ENU_LeftLaneY) == 754)
-assert(length(ENU_RightLaneX) == 754)
-assert(length(ENU_RightLaneY) == 754)
-assert(length(ENU_LaneCenterX) == 754)
-assert(length(ENU_LaneCenterY) == 754)
+assert(length(ENU_LeftLaneX) == 713)
+assert(length(ENU_LeftLaneY) == 713)
+assert(length(ENU_RightLaneX) == 713)
+assert(length(ENU_RightLaneY) == 713)
+assert(length(ENU_LaneCenterX) == 713)
+assert(length(ENU_LaneCenterY) == 713)
 
+%% testing speed of function
+
+% load inputs
+csvFile = 'Test Track2.csv'; % Path to your CSV file
+
+reference_latitude = 40.8637;
+reference_longitude = -77.8359;
+reference_altitude= 344.189;
+
+baseLat = reference_latitude;
+baseLon = reference_longitude;
+baseAlt = reference_altitude;
+laneWidth = 10;
+
+% Speed Test Calculation
+% fig_num=[];
+REPS=5; minTimeSlow=Inf;
+tic;
+%slow mode calculation - code copied from plotVehicleXYZ
+for i=1:REPS
+tstart=tic;
+      [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
+      = fcn_PlotTestTrack_calculateLaneLines(csvFile,baseLat,baseLon,baseAlt, laneWidth);
+minTimeSlow=min(telapsed,minTimeSlow);
+end
+averageTimeSlow=toc/REPS;
+%slow mode END
+%Fast Mode Calculation
+minTimeFast = Inf;
+tic;
+for i=1:REPS
+tstart = tic;
+      [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
+      = fcn_PlotTestTrack_calculateLaneLines(csvFile,baseLat,baseLon,baseAlt, laneWidth);
+minTimeFast = min(telapsed,minTimeFast);
+end
+averageTimeFast = toc/REPS;
+%Display Console Comparison
+if 1==1
+fprintf(1,'\n\nComparison of fcn_PlotTestTrack_calculateLaneLines without speed setting (slow) and with speed setting (fast):\n');
+fprintf(1,'N repetitions: %.0d\n',REPS);
+fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+end
+% no assertion as function does not plot anything

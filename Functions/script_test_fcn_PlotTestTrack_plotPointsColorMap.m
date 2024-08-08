@@ -118,3 +118,60 @@ ENU_fig_num = 502;
 
 fcn_PlotTestTrack_plotPointsColorMap(...
         ENU_coordinates, values , base_station_coordinates, maxValue, minValue, plot_color, LLA_fig_num, ENU_fig_num);
+
+%% testing speed of function
+
+% load inputs
+reference_latitute = 40.44181017;
+reference_longitude = -79.76090840;
+reference_altitude = 327.428;
+
+base_station_coordinates = [reference_latitute, reference_longitude, reference_altitude];
+ENU_coordinates = randi(100,100,3)-50;
+values = randi(100,100,1);
+maxValue = 100;
+minValue = 0;
+plot_color = 'jet';
+
+% Speed Test Calculation
+fig_num=[];
+REPS=5; minTimeSlow=Inf;
+tic;
+%slow mode calculation - code copied from plotVehicleXYZ
+for i=1:REPS
+tstart=tic;
+
+fcn_PlotTestTrack_plotPointsColorMap(...
+        ENU_coordinates, values , base_station_coordinates, maxValue, minValue, plot_color, fig_num, fig_num);
+telapsed=toc(tstart);
+minTimeSlow=min(telapsed,minTimeSlow);
+end
+averageTimeSlow=toc/REPS;
+%slow mode END
+%Fast Mode Calculation
+fig_num = -1;
+minTimeFast = Inf;
+tic;
+for i=1:REPS
+tstart = tic;
+
+fcn_PlotTestTrack_plotPointsColorMap(...
+        ENU_coordinates, values , base_station_coordinates, maxValue, minValue, plot_color, fig_num, fig_num);
+telapsed = toc(tstart);
+minTimeFast = min(telapsed,minTimeFast);
+end
+averageTimeFast = toc/REPS;
+%Display Console Comparison
+if 1==1
+fprintf(1,'\n\nComparison of fcn_PlotTestTrack_plotPointsColorMap without speed setting (slow) and with speed setting (fast):\n');
+fprintf(1,'N repetitions: %.0d\n',REPS);
+fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+end
+%Assertion on averageTime NOTE: Due to the variance, there is a chance that
+%the assertion will fail.
+assert(averageTimeFast<averageTimeSlow);

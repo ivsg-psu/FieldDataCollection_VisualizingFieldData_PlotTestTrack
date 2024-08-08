@@ -192,3 +192,52 @@ fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width,
 
 title(sprintf('Fig %.0d: showing effect of flag_plot_headers_and_tailers',fig_num),'Interpreter','none');
 
+%% testing speed of function
+
+% load inputs
+plot_color = [];
+line_width = [];
+flag_plot_headers_and_tailers = [];
+flag_plot_points = [];
+% load from data
+Array = load("Data\ExampleArray.mat","LLA_positions_cell_array");
+LLA_positions_cell_array = Array.LLA_positions_cell_array;
+
+% Speed Test Calculation
+fig_num=[];
+REPS=5; minTimeSlow=Inf;
+tic;
+%slow mode calculation - code copied from plotVehicleXYZ
+for i=1:REPS
+tstart=tic;
+fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+telapsed=toc(tstart);
+minTimeSlow=min(telapsed,minTimeSlow);
+end
+averageTimeSlow=toc/REPS;
+%slow mode END
+%Fast Mode Calculation
+fig_num = -1;
+minTimeFast = Inf;
+tic;
+for i=1:REPS
+tstart = tic;
+fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+telapsed = toc(tstart);
+minTimeFast = min(telapsed,minTimeFast);
+end
+averageTimeFast = toc/REPS;
+%Display Console Comparison
+if 1==1
+fprintf(1,'\n\nComparison of fcn_PlotTestTrack_plotTraceLLA without speed setting (slow) and with speed setting (fast):\n');
+fprintf(1,'N repetitions: %.0d\n',REPS);
+fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+end
+%Assertion on averageTime NOTE: Due to the variance, there is a chance that
+%the assertion will fail.
+assert(averageTimeFast<averageTimeSlow);

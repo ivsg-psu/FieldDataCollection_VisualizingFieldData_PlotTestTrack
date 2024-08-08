@@ -99,9 +99,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(1,7);
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(1,7);
+    end
 end
 
 % base station coordinates
@@ -378,23 +380,26 @@ ENU_Final = MatrixNoExtremes(:,2:end);
 %                            __/ |
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-fcn_PlotTestTrack_plotPointsColorMap(ENU_Final,AV_Speed_Final, ...
-    base_station_coordinates,maxVelocity,minVelocity,plot_color,LLA_fig_num,ENU_fig_num)
-
-
-figure(LLA_fig_num);
-
-%c.Label.String = 'Speed (mph)';
+if flag_do_plots == 1
+    fcn_PlotTestTrack_plotPointsColorMap(ENU_Final,AV_Speed_Final, ...
+        base_station_coordinates,maxVelocity,minVelocity,plot_color,LLA_fig_num,ENU_fig_num)
 
 
-figure(ENU_fig_num);
+    figure(LLA_fig_num);
+    clf;
 
-%c.Label.String = 'Speed (mph)';
+    %c.Label.String = 'Speed (mph)';
+
+
+    figure(ENU_fig_num);
+    clf;
+
+    %c.Label.String = 'Speed (mph)';
 
 
 
-%end
+    %end
+end
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);

@@ -15,8 +15,8 @@ function [LLA_leftLane, LLA_rightLane, LLA_centerLane] = fcn_PlotTestTrack_plotL
 %                    longitude, altitude, and time of the location
 %                    at which the OBU sent out the BSM message to the RSU
 %                    that was in range. The code assumes latitude in first
-%                    column, longitude in second, altitude in third, and 
-%                    time in fourth. 
+%                    column, longitude in second, altitude in third, and
+%                    time in fourth.
 %
 %       (OPTIONAL INPUTS)
 %      baseLat: Latitude of the base location. Default is 40.8637.
@@ -55,7 +55,7 @@ function [LLA_leftLane, LLA_rightLane, LLA_centerLane] = fcn_PlotTestTrack_plotL
 %       script_test_fcn_PlotTestTrack_plotLaneBoundingBox.m
 %
 % This function was written on 2024_07_18 by Joseph Baker
-% --Start to write the function 
+% --Start to write the function
 % Questions or comments? jmb9658@psu.edu
 
 
@@ -76,7 +76,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -103,10 +103,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(1,10);
-
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(1,10);
+    end
 end
 
 % Default base location coordinates (PSU test track)
@@ -146,7 +147,7 @@ if 5 <= nargin
 end
 
 
-left_color = [0 0 1]; % default 
+left_color = [0 0 1]; % default
 if 6 <= nargin
     temp = varargin{5};
     if ~isempty(temp)
@@ -154,7 +155,7 @@ if 6 <= nargin
     end
 end
 
-right_color = [0 1 1]; % default 
+right_color = [0 1 1]; % default
 if 7 <= nargin
     temp = varargin{6};
     if ~isempty(temp)
@@ -162,7 +163,7 @@ if 7 <= nargin
     end
 end
 
-center_color = [1 0 0]; % default 
+center_color = [1 0 0]; % default
 if 8 <= nargin
     temp = varargin{7};
     if ~isempty(temp)
@@ -170,7 +171,7 @@ if 8 <= nargin
     end
 end
 
-lane_color = [1 0 1]; % default 
+lane_color = [1 0 1]; % default
 if 9 <= nargin
     temp = varargin{8};
     if ~isempty(temp)
@@ -218,7 +219,7 @@ end
 
 [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_CenterLaneX, ENU_CenterLaneY] ...
     = fcn_PlotTestTrack_calculateLaneLines(csvFile, ...
-      baseLat,baseLon,baseAlt,laneWidth);
+    baseLat,baseLon,baseAlt,laneWidth);
 
 ENU_RightLane = [ENU_RightLaneX ENU_RightLaneY (ENU_RightLaneX*0)];
 ENU_LeftLane = [ENU_LeftLaneX ENU_LeftLaneY (ENU_LeftLaneX*0)];
@@ -244,48 +245,50 @@ LLA_centerLane = gps_object.ENU2WGSLLA(ENU_CenterLane);
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+if flag_do_plots == 1
+    figure (fig_num);
+    clf;
 
-figure (fig_num); 
-clf;
+    h_geoplot = geoplot(baseLat, baseLon, '*','Color',lane_color,'Linewidth',3,'Markersize',10);
+    h_parent = get(h_geoplot,'Parent');
+    set(h_parent,'ZoomLevel',17);
+    set(h_parent,'MapCenter',[baseLat baseLon]);
 
-h_geoplot = geoplot(baseLat, baseLon, '*','Color',lane_color,'Linewidth',3,'Markersize',10);
-h_parent = get(h_geoplot,'Parent');
-set(h_parent,'ZoomLevel',17);
-set(h_parent,'MapCenter',[baseLat baseLon]);
-
-try
-    geobasemap satellite
-catch
-    geobasemap openstreetmap
-end
-geotickformat -dd;
-
-hold on
-prevIdx= 0;
-for ith_data = 1:length(LLA_leftLane)
-    if ~isnan(LLA_leftLane(ith_data,1)) %finds indexes of coordinates that exist
-        if prevIdx > 0 %plots the bounding box if there are 2 unique indexes of coordinates that contain different lats and longs.
-            if ~(all(LLA_rightLane(prevIdx,:) == LLA_rightLane(ith_data,:)) || all(LLA_rightLane(prevIdx,:)==LLA_leftLane(ith_data,:)) )
-                fcn_INTERNAL_plotOneLane(LLA_rightLane(prevIdx,:),LLA_rightLane(ith_data,:), LLA_leftLane(prevIdx,:),LLA_leftLane(ith_data,:),lane_color,left_color,right_color)
-                
-            end
-        end
-        prevIdx = ith_data;
+    try
+        geobasemap satellite
+    catch
+        geobasemap openstreetmap
     end
-    
+    geotickformat -dd;
+
+    hold on
+    prevIdx= 0;
+    for ith_data = 1:length(LLA_leftLane)
+        if ~isnan(LLA_leftLane(ith_data,1)) %finds indexes of coordinates that exist
+            if prevIdx > 0 %plots the bounding box if there are 2 unique indexes of coordinates that contain different lats and longs.
+                if ~(all(LLA_rightLane(prevIdx,:) == LLA_rightLane(ith_data,:)) || all(LLA_rightLane(prevIdx,:)==LLA_leftLane(ith_data,:)) )
+                    fcn_INTERNAL_plotOneLane(LLA_rightLane(prevIdx,:),LLA_rightLane(ith_data,:), LLA_leftLane(prevIdx,:),LLA_leftLane(ith_data,:),lane_color,left_color,right_color)
+
+                end
+            end
+            prevIdx = ith_data;
+        end
+
+    end
+
+    %sets up variables for legend
+    qw{1} = geoplot(LLA_centerLane(1,1),LLA_centerLane(1,2), 'Color',lane_color,'LineWidth',1); % lane color
+    qw{2} = geoplot(LLA_leftLane(prevIdx,1), LLA_leftLane(prevIdx,2), 'Color',left_color,'LineWidth',1); %left lane color
+    qw{3} = geoplot(LLA_rightLane(prevIdx,1), LLA_rightLane(prevIdx,2), 'Color',right_color,'LineWidth',1); % right lane color
+
+    %Also plots the center of the lane.
+    qw{4} = geoplot(LLA_centerLane(:,1),LLA_centerLane(:,2),'Color',center_color,'LineWidth',1); %center lane color
+
+    legend([qw{:}], {'Lane Box', 'Left Lane', 'Right Lane', 'Center Lane'}, 'location', 'best');
+
+    hold off
+
 end
-
-%sets up variables for legend
-qw{1} = geoplot(LLA_centerLane(1,1),LLA_centerLane(1,2), 'Color',lane_color,'LineWidth',1); % lane color
-qw{2} = geoplot(LLA_leftLane(prevIdx,1), LLA_leftLane(prevIdx,2), 'Color',left_color,'LineWidth',1); %left lane color
-qw{3} = geoplot(LLA_rightLane(prevIdx,1), LLA_rightLane(prevIdx,2), 'Color',right_color,'LineWidth',1); % right lane color
-
-%Also plots the center of the lane.
-qw{4} = geoplot(LLA_centerLane(:,1),LLA_centerLane(:,2),'Color',center_color,'LineWidth',1); %center lane color
-
-legend([qw{:}], {'Lane Box', 'Left Lane', 'Right Lane', 'Center Lane'}, 'location', 'best');
-
-hold off
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end

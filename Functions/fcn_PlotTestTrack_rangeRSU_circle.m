@@ -5,7 +5,7 @@ function fcn_PlotTestTrack_rangeRSU_circle(...
 % in all LLA and ENU coordinates if specified
 
 % INPUTS:
-%   reference_latitude: the base station latitude 
+%   reference_latitude: the base station latitude
 %
 %   reference_longitude: -77.83592832
 %
@@ -57,7 +57,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -84,9 +84,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(5,8);
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(5,8);
+    end
 end
 
 
@@ -172,41 +174,41 @@ circle_lon = lla_coords(2) + radius_in_degrees * sin(theta) ./ cosd(lla_coords(1
 %                            __/ |
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if flag_do_plots == 1
+    % Plot the RSU coordinates on the geoplot created
+    figure(fig_num);
+    h_geoplot = geoplot(lla_coords(1), lla_coords(2), '*','Color',plot_color,'LineWidth',3,'MarkerSize',MarkerSize);
 
-% Plot the RSU coordinates on the geoplot created
-figure(fig_num);
-h_geoplot = geoplot(lla_coords(1), lla_coords(2), '*','Color',plot_color,'LineWidth',3,'MarkerSize',MarkerSize);
+    % Obtain the parent of the geoplot with a sattelite or openstreetmap view
+    h_parent = get(h_geoplot, 'Parent');
+    set(h_parent, 'ZoomLevel', 16.375);
+    try
+        geobasemap satellite;
+    catch
+        geobasemap openstreetmap;
+    end
+    hold on;
+    geotickformat -dd;
 
-% Obtain the parent of the geoplot with a sattelite or openstreetmap view
-h_parent = get(h_geoplot, 'Parent');
-set(h_parent, 'ZoomLevel', 16.375);
-try
-    geobasemap satellite;
-catch
-    geobasemap openstreetmap;
+    % plot circle
+    geoplot(circle_lat, circle_lon, 'Color', plot_color, 'LineWidth', 0.5);
+    hold off;
+    %legend('RSU Location', 'Expected Range of RSU');
+
+    % % Plot the RSU coordinates on the ENU plot
+
+    figure(fig_num+100);
+    plot(rsu_coordinates_enu(1), rsu_coordinates_enu(2), '*', 'Color', plot_color, 'LineWidth', 3, 'MarkerSize', MarkerSize);
+    hold on;
+    circle_x = rsu_coordinates_enu(1) + radius * cos(theta); % Calculate x coordinates for the circle in ENU plot
+    circle_y = rsu_coordinates_enu(2) + radius * sin(theta); % Calculate y coordinates for the circle in ENU plot
+    plot(circle_x, circle_y, 'Color', plot_color, 'LineWidth', 1.5);
+    hold off;
+    xlabel('East (m)');
+    ylabel('North (m)');
+    axis equal;
+    %legend('RSU Location', 'Expected Range of RSU','OBU Location when BSM was sent', 'Start of test location','End of test location');
 end
-hold on;
-geotickformat -dd;
-
-% plot circle
-geoplot(circle_lat, circle_lon, 'Color', plot_color, 'LineWidth', 0.5);
-hold off;
-%legend('RSU Location', 'Expected Range of RSU');
-
-% % Plot the RSU coordinates on the ENU plot
-
-figure(fig_num+100);
-plot(rsu_coordinates_enu(1), rsu_coordinates_enu(2), '*', 'Color', plot_color, 'LineWidth', 3, 'MarkerSize', MarkerSize);
-hold on;
-circle_x = rsu_coordinates_enu(1) + radius * cos(theta); % Calculate x coordinates for the circle in ENU plot
-circle_y = rsu_coordinates_enu(2) + radius * sin(theta); % Calculate y coordinates for the circle in ENU plot
-plot(circle_x, circle_y, 'Color', plot_color, 'LineWidth', 1.5);
-hold off;
-xlabel('East (m)');
-ylabel('North (m)');
-axis equal;
-%legend('RSU Location', 'Expected Range of RSU','OBU Location when BSM was sent', 'Start of test location','End of test location');
-
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end

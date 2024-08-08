@@ -72,7 +72,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -99,9 +99,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(2,8);
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(2,8);
+    end
 end
 
 % base station coordinates
@@ -233,12 +235,12 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % % Plot the inputs?
-
-% call a function to plot the points
-fcn_INTERNAL_plotSinglePoint(plot_color, MarkerSize, ...
-    LLA_coordinates, ENU_coordinates, base_station_coordinates, ...
-    LLA_fig_num, ENU_fig_num);
-
+if flag_do_plots == 1
+    % call a function to plot the points
+    fcn_INTERNAL_plotSinglePoint(plot_color, MarkerSize, ...
+        LLA_coordinates, ENU_coordinates, base_station_coordinates, ...
+        LLA_fig_num, ENU_fig_num);
+end
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
@@ -268,6 +270,7 @@ if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
     if ~isempty(LLA_coordinates)
         hold on
         f = figure(LLA_fig_num);
+        clf;
         if f.Tag ~= "1"
             hold off
             h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
@@ -301,12 +304,9 @@ if exist('ENU_fig_num','var') && ~isempty(ENU_fig_num)
     if ~isempty(ENU_coordinates)
         hold on;
         f = figure(ENU_fig_num);
+        clf;
 
         axis equal;
-
-
-
-
         p = plot(nanArray(:),nanArray(:),'.','Color',plot_color,'MarkerSize',MarkerSize);
 
         set(p,"XData",ENU_coordinates(:,1));

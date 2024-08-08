@@ -36,7 +36,7 @@ function [LLA_trace, ENU_trace, STH_trace]  = fcn_PlotTestTrack_plotTraces(...
 %       ENU_fig_num: a figure number for the ENU plot
 %
 %       STH_fig_num: a figure number for the STH plot
-% 
+%
 %       reference_unit_tangent_vector: the reference vector for the STH
 %       coordinate frame to use for STH plotting
 %
@@ -88,7 +88,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -115,9 +115,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_check_inputs == 1
-    % Are there the right number of inputs?
-    narginchk(2,10);
+if 0 == flag_max_speed
+    if flag_check_inputs == 11
+        % Are there the right number of inputs?
+        narginchk(2,10);
+    end
 end
 
 % Does user want to specify plot_color?
@@ -199,7 +201,7 @@ end
 
 % If all are empty, default to LLA
 if isempty(LLA_fig_num) && isempty(ENU_fig_num) && isempty(STH_fig_num)
-    LLA_fig_num = figure;
+    LLA_fig_num = 678532;
 end
 
 % Setup figures if there is debugging
@@ -262,7 +264,7 @@ if input_coordinates_type == "LLA"
 elseif input_coordinates_type == "ENU"
 
     ENU_trace = Trace_coordinates;
-    % get LLA 
+    % get LLA
     LLA_data_with_nan = [];
     [ENU_positions_cell_array, LLA_positions_cell_array] = ...
         fcn_INTERNAL_prepDataForOutput(Trace_coordinates,LLA_data_with_nan);
@@ -294,10 +296,7 @@ elseif input_coordinates_type == "STH"
 
 end
 
-% call a function to plot the traces
-fcn_INTERNAL_plotSingleTrace(plot_color, line_width, ...
-    LLA_positions_cell_array, ENU_positions_cell_array, ...
-    LLA_fig_num, ENU_fig_num, STH_fig_num, reference_unit_tangent_vector, flag_plot_headers_and_tailers, flag_plot_points);
+
 
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -311,10 +310,14 @@ fcn_INTERNAL_plotSingleTrace(plot_color, line_width, ...
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % % Plot the inputs?
-    
-% if flag_do_plots  
-%     % Nothing to do here!
-% end
+
+if flag_do_plots == 1
+
+    % call a function to plot the traces
+    fcn_INTERNAL_plotSingleTrace(plot_color, line_width, ...
+        LLA_positions_cell_array, ENU_positions_cell_array, ...
+        LLA_fig_num, ENU_fig_num, STH_fig_num, reference_unit_tangent_vector, flag_plot_headers_and_tailers, flag_plot_points);
+end
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
@@ -344,7 +347,7 @@ if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
     if iscell(LLA_positions_cell_array)
         if ~isempty(LLA_positions_cell_array{1})
             fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array,plot_color,line_width, flag_plot_headers_and_tailers, flag_plot_points, LLA_fig_num);
-            title(sprintf('LLA Trace geometry')); 
+            title(sprintf('LLA Trace geometry'));
         end
     else
         error('Expecting a cell array for LLA data')

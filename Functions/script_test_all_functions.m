@@ -33,8 +33,10 @@ end
 diary off
 
 close all;
-figure(1)
+figure(458908);
 plot(testing_times);
 grid on;
 xlabel('Script test number');
 ylabel('Elapsed time to test (sec)');
+
+disp(testing_times);

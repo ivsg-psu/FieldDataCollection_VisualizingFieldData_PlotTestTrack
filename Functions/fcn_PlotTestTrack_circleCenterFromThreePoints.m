@@ -96,8 +96,10 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(2,3);
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(2,3);
+    end
 end
 do_debug = 0;
 % Does user want to show the plots?
@@ -205,21 +207,23 @@ radii = ((xc - x(1:num_solutions,1)).^2 + ...
 %                            __/ |
 %                           |___/ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if do_debug
-    hold on % allow multiple plot calls
-    plot(x,y,'ro');  % Plot all the input points
-    plot(xc,yc,'g+'); % Plot all the circle centers
+if flag_do_plots == 1
+    if do_debug
+        hold on % allow multiple plot calls
+        plot(x,y,'ro');  % Plot all the input points
+        plot(xc,yc,'g+'); % Plot all the circle centers
 
-    axis equal;
-    grid on; grid minor;
+        axis equal;
+        grid on; grid minor;
 
-    % plot all the circle fits
-    angles = 0:0.01:2*pi;
-    for i_fit = 1:length(xc)       
-      
-        x_circle = xc(i_fit,1) + radii(i_fit) * cos(angles);
-        y_circle = yc(i_fit,1) + radii(i_fit) * sin(angles);
-        plot(x_circle,y_circle,'b-');
+        % plot all the circle fits
+        angles = 0:0.01:2*pi;
+        for i_fit = 1:length(xc)
+
+            x_circle = xc(i_fit,1) + radii(i_fit) * cos(angles);
+            y_circle = yc(i_fit,1) + radii(i_fit) * sin(angles);
+            plot(x_circle,y_circle,'b-');
+        end
     end
 end
 

@@ -21,7 +21,7 @@ function fcn_PlotTestTrack_plotPointsColorMap(...
 %       base_station_coordinates: the reference latitude, reference
 %       longitude and reference altitude for the base station that we can
 %       use to convert ENU2LLA and vice-versa
-%       
+%
 %       maxValue: maximum value of the list of values to allow. For
 %       example, a 70mph speed limit
 %
@@ -72,12 +72,10 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
-
-flag_do_debug = 1;
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
@@ -99,9 +97,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(2,8);
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(2,8);
+    end
 end
 
 % base station coordinates
@@ -123,28 +123,30 @@ end
 
 % maxValue
 maxValue = 85; % Default is at 85mph with is the fastest highway speed assigned in the US
-if 4 <= nargin 
+if 4 <= nargin
     temp = varargin{2};
     if ~isempty(temp) % if temp is not empty
-        maxValue = temp;  
+        maxValue = temp;
     end
 end
 
 % minVelocity
 minValue = 15; % Default is at 15mph with is the slowest speed limit assigned in the US
-if 5 <= nargin 
-    temp = varargin{3}; 
+if 5 <= nargin
+    temp = varargin{3};
     if ~isempty(temp) % if temp is not empty
         minValue = temp;
     end
 end
 
 % Does user want to specify plot_color?
-color_map = fcn_INTERNAL_getColorMap('jet'); % Default
-if 6 <= nargin 
+color_mapArray = load("Data\colourmap_jet.mat","old_colormap"); % Default
+color_map = color_mapArray.old_colormap;
+if 6 <= nargin
     temp = varargin{4};
-    if ~isempty(temp) 
-        color_map = fcn_INTERNAL_getColorMap(temp);
+    if ~isempty(temp)
+        find_colormap = temp;
+        color_map = 0;
     end
 end
 
@@ -177,7 +179,8 @@ flag_do_plots = 0;
 if (0==flag_max_speed) && (8<= nargin)
     temp = varargin{end};
     if ~isempty(temp)
-        fig_num = temp;
+        LLA_fig_num = temp;
+        ENU_fig_num = temp+1;
         flag_do_plots = 1;
     end
 end
@@ -203,9 +206,6 @@ LLA_coordinates = gps_object.ENU2WGSLLA(ENU_coordinates);
 %Calculate percentage
 percent = fcn_INTERNAL_calculatePercentage(maxValue,minValue,values);
 
-%convert to color:
-[colors,sizes] = fcn_INTERNAL_assignColor(color_map, percent, LLA_coordinates);
-
 
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -218,65 +218,75 @@ percent = fcn_INTERNAL_calculatePercentage(maxValue,minValue,values);
 %                            __/ |
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if flag_do_plots == 1
 
-f = figure(LLA_fig_num);
-
-h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
-h_parent =  get(h_geoplot,'Parent');
-set(h_parent);
-
-
-try
-    geobasemap satellite
-
-catch
-    geobasemap openstreetmap
-end
-geotickformat -dd
-
-set(f,"Tag", "1");
-
-maxLat = max(LLA_coordinates(:,1));
-minLat = min(LLA_coordinates(:,1));
-
-maxLong = max(LLA_coordinates(:,2));
-minLong = min(LLA_coordinates(:,2));
-
-
-geolimits("manual");
-geolimits([minLat maxLat], [minLong maxLong]);
-
-
-
-
-for i = 1:size(colors,1)
-    hold on;
-    if sizes(i)>1
-    input_coordinates_type = "LLA";
-    MarkerSize = [];
-    fcn_PlotTestTrack_plotPointsAnywhere(...
-        reshape(colors(i,2:sizes(i),1:3),sizes(i)-1,3), input_coordinates_type, base_station_coordinates,...
-        reshape(colors(i,1,1:3),1,3), MarkerSize, LLA_fig_num, ENU_fig_num);
+    % since colourmap opeans a figure always
+    % find colormap
+    if color_map == 0 
+        color_map = fcn_INTERNAL_getColorMap(find_colormap);
     end
-    
+    %convert to color:
+    [colors,sizes] = fcn_INTERNAL_assignColor(color_map, percent, LLA_coordinates);
+
+    f = figure(LLA_fig_num);
+    clf;
+
+    h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
+    h_parent =  get(h_geoplot,'Parent');
+    set(h_parent);
+
+
+    try
+        geobasemap satellite
+
+    catch
+        geobasemap openstreetmap
+    end
+    geotickformat -dd
+
+    set(f,"Tag", "1");
+
+    maxLat = max(LLA_coordinates(:,1));
+    minLat = min(LLA_coordinates(:,1));
+
+    maxLong = max(LLA_coordinates(:,2));
+    minLong = min(LLA_coordinates(:,2));
+
+
+    geolimits("manual");
+    geolimits([minLat maxLat], [minLong maxLong]);
+
+
+
+
+    for i = 1:size(colors,1)
+        hold on;
+        if sizes(i)>1
+            input_coordinates_type = "LLA";
+            MarkerSize = [];
+            fcn_PlotTestTrack_plotPointsAnywhere(...
+                reshape(colors(i,2:sizes(i),1:3),sizes(i)-1,3), input_coordinates_type, base_station_coordinates,...
+                reshape(colors(i,1,1:3),1,3), MarkerSize, LLA_fig_num, ENU_fig_num);
+        end
+
+    end
+    hold off;
+    figure(LLA_fig_num);
+    colormap(color_map);
+    c = colorbar('Ticks',0:.1:1,...
+        'TickLabels',{linspace(minValue,maxValue,11)});
+
+
+    figure(ENU_fig_num);
+    colormap(color_map);
+    c = colorbar('Ticks',0:.1:1,...
+        'TickLabels',{linspace(minValue,maxValue,11)});
+
+
+
+
+    %end
 end
-hold off;
-figure(LLA_fig_num);
-colormap(color_map);
-c = colorbar('Ticks',0:.1:1,...
-         'TickLabels',{linspace(minValue,maxValue,11)});
-
-
-figure(ENU_fig_num);
-colormap(color_map);
-c = colorbar('Ticks',0:.1:1,...
-         'TickLabels',{linspace(minValue,maxValue,11)});
-
-
-
-
-%end
-
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
@@ -300,23 +310,23 @@ end % Ends main function for fcn_PlotTestTrack_plot
 
 function percentage = fcn_INTERNAL_calculatePercentage(max_speed, min_speed, input_speed)
 percentage = zeros(1,length(input_speed));
-    for i = 1:length(input_speed)
-        input_speed(i);
-        usable_speed = min(max_speed, max(min_speed, input_speed(i)));
-        percentage(i) = (usable_speed - min_speed)/(max_speed-min_speed);
-    end
+for i = 1:length(input_speed)
+    input_speed(i);
+    usable_speed = min(max_speed, max(min_speed, input_speed(i)));
+    percentage(i) = (usable_speed - min_speed)/(max_speed-min_speed);
+end
 end
 
 %% fcn_INTERNAL_assignColor
 
 function [color, sizes] = fcn_INTERNAL_assignColor(color_map, percentages,coordinates)
-    color(:,1,1:3) = color_map;
-    sizes = ones(size(color,1),1);
-    for i = 1:length(percentages)
-        idx = max(round(size(color_map,1)*percentages(i)),1);
-        sizes(idx) = sizes(idx)+1;
-        color(idx,sizes(idx),1:3) = coordinates(i,1:3);
-    end
+color(:,1,1:3) = color_map;
+sizes = ones(size(color,1),1);
+for i = 1:length(percentages)
+    idx = max(round(size(color_map,1)*percentages(i)),1);
+    sizes(idx) = sizes(idx)+1;
+    color(idx,sizes(idx),1:3) = coordinates(i,1:3);
+end
 end
 
 
@@ -324,16 +334,16 @@ end
 
 function color_map = fcn_INTERNAL_getColorMap(colormap_string)
 
-    % Use user-defined colormap_string    
-    old_colormap = colormap;
-    if strcmp(colormap_string,'redtogreen')
-        new_colormap = colormap('hsv');
-        color_ordering = [new_colormap(1:85,:); [0 1 0]];
-    else
-        color_ordering = colormap(colormap_string);
-    end
-    color_map = color_ordering;
-    
+% Use user-defined colormap_string
+% old_colormap = colormap;
+if strcmp(colormap_string,'redtogreen')
+    new_colormap = colormap('hsv');
+    color_ordering = [new_colormap(1:85,:); [0 1 0]];
+else
+    color_ordering = colormap(colormap_string);
+end
+color_map = color_ordering;
+
 
 end
 
