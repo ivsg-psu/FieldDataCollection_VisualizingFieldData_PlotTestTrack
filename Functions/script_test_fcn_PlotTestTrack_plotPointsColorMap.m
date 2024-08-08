@@ -75,7 +75,7 @@ ENU_coordinates = [x; y; ones(1,length(x))]';
 values = 0:.5:50;
 maxValue = 40;
 minValue = 10;
-plot_color = 'jet';
+plot_color = 'spring';
 LLA_fig_num = 301;
 ENU_fig_num = 302;
 
