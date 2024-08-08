@@ -68,8 +68,6 @@ Library of MATLAB functions related to visualizing data collected from various t
 3. Run the main code in the root of the folder (script_demo_plotTestTrack.m). This will download the required utilities for this code, unzip the zip files into a Utilities folder (.\Utilities), and update the MATLAB path to include the Utility locations. This install process will only occur the first time. Note: to force the install to occur again, delete the Utilities directory
 
 4. Confirm it works! Run script_demo_plotTestTrack. If the code works, the script should run without errors. This script produces numerous example images such as those in this README file.
-
-<a href="#pathplanning_geomtools_geomclasslibrary">Back to top</a>
    
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
