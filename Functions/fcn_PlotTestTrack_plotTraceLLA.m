@@ -63,18 +63,37 @@ function fcn_PlotTestTrack_plotTraceLLA(LLA_data, varargin)
 % offset_Lon = 0; % default offset 
 % to get rid of Unrecognized function or variable errors 
 
-flag_do_debug = 0; % Flag to show the results for debugging
-flag_do_plots = 0; % % Flag to plot the final results
-flag_check_inputs = 1; % Flag to perform input checking
+%% Debugging and Input checks
+
+% Check if flag_max_speed set. This occurs if the fig_num variable input
+% argument (varargin) is given a number of -1, which is not a valid figure
+% number.
+flag_max_speed = 0;
+if (nargin==6 && isequal(varargin{end},-1))
+    flag_do_debug = 0; % % % % Flag to plot the results for debugging
+    flag_check_inputs = 0; % Flag to perform input checking
+    flag_max_speed = 1;
+else
+    % Check to see if we are externally setting debug mode to be "on"
+    flag_do_debug = 0; % % % % Flag to plot the results for debugging
+    flag_check_inputs = 1; % Flag to perform input checking
+    MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
+    MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
+    if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
+    end
+end
+
+flag_do_debug = 1;
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
     fprintf(1,'STARTING function: %s, in file: %s\n',st(1).name,st(1).file);
-    debug_fig_num = 34838;
+    debug_fig_num = 999978;
 else
-    debug_fig_num = []; %#ok<NASGU>
+    debug_fig_num = [];
 end
-
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____                   _
@@ -88,7 +107,7 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_check_inputs == 1
+if flag_max_speed == 1
     % Are there the right number of inputs?
     narginchk(1,6);
 
@@ -160,7 +179,16 @@ end
 if flag_do_debug
     fig_debug = 9999;
 else
-    fig_debug = []; %#ok<NASGU>
+    fig_debug = []; %#ok<*NASGU>
+end
+
+flag_do_plots = 0;
+if (0==flag_max_speed) && (6<= nargin)
+    temp = varargin{end};
+    if ~isempty(temp)
+        fig_num = temp;
+        flag_do_plots = 1;
+    end
 end
 
 %% Write main code for plotting
@@ -209,8 +237,26 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if flag_do_plots    
-    fcn_PlotTestTrack_plotMarkerClusters(markerCluster,fig_num);
-    
+% Prep a figure
+figure(fig_num);
+
+% Does the figure already have data?
+temp_fig_handle = gcf;
+if isempty(temp_fig_handle.Children)
+    % Initialize the plot
+    % which automatically plot the base station with a green star
+    fcn_PlotTestTrack_geoPlotData([],[],'',fig_num);
+end
+
+% Plot LLA results as cell?
+if iscell(LLA_data)
+    for ith_data = 1:length(LLA_data)
+        LLA_data_to_plot = LLA_data{ith_data};
+        fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
+    end
+else
+    fcn_INTERNAL_plotData(LLA_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points);
+end    
 end % Ends check if plotting
 
 if flag_do_debug

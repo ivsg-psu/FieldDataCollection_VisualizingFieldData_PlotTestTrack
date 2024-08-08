@@ -105,7 +105,7 @@ baseLon = reference_longitude;
 baseAlt = reference_altitude;
 laneWidth = 10;
       [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
-      = fcn_PlotTestTrack_calculateLaneLines(csvFile,baseLat,baseLon,baseAlt, laneWidth);
+      = fcn_PlotTestTrack_calculateLaneLines(csvFilename,baseLat,baseLon,baseAlt, laneWidth);
 
 assert(length(ENU_LeftLaneX) == 754)
 assert(length(ENU_LeftLaneY) == 754)

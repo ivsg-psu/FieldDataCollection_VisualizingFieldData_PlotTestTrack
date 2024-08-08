@@ -109,7 +109,7 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if 0==flag_max_speed
+if flag_max_speed == 1
     if flag_check_inputs == 1
         % Are there the right number of inputs?
         narginchk(1,6);
@@ -186,6 +186,15 @@ if flag_do_debug
     fig_debug = 9999;
 else
     fig_debug = []; %#ok<*NASGU>
+end
+
+flag_do_plots = 0;
+if (0==flag_max_speed) && (6<= nargin)
+    temp = varargin{end};
+    if ~isempty(temp)
+        fig_num = temp;
+        flag_do_plots = 1;
+    end
 end
 
 %% Write main code for plotting

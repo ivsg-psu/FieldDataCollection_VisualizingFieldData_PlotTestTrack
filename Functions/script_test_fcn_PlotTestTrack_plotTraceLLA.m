@@ -126,7 +126,7 @@ save('ExampleArray.mat','LLA_positions_cell_array','-append');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
 
-%% BASIC example 1 - showing plot of entire cell arra
+%% BASIC example 1 - showing plot of entire cell array
 % Load the first marker cluster - call it by name
 fig_num = 1;
 plot_color = [];

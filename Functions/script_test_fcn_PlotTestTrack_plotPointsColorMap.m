@@ -1,5 +1,5 @@
 %% script_test_fcn_PlotTestTrack_plotSpeedofAV.m
-% This is a script to exercise the function: fcn_PlotTestTrack_plotSpeedofAV.m
+% This is a script to exercise the function: fcn_PlotTestTrack_plotPointsColorMap.m
 % This function was written on 2024_07_14 by V. Wagh, vbw5054@psu.edu
 
 % Revision history:

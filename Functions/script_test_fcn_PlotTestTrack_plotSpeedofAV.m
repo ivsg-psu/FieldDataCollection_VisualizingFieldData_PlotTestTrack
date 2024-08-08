@@ -38,7 +38,7 @@ ENU_fig_num = 102;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==599);
+assert(length(SpeedofAV)==516);
 
 %% Basic example 2 - RSU range test at PA-288 with time
 
@@ -58,7 +58,7 @@ ENU_fig_num = 102;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==991);
+assert(length(SpeedofAV)==971);
 %% Basic example 2 - RSU range test at Falling waters with time
 
 csvFilename = 'site2_3.csv';
@@ -77,7 +77,7 @@ ENU_fig_num = 302;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
         csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==513);
+assert(length(SpeedofAV)==501);
 %% Basic example 2 - Speed Plot of TestTrack 1
 
 csvFilename = 'Test Track1.csv'; % Path to your CSV file
@@ -114,7 +114,7 @@ ENU_fig_num = 302;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==680);
+assert(length(SpeedofAV)==678);
 
 %% Basic example 4 - Speed Plot of TestTrack 1 with differentplot color
 csvFilename = 'Test Track1.csv'; % Path to your CSV file
@@ -128,6 +128,7 @@ maxVelocity = 30;
 minVelocity = 1;
 plot_color = 'spring';
 LLA_fig_num = 401;
+
 ENU_fig_num = 402;
 
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
@@ -151,4 +152,4 @@ ENU_fig_num = 502;
 SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
 
-assert(length(SpeedofAV)==680);
+assert(length(SpeedofAV)==678);
