@@ -35,7 +35,6 @@
         <li><a href="#fcn_plottesttrack_plottraceenu">fcn_PlotTestTrack_plotTraceENU</a></li>
         <li><a href="#fcn_plottesttrack_plottracella">fcn_PlotTestTrack_plotTraceLLA</a></li>
         <li><a href="#fcn_plottesttrack_plottraces">fcn_PlotTestTrack_plotTraces</a></li>
-        <li><a href="#fcn_plottesttrack_positionvsvelocity">fcn_PlotTestTrack_PositionvsVelocity</a></li>
         <li><a href="#fcn_plottesttrack_rangersu_circle">fcn_PlotTestTrack_rangeRSU_circle</a></li> 
         </ul>
     </li>
@@ -125,8 +124,13 @@ The following are the top level directories within the repository:
     AV_color: color of the AV
 
     name_of_movfile: string that will be the name of the output
-    animation file. If a string is not supplied, the video will not be
-    saved
+    animation file. If a string is not supplied, the video will not 
+    be saved
+
+    path_to_save_video: the filepath that specifies where the 
+    video  should be saved. Recommended to save in the Data Folder 
+    of the repo.
+
 
     fig_num: figure number
 
@@ -141,6 +145,27 @@ The following are the top level directories within the repository:
     (none)
 
  **EXAMPLES:**
+
+    csvFile = 'Test Track1.csv'; % Path to your CSV file
+
+    baseLat = [];
+    baseLon = [];
+    baseAlt = []; 
+    fig_num = [];
+    car_width = 6; 
+    car_length = 14;
+    left_color = [];
+    right_color = [];
+    AV_color = [];
+    name_of_movfile = 'TestTrack1';
+    path_to_save_video = '.\Data';
+    [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...'
+        = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+        baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,path_to_save_video,fig_num);
+<pre align="center">
+  <img src=".\Images\animateav.jpg" alt="fcn_geometry_plotSphere picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
 
     See the script:
     script_test_fcn_PlotTestTrack_animateAVLane.m
@@ -178,10 +203,22 @@ Finds sections of nan, and breaks indicies into segments of non-nan data, return
 
 **EXAMPLES:**
 
+    %% Basic test case - no Nans
+    test_data = rand(10,2);
+    indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(test_data);
+    assert(isequal(indicies_cell_array{1},(1:10)'));
+
+    %% Basic test case - all Nans
+    test_data = nan(10,2);
+    indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(test_data);
+    assert(isequal(indicies_cell_array{1},[]));
+
     See the script:
     script_test_fcn_PlotTestTrack_breakArrayByNans.m
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
 
 #### **fcn_plotTestTrack_calculateLaneLines**
 
@@ -228,8 +265,30 @@ Returns the left lane, right lane, and center of lane coordinates in ENU format
 
 **EXAMPLES:**
 
+    csvFile = 'Pittsburgh_2_11_07_2024.csv'; % Path to your CSV file
+
+    % base station in pittsburg
+    reference_latitude_pitts = 40.44181017;
+    reference_longitude_pitts = -79.76090840;
+    reference_altitude_pitts = 327.428;
+
+    baseLat = reference_latitude_pitts;
+    baseLon = reference_longitude_pitts;
+    baseAlt = reference_altitude_pitts;
+    laneWidth = [];
+        [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
+        = fcn_PlotTestTrack_calculateLaneLines(csvFile,baseLat,baseLon,baseAlt, laneWidth);
+
+    assert(length(ENU_LeftLaneX) == 5988)
+    assert(length(ENU_LeftLaneY) == 5988)
+    assert(length(ENU_RightLaneX) == 5988)
+    assert(length(ENU_RightLaneY) == 5988)
+    assert(length(ENU_LaneCenterX) == 5988)
+    assert(length(ENU_LaneCenterY) == 5988)
+
     See the script:
     script_test_fcn_PlotTestTrack_calculateLaneLines.m
+    for a full test suite.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -277,6 +336,24 @@ Returns the left lane, right lane, and center of lane coordinates in ENU format
 
 **EXAMPLES:**
 
+    %% Example 1
+    x = [0; 0.5; 1; 4; 6; 7; 9; 11; 15];
+    y = [0; 4;  -1;-3; 2; -1;3;  3; -0.5];
+    fcn_circleCenterFromThreePoints(x,y,1);
+    plot(x,y,'r-');
+    hold on
+    figure(1); clf;
+    for i=1:length(x)-2
+        fcn_circleCenterFromThreePoints(x(i:i+2),y(i:i+2),1);
+        plot(x,y,'g-');
+        %pause;
+    end
+
+<pre align="center">
+  <img src=".\Images\circlecenter.jpg" alt="fcn_geometry_plotSphere picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+
     See the script:
     script_test_fcn_PlotTestTrack_calculateLaneLines.m
 
@@ -316,6 +393,17 @@ Takes ST_points that are [station, transverse] in ENU coordinates and uses them 
     (none)
 
 **EXAMPLES:**
+
+    % very simple points : [2,2]
+
+    v_bar = [1 1]; % 45 degree line segment
+    v_bar_magnitude = sum((v_bar).^2,2).^0.5;
+    v_unit = v_bar/v_bar_magnitude;
+
+    ENU_points = [2,2];
+    fig_num = 1001;
+    ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
+    assert(length(ST_points)==2)
 
     See the script:
     script_test_fcn_PlotTestTrack_convertSTtoXY.m
@@ -359,6 +447,19 @@ Takes xEast and yNorth points in the ENU coordinates and used them as an input t
 
 **EXAMPLES:**
 
+    % very simple points : [2,2]
+
+    v_bar = [1 1]; % 45 degree line segment
+    v_bar_magnitude = sum((v_bar).^2,2).^0.5;
+    v_unit = v_bar/v_bar_magnitude;
+
+
+    ENU_points = [2,2];
+    fig_num = 1001;
+    ST_points = fcn_PlotTestTrack_convertXYtoST(ENU_points,v_unit,fig_num);
+    assert(abs(ST_points(:,1)- 2*2^0.5)<1E-10);
+    assert(isequal(ST_points(:,2),0));
+
     See the script:
     script_test_fcn_PlotTestTrack_convertXYtoST.m
 
@@ -399,6 +500,19 @@ Plots data from an array one by one, created to plot data arrays for scenarios, 
 
 **EXAMPLES:**
 
+    % call the function with empty inputs, but with a figure number,
+    % and it should create the plot with
+    % the focus on the test track, satellite view
+    % fcn_PlotTestTrack_geoPlotData((data_array),(color),(text),(fig_num))
+    data_array = []; % Make it empty to NOT plot data
+    plot_color = []; % Make it empty to use default
+    plot_text = ''; % Make it empty to NOT put text on
+    fig_num = 222; % Give a figure number to make it plot it the figure
+    fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+<pre align="center">
+  <img src=".\Images\geoplot.jpg" alt="fcn_geometry_plotSphere picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
     See the script:
     script_test_fcn_PlotTestTrack_geoPlotData.m
 
@@ -476,6 +590,22 @@ Creates a plot of entered traces in either LLA, ENU, or STH-linear formats.
 
 **EXAMPLES:**
 
+    %% Basic example 1 - RSU range test at the pendulum for 50ft
+
+    csv_filename = 'Pendulum50ft.csv';
+
+    [LLA_BSM_coordinates, ENU_BSM_coordinates, STH_BSM_coordinates]  = ...
+        fcn_PlotTestTrack_plotBSMfromOBUtoRSU(...
+        csv_filename);
+
+    assert(length(LLA_BSM_coordinates) == 2211)
+    assert(length(ENU_BSM_coordinates) == 2211)
+    assert(length(STH_BSM_coordinates) == 2211)
+
+<pre align="center">
+  <img src=".\Images\plotbsm.jpg" alt="fcn_geometry_plotSphere picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
     See the script:
     script_test_fcn_PlotTestTrack_plotBSMfromOBUtoRSU.m
 
@@ -540,6 +670,31 @@ Creates a plot of the lanes with a bounding box appearing under the lanes.
 
 **EXAMPLES:**
 
+    csvFile = 'Pittsburgh_2_11_07_2024.csv'; % Path to your CSV file
+
+    % base station in pittsburg
+    reference_latitude_pitts = 40.44181017;
+    reference_longitude_pitts = -79.76090840;
+    reference_altitude_pitts = 327.428;
+
+    baseLat = reference_latitude_pitts;
+    baseLon = reference_longitude_pitts;
+    baseAlt = reference_altitude_pitts;
+    laneWidth = [];
+    left_color = [];
+    right_color= [];
+    center_color = [];
+    lane_color = [];
+    fig_num = 177;
+    [LLA_leftLane,LLA_rightLane, LLA_centerOfLane] = fcn_PlotTestTrack_plotLaneBoundingBox(csvFile, ...
+        baseLat,baseLon, baseAlt,laneWidth, left_color,...
+        right_color,center_color,lane_color,fig_num);
+
+<pre align="center">
+  <img src=".\Images\plotlane.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+
     See the script:
     script_test_fcn_PlotTestTrack_plotLaneBoundingBox.m
 
@@ -591,7 +746,39 @@ Takes the input points in any format, LLA/ENU and plots them as points in all LL
     (none)
 
 **EXAMPLES:**
+    initial_points = 1.0e+02 * [
 
+    -0.681049494040000  -1.444101004200000   0.225959982543000
+    -0.635840916402000  -1.480360972130000   0.225959615156000
+    -0.591458020164000  -1.513620272760000   0.225949259327000
+    -0.526826099435000  -1.557355626820000   0.226468769561000
+    -0.455230413850000  -1.601954836740000   0.226828212563000
+    -0.378844266810000  -1.644026018910000   0.227087638509000
+    -0.302039949257000  -1.680678797970000   0.227207090339000
+    -0.217481846757000  -1.715315663660000   0.227336509752000
+    -0.141767378277000  -1.742610853740000   0.227585981357000
+    -0.096035753167200  -1.756950994360000   0.227825672033000
+    ];
+
+    input_coordinates_type = "ENU";
+    base_station_coordinates = [];
+    plot_color = [];
+    MarkerSize = [];
+    LLA_fig_num = [];
+    ENU_fig_num = [];
+
+    [LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+        initial_points, input_coordinates_type, base_station_coordinates,...
+        plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
+    
+<pre align="center">
+  <img src=".\Images\plotpointslla.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+<pre align="center">
+  <img src=".\Images\plotpointsenu.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
     See the script:
     script_test_fcn_PlotTestTrack_plotPointsAnywhere.m
 
@@ -644,6 +831,38 @@ Takes input coordinates in ENU, as well as a third value at each point, and plot
 
 **EXAMPLES:**
 
+    %Plots a circle around the test track facility in different colors
+
+    reference_latitude = 40.8637;
+    reference_longitude = -77.8359;
+    reference_altitude= 344.189;
+    base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
+
+    t = 2*pi*(0:.01:1);
+    x = 50.*cos(t);
+    y = 50.*sin(t);
+
+
+    ENU_coordinates = [x; y; ones(1,length(x))]';
+    values = 0:.5:50;
+    maxValue = 40;
+    minValue = 10;
+    plot_color = 'jet';
+    LLA_fig_num = 301;
+    ENU_fig_num = 302;
+
+    fcn_PlotTestTrack_plotPointsColorMap(...
+            ENU_coordinates, values , base_station_coordinates, maxValue, minValue, plot_color, LLA_fig_num, ENU_fig_num);
+
+<pre align="center">
+  <img src=".\Images\plotcolormaplla.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+<pre align="center">
+  <img src=".\Images\plotcolormapenu.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+
     See the script:
     script_test_fcn_PlotTestTrack_plotPointsColorMap.m
 
@@ -691,6 +910,33 @@ the speed of the AV in different colours
     ENU_fig_num: a figure number for the ENU plot
 
 **OUTPUTS:**
+
+    csvFilename = 'Test Track1.csv'; % Path to your CSV file
+
+    reference_latitude = 40.8637;
+    reference_longitude = -77.8359;
+    reference_altitude= 344.189;
+    base_station_coordinates = [reference_latitude, reference_longitude, reference_altitude];
+
+    maxVelocity = 30;
+    minVelocity = 5;
+    plot_color = 'jet';
+    LLA_fig_num = 201;
+    ENU_fig_num = 202;
+
+    SpeedofAV  = fcn_PlotTestTrack_plotSpeedofAV(...
+        csvFilename, base_station_coordinates, maxVelocity, minVelocity, plot_color, LLA_fig_num, ENU_fig_num);
+
+    assert(length(SpeedofAV)==742);
+
+<pre align="center">
+  <img src=".\Images\speedofav.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+<pre align="center">
+  <img src=".\Images\speedofavenu.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
 
     SpeedofAV: a 1XN matirx with the speed of the AV in mph that 
     correspondes to every LLA location of the AV from the BSMs sent 
@@ -755,6 +1001,28 @@ Creates a plot of speed vs Station coordinates by taking the LLA and time from t
 
 **EXAMPLES:**
 
+    csvFile = 'Pittsburgh_3.csv';
+
+    baseLat = 40.44181017;
+    baseLon = -79.76090840;
+    baseAlt = 327.428;
+    plot_color = [];
+    fig_num = [];
+
+    [AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
+
+    assert(length(AVSpeed_mph) == 780)
+    assert(length(NoExtremes_SC) == 780)
+
+<pre align="center">
+  <img src=".\Images\speedvsstation1.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+<pre align="center">
+  <img src=".\Images\speedvsstation2.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+
     See the script:
     script_test_fcn_plotTestTrack_plotSpeedvsStation.m
 
@@ -801,6 +1069,22 @@ Plots trace of ENU data via plot.
     (none)
 
 **EXAMPLES:**
+
+    % Load the first marker cluster - call it by name
+    fig_num = 3;
+    plot_color = [0 0 1];
+    line_width = 5;
+    Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
+    ENU_positions_cell_array = Array.ENU_positions_cell_array;
+    % Plot ENU cell array
+    fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+
+    title(sprintf('Fig %.0d: showing plot_color',fig_num), 'Interpreter','none');
+
+<pre align="center">
+  <img src=".\Images\plottraceenu.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
 
     See the script:
     script_test_fcn_PlotTestTrack_plotTraceENU.m
@@ -851,6 +1135,25 @@ Plots trace of LLA data via geoplot.
 
 **EXAMPLES:**
 
+    % Load the first marker cluster - call it by name
+    fig_num = 1;
+    plot_color = [];
+    line_width = [];
+    flag_plot_headers_and_tailers = [];
+    flag_plot_points = [];
+
+    Array = load("Data\ExampleArray.mat","LLA_positions_cell_array");
+    LLA_positions_cell_array = Array.LLA_positions_cell_array;
+
+    % Plot LLA cell array
+    fcn_PlotTestTrack_plotTraceLLA(LLA_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, flag_plot_points, fig_num);
+
+    title(sprintf('Fig %.0d: showing plot of entire cell array in LLA',fig_num),'Interpreter','none');
+
+<pre align="center">
+  <img src=".\Images\plottracella.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
     See the script:
     script_test_fcn_PlotTestTrack_plotTraceLLA.m
 
@@ -917,46 +1220,29 @@ Creates a plot of selected traces in either LLA, ENU, or STH-linear formats.
 
 **EXAMPLES:**
 
+    Trace_coordinates = 1.0e+02 * [
+
+    -0.681049494040000  -1.444101004200000   0.225959982543000
+    -0.635840916402000  -1.480360972130000   0.225959615156000
+    -0.591458020164000  -1.513620272760000   0.225949259327000
+    -0.526826099435000  -1.557355626820000   0.226468769561000
+    -0.455230413850000  -1.601954836740000   0.226828212563000
+    -0.378844266810000  -1.644026018910000   0.227087638509000
+    -0.302039949257000  -1.680678797970000   0.227207090339000
+    -0.217481846757000  -1.715315663660000   0.227336509752000
+    -0.141767378277000  -1.742610853740000   0.227585981357000
+    -0.096035753167200  -1.756950994360000   0.227825672033000
+    ];
+
+    input_coordinates_type = "ENU";
+    fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+
+<pre align="center">
+  <img src=".\Images\plottrace.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
     See the script:
     script_test_fcn_PlotTestTrack_plotTraces.m
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-#### **fcn_plotTestTrack_PositionvsVelocity**
-
-Plots velocity of van vs position respect to time 
-
-**FORMAT:**
-
-    [speed,position] = fcn_PlotTestTrack_PostionvsVelocity(csvFile)
-
-**MANDATORY INPUTS**
-
-    csvFile: The name of the .csv file that contains the latitude, 
-            longitude, altitude, and time of the location at which 
-            the OBU sent out the BSM message to the RSU that was 
-            in range. The code assumes latitude in first column, 
-            longitude in second, altitude in third, and time in 
-            fourth. 
-
-**OPTIONAL INPUTS**
-    
-    (none)
-
-**OUTPUTS:**
-
-    Plot of velocity vs position 
-
-**DEPENDENCIES:**
-
-    (none)
-
-**EXAMPLES:**
-
-    See the script:
-    script_test_fcn_PlotTestTrack_PositionvsVelocity.m
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -999,6 +1285,30 @@ Takes the input points from the RSU, LLA/ENU and plots a circle in all LLA and E
     (none)
 
 **EXAMPLES:**
+
+    reference_latitute = 40.79347940;
+    reference_longitude = -77.86444659;
+    reference_altitude = 357;
+
+    rsu_coordinates_lla = [40.79382193, -77.91282763, 0];
+
+    gps_object = GPS(reference_latitute,reference_longitude,reference_altitude);
+    rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1), rsu_coordinates_lla(:,2), rsu_coordinates_lla(:,3));
+
+    radius = 500;
+
+    plot_color = [0 1 0];
+    MarkerSize = 18;
+    fcn_PlotTestTrack_rangeRSU_circle(reference_latitute, reference_longitude, reference_altitude, rsu_coordinates_enu, radius, plot_color, MarkerSize);
+
+<pre align="center">
+  <img src=".\Images\plotrangecirclella.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
+<pre align="center">
+  <img src=".\Images\plotrangecircleenu.jpg" alt="plotLaneBoundingBox picture" width="500" height="400">
+  <figcaption></figcaption>
+</pre>
 
     See the script:
     script_test_fcn_PlotTestTrack_rangeRSU_circle.m
