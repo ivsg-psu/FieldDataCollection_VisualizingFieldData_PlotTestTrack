@@ -386,13 +386,13 @@ if flag_do_plots == 1
 
 
     figure(LLA_fig_num);
-    clf;
+    %clf;
 
     %c.Label.String = 'Speed (mph)';
 
 
     figure(ENU_fig_num);
-    clf;
+    %clf;
 
     %c.Label.String = 'Speed (mph)';
 

@@ -10,8 +10,8 @@ function [LLA_trace, ENU_trace, STH_trace]  = fcn_PlotTestTrack_plotTraces(...
 %       fcn_PlotTestTrack_plotTraces(...
 %          Trace_coordinates, input_coordinates_type,...
 %          (plot_color,line_width,...
-%          LLA_fig_num,ENU_fig_num,STH_fig_num,reference_unit_tangent_vector,...
-%          flag_plot_headers_and_tailers, flag_plot_points));
+%          reference_unit_tangent_vector,...
+%          flag_plot_headers_and_tailers, flag_plot_points,LLA_fig_num,ENU_fig_num,STH_fig_num));
 %
 % INPUTS:
 %
@@ -140,39 +140,12 @@ if 4<= nargin
     end
 end
 
-% Does user want to specify LLA_fig_num?
-LLA_fig_num = []; % Default
-if 5<= nargin
-    temp = varargin{3};
-    if ~isempty(temp)
-        LLA_fig_num = temp;
-    end
-end
-
-% Does user want to specify ENU_fig_num?
-ENU_fig_num = []; % Default is do not plot
-if 6<= nargin
-    temp = varargin{4};
-    if ~isempty(temp)
-        ENU_fig_num = temp;
-    end
-end
-
-% Does user want to specify STH_fig_num?
-STH_fig_num = []; % Default is do not plot
-if 7<= nargin
-    temp = varargin{5};
-    if ~isempty(temp)
-        STH_fig_num = temp;
-    end
-end
-
 hard_coded_reference_unit_tangent_vector_outer_lanes   = [0.793033249943519   0.609178351949592];
 hard_coded_reference_unit_tangent_vector_LC_south_lane = [0.794630317120972   0.607093616431785];
 STH_vector = [];
 reference_unit_tangent_vector = hard_coded_reference_unit_tangent_vector_LC_south_lane; % Initialize the reference vector
-if 8 <= nargin
-    temp = varargin{6};
+if 5 <= nargin
+    temp = varargin{3};
     if ~isempty(STH_vector)
         reference_unit_tangent_vector = temp;
     else
@@ -182,8 +155,8 @@ end
 
 % Does user want to specify flag_plot_headers_and_tailers?
 flag_plot_headers_and_tailers   = 1;
-if 9 <= nargin
-    temp = varargin{7};
+if 5 <= nargin
+    temp = varargin{4};
     if ~isempty(temp)
         flag_plot_headers_and_tailers = temp;
     end
@@ -191,10 +164,37 @@ end
 
 % Does user want to specify flag_plot_headers_and_tailers?
 flag_plot_points   = 1;
-if 10 <= nargin
-    temp = varargin{8};
+if 7 <= nargin
+    temp = varargin{5};
     if ~isempty(temp)
         flag_plot_points = temp;
+    end
+end
+
+% Does user want to specify LLA_fig_num?
+LLA_fig_num = []; % Default
+if 8<= nargin
+    temp = varargin{6};
+    if ~isempty(temp)
+        LLA_fig_num = temp;
+    end
+end
+
+% Does user want to specify ENU_fig_num?
+ENU_fig_num = []; % Default is do not plot
+if 9<= nargin
+    temp = varargin{7};
+    if ~isempty(temp)
+        ENU_fig_num = temp;
+    end
+end
+
+% Does user want to specify STH_fig_num?
+STH_fig_num = []; % Default is do not plot
+if 10<= nargin
+    temp = varargin{8};
+    if ~isempty(temp)
+        STH_fig_num = temp;
     end
 end
 
@@ -212,12 +212,22 @@ else
 end
 
 flag_do_plots = 0;
-if (0==flag_max_speed) && (10<= nargin)
+if (0==flag_max_speed) && (8<= nargin)
     temp = varargin{end};
+    temp2 = varargin{end-1};
+    temp3 = varargin{end-2};
     if ~isempty(temp)
-        fig_num = temp;
+        STH_fig_num = temp;
         flag_do_plots = 1;
     end
+    if ~isempty(temp2)
+        ENU_fig_num = temp2;
+        flag_do_plots = 1;
+    end
+        if ~isempty(temp3)
+        LLA_fig_num = temp3;
+        flag_do_plots = 1;
+        end
 end
 
 %% Write main code for plotting

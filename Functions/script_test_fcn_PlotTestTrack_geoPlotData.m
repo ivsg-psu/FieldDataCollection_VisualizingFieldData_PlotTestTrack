@@ -35,8 +35,9 @@ fcn_PlotTestTrack_geoPlotData;
 data_array = []; % Make it empty to NOT plot data
 plot_color = []; % Make it empty to use default
 plot_text = ''; % Make it empty to NOT put text on
+line_type = [];
 fig_num = 222; % Give a figure number to make it plot it the figure
-fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,line_type,fig_num);
 
 %% BASIC example 3
 % Plot data onto an empty figure. This will force the code to check to see
@@ -96,7 +97,8 @@ data_array = [data3(:,2), data3(:,1), data3(:,3)];
 plot_color = []; % Make it empty to use default
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 333; % Give a figure number to make it plot it the figure
-fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+line_type = [];
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,line_type,fig_num);
 
 %% Basic example 4
 % Plot data onto an existing figure
@@ -109,7 +111,8 @@ empty_data = []; % Make it empty to NOT plot data
 plot_color = []; % Make it empty to use default
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 444; % Give a figure number to make it plot it the figure
-fcn_PlotTestTrack_geoPlotData(empty_data,plot_color,plot_text,fig_num);
+line_type = [];
+fcn_PlotTestTrack_geoPlotData(empty_data,plot_color,plot_text,line_type,fig_num);
 
 % Now call the function again to plot data into an existing figure to check
 % that this works
@@ -123,7 +126,8 @@ plot_data = [
     -77.83069596999997,40.86455288200005,0
     -77.83064856399994,40.86461089600004,0];
 data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+line_type = [];
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,line_type,fig_num);
 
 %% Basic example 5
 % Plot data with user-given color
@@ -142,7 +146,8 @@ plot_color = [0 0 1]; % Make it blue!
 plot_text = ''; % Make it empty to NOT put text on
 fig_num = 555; % Give a figure number to make it plot it the figure
 data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+line_type = [];
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,line_type,fig_num);
 
 %% Basic example 6
 % Plot data with text
@@ -161,7 +166,8 @@ plot_color = []; % Make it empty to use default
 plot_text = 'Test'; % Make it empty to NOT put text on
 fig_num = 666; % Give a figure number to make it plot it the figure
 data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+line_type = [];
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,line_type,fig_num);
 
 %% testing speed of function
 
@@ -178,7 +184,7 @@ plot_data = [
 plot_color = []; % Make it empty to use default
 plot_text = 'Test'; % Make it empty to NOT put text on
 data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-
+line_type = [];
 % Speed Test Calculation
 fig_num=[];
 REPS=5; minTimeSlow=Inf;
@@ -186,7 +192,7 @@ tic;
 %slow mode calculation - code copied from plotVehicleXYZ
 for i=1:REPS
 tstart=tic;
-fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,line_type,fig_num);
 telapsed=toc(tstart);
 minTimeSlow=min(telapsed,minTimeSlow);
 end
@@ -198,7 +204,7 @@ minTimeFast = Inf;
 tic;
 for i=1:REPS
 tstart = tic;
-fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,fig_num);
+fcn_PlotTestTrack_geoPlotData(data_array,plot_color,plot_text,line_type,fig_num);
 telapsed = toc(tstart);
 minTimeFast = min(telapsed,minTimeFast);
 end

@@ -176,11 +176,15 @@ else
 end
 
 flag_do_plots = 0;
-if (0==flag_max_speed) && (8<= nargin)
+if (0==flag_max_speed) && (7<= nargin)
     temp = varargin{end};
+    temp2 = varargin{end-1};
     if ~isempty(temp)
-        LLA_fig_num = temp;
-        ENU_fig_num = temp+1;
+        ENU_fig_num = temp;
+        flag_do_plots = 1;
+    end
+    if ~isempty(temp2)
+        LLA_fig_num = temp2;
         flag_do_plots = 1;
     end
 end
@@ -287,6 +291,7 @@ if flag_do_plots == 1
 
     %end
 end
+
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end

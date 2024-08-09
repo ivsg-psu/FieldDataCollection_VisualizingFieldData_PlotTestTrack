@@ -128,7 +128,7 @@ save('ExampleArray.mat','LLA_positions_cell_array','-append');
 
 %% BASIC example 1 - showing plot of entire cell array
 % Load the first marker cluster - call it by name
-fig_num = 1;
+fig_num = 45672;
 plot_color = [];
 line_width = [];
 flag_plot_headers_and_tailers = [];
@@ -145,7 +145,7 @@ title(sprintf('Fig %.0d: showing plot of entire cell array in LLA',fig_num),'Int
 
 %% BASIC example 2 - showing plot of entire cell arra
 % Load the first marker cluster - call it by name
-fig_num = 2;
+fig_num = 27425;
 plot_color = [];
 line_width = [];
 flag_plot_headers_and_tailers = [];
@@ -164,7 +164,7 @@ title(sprintf('Fig %.0d: showing plot of entire cell array in LLA',fig_num),'Int
 
 %% BASIC example 3 - showing plot_color and line width (blue, 5)
 % Load the first marker cluster - call it by name
-fig_num = 3;
+fig_num = 309870;
 plot_color = [0 0 1];
 line_width = 5;
 flag_plot_headers_and_tailers = [];
@@ -179,7 +179,7 @@ title(sprintf('Fig %.0d: showing plot_color and line width',fig_num),'Interprete
 
 %% BASIC example 4 - flag_plot_headers_and_tailers = 0, but same as Example 3
 % Load the first marker cluster - call it by name
-fig_num = 4;
+fig_num = 42456;
 plot_color = [0 0 1];
 line_width = 5;
 flag_plot_headers_and_tailers = 0;

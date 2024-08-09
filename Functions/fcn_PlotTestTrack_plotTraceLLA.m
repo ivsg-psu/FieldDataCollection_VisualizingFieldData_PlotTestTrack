@@ -216,27 +216,27 @@ end
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_do_plots
+if flag_do_plots == 1
     % Prep a figure
     figure(fig_num);
-    clf;
+    %clf;
 
     % Does the figure already have data?
     temp_fig_handle = gcf;
     if isempty(temp_fig_handle.Children)
         % Initialize the plot
         % which automatically plot the base station with a green star
-        fcn_PlotTestTrack_geoPlotData([],[],'',fig_num);
+        fcn_PlotTestTrack_geoPlotData([],[],'',[],fig_num);
     end
 
     % Plot LLA results as cell?
     if iscell(LLA_data)
         for ith_data = 1:length(LLA_data)
             LLA_data_to_plot = LLA_data{ith_data};
-            fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
+            fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points,fig_num)
         end
     else
-        fcn_INTERNAL_plotData(LLA_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points);
+        fcn_INTERNAL_plotData(LLA_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points,fig_num);
     end
 end % Ends check if plotting
 
@@ -260,7 +260,7 @@ end % Ends main function
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
 %% fcn_INTERNAL_plotData
-function fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
+function fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points,fig_num)
 
 
 reference_latitude = 40.86368573;
@@ -283,6 +283,7 @@ end
 
 
 sizeOfMarkers = 10;
+figure(fig_num);
 geoplot(LLA_data_to_plot(:,1)+offset_Lat,LLA_data_to_plot(:,2)+offset_Lon, '-','Color',plot_color,'Linewidth',line_width,'Markersize',sizeOfMarkers);
 
 % Plot the points?

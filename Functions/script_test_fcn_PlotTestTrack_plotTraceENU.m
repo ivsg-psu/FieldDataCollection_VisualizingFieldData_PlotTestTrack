@@ -136,12 +136,12 @@ fig_num = 1;
 plot_color = [];
 line_width = [];
 flag_plot_headers_and_tailers = [];
-
+flag_plot_points = [];
 % load from data
 Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
 ENU_positions_cell_array = Array.ENU_positions_cell_array;
 % Plot LLA cell array
-fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers,flag_plot_points, fig_num);
 
 title(sprintf('Fig %.0d: showing plot of entire cell array in ENU',fig_num), 'Interpreter','none');
 
@@ -152,12 +152,13 @@ fig_num = 2;
 plot_color = [];
 line_width = [];
 flag_plot_headers_and_tailers = [];
+flag_plot_points = [];
 % Plot ENU results by each cell
 Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
 ENU_positions_cell_array = Array.ENU_positions_cell_array;
 for ith_data = 1:length(ENU_positions_cell_array)
     ENU_data_to_plot = ENU_positions_cell_array{ith_data};
-    fcn_PlotTestTrack_plotTraceENU(ENU_data_to_plot, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+    fcn_PlotTestTrack_plotTraceENU(ENU_data_to_plot, plot_color, line_width, flag_plot_headers_and_tailers,flag_plot_points, fig_num);
 end
 
 title(sprintf('Fig %.0d: showing plot of entire cell array in ENU',fig_num),'Interpreter','none');
@@ -168,10 +169,11 @@ fig_num = 3;
 plot_color = [0 0 1];
 line_width = 5;
 flag_plot_headers_and_tailers = 0;
+flag_plot_points = [];
 Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
 ENU_positions_cell_array = Array.ENU_positions_cell_array;
 % Plot ENU cell array
-fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers,flag_plot_points, fig_num);
 
 title(sprintf('Fig %.0d: showing plot_color',fig_num), 'Interpreter','none');
 
@@ -181,10 +183,11 @@ fig_num = 4;
 plot_color = [0 0 1];
 line_width = 5;
 flag_plot_headers_and_tailers = 0;
+flag_plot_points = [];
 Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
 ENU_positions_cell_array = Array.ENU_positions_cell_array;
 % Plot ENU cell array
-fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers,flag_plot_points, fig_num);
 
 title(sprintf('Fig %.0d: showing flag_plot_headers_and_tailers',fig_num), 'Interpreter','none');
 
@@ -195,7 +198,7 @@ title(sprintf('Fig %.0d: showing flag_plot_headers_and_tailers',fig_num), 'Inter
 plot_color = [];
 line_width = [];
 flag_plot_headers_and_tailers = [];
-
+flag_plot_points = [];
 % load from data
 Array = load("Data\ExampleArray.mat","ENU_positions_cell_array");
 ENU_positions_cell_array = Array.ENU_positions_cell_array;
@@ -207,7 +210,7 @@ tic;
 %slow mode calculation - code copied from plotVehicleXYZ
 for i=1:REPS
 tstart=tic;
-fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers,flag_plot_points, fig_num);
 telapsed=toc(tstart);
 minTimeSlow=min(telapsed,minTimeSlow);
 end
@@ -219,7 +222,7 @@ minTimeFast = Inf;
 tic;
 for i=1:REPS
 tstart = tic;
-fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers, fig_num);
+fcn_PlotTestTrack_plotTraceENU(ENU_positions_cell_array, plot_color, line_width, flag_plot_headers_and_tailers,flag_plot_points, fig_num);
 telapsed = toc(tstart);
 minTimeFast = min(telapsed,minTimeFast);
 end

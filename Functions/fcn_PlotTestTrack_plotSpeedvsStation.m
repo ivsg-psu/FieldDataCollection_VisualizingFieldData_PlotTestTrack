@@ -161,7 +161,7 @@ else
 end
 
 flag_do_plots = 0;
-if (0==flag_max_speed) && (12<= nargin)
+if (0==flag_max_speed) && (6<= nargin)
     temp = varargin{end};
     if ~isempty(temp)
         fig_num = temp;

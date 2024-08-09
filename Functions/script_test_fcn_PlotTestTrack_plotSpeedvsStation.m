@@ -46,7 +46,7 @@ baseLat = 40.44181017;
 baseLon = -79.76090840;
 baseAlt = 327.428;
 plot_color = [];
-fig_num = [];
+fig_num = 23456;
 
 [AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csvFile, baseLat,baseLon, baseAlt, plot_color, fig_num);
 

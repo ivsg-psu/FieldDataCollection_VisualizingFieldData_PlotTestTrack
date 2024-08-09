@@ -141,9 +141,18 @@ if 3<= nargin
     end
 end
 
+if 4 <= nargin
+    temp = varargin{end};
+    if ~isempty(temp)
+        line_type = temp;
+    else
+        line_type = '-';
+    end
+end
+
 flag_make_new_plot = 1; % Default to make a new plot, which will clear the plot and start a new plot
-fig_num = []; % Initialize the figure number to be empty
-if 4 == nargin
+fig_num = 100; % Initialize the figure number to be empty
+if 5 == nargin
     temp = varargin{4};
     if ~isempty(temp)
         fig_num = temp;
@@ -164,14 +173,7 @@ if 4 == nargin
     end
 end
 
-if 5 == nargin
-    temp = varargin{end};
-    if ~empty(temp)
-        line_type = temp;
-    else
-        line_type = '-';
-    end
-end
+
 
 % Is the figure number still empty? If so, then we need to open a new
 % figure
@@ -190,7 +192,7 @@ else
 end
 
 flag_do_plots = 0;
-if (0==flag_max_speed) && (12<= nargin)
+if (0==flag_max_speed) && (5<= nargin)
     temp = varargin{end};
     if ~isempty(temp)
         fig_num = temp;

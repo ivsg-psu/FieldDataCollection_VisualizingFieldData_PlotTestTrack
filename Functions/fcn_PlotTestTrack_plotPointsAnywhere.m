@@ -170,10 +170,15 @@ else
 end
 
 flag_do_plots = 0;
-if (0==flag_max_speed) && (8<= nargin)
+if (0==flag_max_speed) && (7<= nargin)
     temp = varargin{end};
+    temp2 = varargin{end-1};
     if ~isempty(temp)
-        fig_num = temp;
+        ENU_fig_num = temp;
+        flag_do_plots = 1;
+    end
+    if ~isempty(temp2)
+        LLA_fig_num = temp2;
         flag_do_plots = 1;
     end
 end
@@ -268,9 +273,10 @@ nanArray = NaN(size(LLA_coordinates,1),1);
 % LLA plot?
 if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
     if ~isempty(LLA_coordinates)
-        hold on
+        
         f = figure(LLA_fig_num);
-        clf;
+        %clf;
+        hold on
         if f.Tag ~= "1"
             hold off
             h_geoplot = geoplot(base_station_coordinates(:,1), base_station_coordinates(:,2), '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
@@ -304,7 +310,7 @@ if exist('ENU_fig_num','var') && ~isempty(ENU_fig_num)
     if ~isempty(ENU_coordinates)
         hold on;
         f = figure(ENU_fig_num);
-        clf;
+        %clf;
 
         axis equal;
         p = plot(nanArray(:),nanArray(:),'.','Color',plot_color,'MarkerSize',MarkerSize);

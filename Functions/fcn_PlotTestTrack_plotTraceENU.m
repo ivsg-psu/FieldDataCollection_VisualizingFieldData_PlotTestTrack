@@ -222,7 +222,7 @@ end
 if flag_do_plots == 1
     % Prep a figure
     figure(fig_num);
-    clf;
+    %clf;
 
 
     % Set background to near-black?

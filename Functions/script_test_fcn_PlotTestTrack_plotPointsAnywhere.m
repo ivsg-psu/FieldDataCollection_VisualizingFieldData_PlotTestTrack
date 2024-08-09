@@ -72,8 +72,8 @@ input_coordinates_type = "LLA";
 base_station_coordinates = [];
 plot_color = [];
 MarkerSize = [];
-LLA_fig_num = [];
-ENU_fig_num = [];
+LLA_fig_num = 245;
+ENU_fig_num = 1245;
 
 [LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
     initial_points, input_coordinates_type, base_station_coordinates,...
