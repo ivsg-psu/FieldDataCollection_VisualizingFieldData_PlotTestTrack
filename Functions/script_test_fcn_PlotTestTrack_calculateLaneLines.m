@@ -137,6 +137,7 @@ for i=1:REPS
 tstart=tic;
       [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
       = fcn_PlotTestTrack_calculateLaneLines(csvFile,baseLat,baseLon,baseAlt, laneWidth);
+telapsed=toc(tstart);
 minTimeSlow=min(telapsed,minTimeSlow);
 end
 averageTimeSlow=toc/REPS;
@@ -148,6 +149,7 @@ for i=1:REPS
 tstart = tic;
       [ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY, ENU_LaneCenterX, ENU_LaneCenterY]...
       = fcn_PlotTestTrack_calculateLaneLines(csvFile,baseLat,baseLon,baseAlt, laneWidth);
+telapsed=toc(tstart);
 minTimeFast = min(telapsed,minTimeFast);
 end
 averageTimeFast = toc/REPS;

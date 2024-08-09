@@ -49,6 +49,7 @@ tic;
 for i=1:REPS
 tstart=tic;
 fcn_circleCenterFromThreePoints(x,y,fig_num);
+telapsed=toc(tstart);
 minTimeSlow=min(telapsed,minTimeSlow);
 end
 averageTimeSlow=toc/REPS;
