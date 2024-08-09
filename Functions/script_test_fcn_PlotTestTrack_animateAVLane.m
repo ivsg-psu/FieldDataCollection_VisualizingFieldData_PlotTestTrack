@@ -4,7 +4,6 @@
 % fcn_PlotTestTrack_animateAVLane.m 
 % This function was written on 2024_07_10 by Vaishnavi Wagh vbw5054@psu.edu
 
-
 %% test 1 save the animation plot as a mov file
 csvFile = 'Test Track1.csv'; % Path to your CSV file
 
@@ -159,6 +158,75 @@ rsu_coordinates_enu = gps_object.WGSLLA2ENU(rsu_coordinates_lla(:,1),rsu_coordin
 
 radius = 1000;
 fcn_PlotTestTrack_rangeRSU_circle(reference_latitude, reference_longitude, reference_altitude, rsu_coordinates_enu, radius)
+
+%% 
+
+% abve example for testing fast and slow mode
+csvFile = 'Pittsburgh_2_11_07_2024_after5293.csv'; % Path to your CSV file
+
+% base station in pittsburg
+reference_latitude_pitts = 40.44181017;
+reference_longitude_pitts = -79.76090840;
+reference_altitude_pitts = 327.428;
+%base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts, reference_altitude_pitts];
+
+% car_length = 4.27; % 4.27m is the standard length of a sedan
+% car_width = 1.77; % 1.77 m is the standard width of a sedan
+baseLat = reference_latitude_pitts;
+baseLon = reference_longitude_pitts;
+baseAlt = reference_altitude_pitts;
+left_color = [1 0 0];
+right_color = [1 1 0];
+AV_color = [0 1 1];
+car_width = 6; 
+car_length = 14;
+name_of_movfile = [];
+path_to_save_video = [];
+
+% Speed Test Calculation
+fig_num=[];
+REPS=5; minTimeSlow=Inf;
+tic;
+%slow mode calculation - code copied from plotVehicleXYZ
+for i=1:REPS
+tstart=tic;
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,...
+      path_to_save_video,fig_num);
+telapsed=toc(tstart);
+minTimeSlow=min(telapsed,minTimeSlow);
+end
+averageTimeSlow=toc/REPS;
+%slow mode END
+%Fast Mode Calculation
+fig_num = -1;
+minTimeFast = Inf;
+tic;
+for i=1:REPS
+tstart = tic;
+[ENU_LeftLaneX, ENU_LeftLaneY, ENU_RightLaneX, ENU_RightLaneY] ...
+    = fcn_PlotTestTrack_animateAVLane(csvFile,car_length,car_width, ...
+      baseLat,baseLon,baseAlt,left_color,right_color,AV_color,name_of_movfile,...
+      path_to_save_video,fig_num);
+telapsed = toc(tstart);
+minTimeFast = min(telapsed,minTimeFast);
+end
+averageTimeFast = toc/REPS;
+%Display Console Comparison
+if 1==1
+fprintf(1,'\n\nComparison of fcn_PlotTestTrack_animateAVLane without speed setting (slow) and with speed setting (fast):\n');
+fprintf(1,'N repetitions: %.0d\n',REPS);
+fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+end
+%Assertion on averageTime NOTE: Due to the variance, there is a chance that
+%the assertion will fail.
+assert(averageTimeFast<averageTimeSlow);
 
 %% Not examples , to be moved to another repo
 % %% PPT Pittsburg

@@ -33,7 +33,7 @@ function fcn_PlotTestTrack_plotTraceLLA(LLA_data, varargin)
 %       uses setenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES","1");
 %       to add offset during plotting, in images, to match to true LLA
 %       coordinates.
-%      
+%
 %
 % OUTPUTS:
 %
@@ -60,8 +60,8 @@ function fcn_PlotTestTrack_plotTraceLLA(LLA_data, varargin)
 % 2023_09_08 by V. Wagh
 % -- added in line 236,237,
 % offset_Lat = 0; % default offset
-% offset_Lon = 0; % default offset 
-% to get rid of Unrecognized function or variable errors 
+% offset_Lon = 0; % default offset
+% to get rid of Unrecognized function or variable errors
 
 %% Debugging and Input checks
 
@@ -80,7 +80,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -107,10 +107,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(1,6);
-
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(1,6);
+    end
 end
 
 
@@ -160,8 +161,7 @@ if 6 == nargin
         fig_num = temp;
 
     else % An empty figure number is given by user, so we have to make one
-        fig = figure; % create new figure with next default index
-        fig_num = get(fig,'Number');
+        fig_num = 5672;
         flag_make_new_plot = 1;
     end
 end
@@ -170,8 +170,7 @@ end
 % Is the figure number still empty? If so, then we need to open a new
 % figure
 if flag_make_new_plot && isempty(fig_num)
-    fig = figure; % create new figure with next default index
-    fig_num = get(fig,'Number');
+    fig_num = 64335;
 end
 
 
@@ -203,26 +202,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% Prep a figure
-figure(fig_num);
-
-% Does the figure already have data?
-temp_fig_handle = gcf;
-if isempty(temp_fig_handle.Children)
-    % Initialize the plot
-    % which automatically plot the base station with a green star
-    fcn_PlotTestTrack_geoPlotData([],[],'',fig_num);
-end
-
-% Plot LLA results as cell?
-if iscell(LLA_data)
-    for ith_data = 1:length(LLA_data)
-        LLA_data_to_plot = LLA_data{ith_data};
-        fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
-    end
-else
-    fcn_INTERNAL_plotData(LLA_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points);
-end
+% no calculations
 
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -236,27 +216,28 @@ end
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_do_plots    
-% Prep a figure
-figure(fig_num);
+if flag_do_plots
+    % Prep a figure
+    figure(fig_num);
+    clf;
 
-% Does the figure already have data?
-temp_fig_handle = gcf;
-if isempty(temp_fig_handle.Children)
-    % Initialize the plot
-    % which automatically plot the base station with a green star
-    fcn_PlotTestTrack_geoPlotData([],[],'',fig_num);
-end
-
-% Plot LLA results as cell?
-if iscell(LLA_data)
-    for ith_data = 1:length(LLA_data)
-        LLA_data_to_plot = LLA_data{ith_data};
-        fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
+    % Does the figure already have data?
+    temp_fig_handle = gcf;
+    if isempty(temp_fig_handle.Children)
+        % Initialize the plot
+        % which automatically plot the base station with a green star
+        fcn_PlotTestTrack_geoPlotData([],[],'',fig_num);
     end
-else
-    fcn_INTERNAL_plotData(LLA_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points);
-end    
+
+    % Plot LLA results as cell?
+    if iscell(LLA_data)
+        for ith_data = 1:length(LLA_data)
+            LLA_data_to_plot = LLA_data{ith_data};
+            fcn_INTERNAL_plotData(LLA_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
+        end
+    else
+        fcn_INTERNAL_plotData(LLA_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points);
+    end
 end % Ends check if plotting
 
 if flag_do_debug

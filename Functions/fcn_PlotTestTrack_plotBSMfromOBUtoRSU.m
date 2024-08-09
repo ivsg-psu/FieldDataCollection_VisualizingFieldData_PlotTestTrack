@@ -154,9 +154,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(1,8);
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(1,8);
+    end
 end
 
 % (flag_plot_spokes,flag_plot_hubs,flag_plot_LLA,...
@@ -296,7 +298,22 @@ end
 % now that we have all the coordinates in all 3 formats, we can go ahead
 % and plot the needed BSM locations
 
-% if user wants to plot in LLA
+
+%% Any debugging?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   _____       _
+%  |  __ \     | |
+%  | |  | | ___| |__  _   _  __ _
+%  | |  | |/ _ \ '_ \| | | |/ _` |
+%  | |__| |  __/ |_) | |_| | (_| |
+%  |_____/ \___|_.__/ \__,_|\__, |
+%                            __/ |
+%                           |___/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Plot the inputs?
+if flag_do_plots
+
+    % if user wants to plot in LLA
 if flag_plot_LLA == 1
 
     % set up new plot, clear the figure, and initialize the coordinates
@@ -325,29 +342,8 @@ if flag_plot_LLA == 1
 
     % if the user wants to plot the spokes
     if flag_plot_spokes == 1 % save all the pole locations in a .mat file
-        % and then plot from there, this is a bad way to do this
 
-        % geoplot(pole1_coordinates_lla(:,1), pole1_coordinates_lla(:,2), 'm*', MarkerSize=20);
-        % text(pole1_coordinates_lla(:,1), pole1_coordinates_lla(:,2), '1', 'Color', 'm', 'FontSize', 20, 'FontWeight', 'bold');
-        % 
-        % geoplot(pole2_coordinates_lla(:,1), pole2_coordinates_lla(:,2), 'm*', MarkerSize=20);
-        % text(pole2_coordinates_lla(:,1), pole2_coordinates_lla(:,2), '3', 'Color', 'm', 'FontSize', 20, 'FontWeight', 'bold');
-        % 
-        % geoplot(pole3_coordinates_lla(:,1), pole3_coordinates_lla(:,2), 'm*', MarkerSize=20);
-        % text(pole3_coordinates_lla(:,1), pole3_coordinates_lla(:,2), '2', 'Color', 'm', 'FontSize', 20, 'FontWeight', 'bold');
-        % 
-        % geoplot(pole4_coordinates_lla(:,1), pole4_coordinates_lla(:,2), 'b*', MarkerSize=20);
-        % text(pole4_coordinates_lla(:,1), pole4_coordinates_lla(:,2), '4', 'Color', 'b', 'FontSize', 20, 'FontWeight', 'bold');
-        % 
-        % geoplot(pole5_coordinates_lla(:,1), pole5_coordinates_lla(:,2), '*', MarkerSize=20, Color=[0.9290, 0.6940, 0.1250]);
-        % text(pole5_coordinates_lla(:,1), pole5_coordinates_lla(:,2), '7', 'Color', [0.9290, 0.6940, 0.1250], 'FontSize', 20, 'FontWeight', 'bold');
-        % 
-        % geoplot(pole6_coordinates_lla(:,1), pole6_coordinates_lla(:,2), '*', MarkerSize=20, Color=[0.9290, 0.6940, 0.1250]);
-        % text(pole6_coordinates_lla(:,1), pole6_coordinates_lla(:,2), '5', 'Color', [0.9290, 0.6940, 0.1250], 'FontSize', 20, 'FontWeight', 'bold');
-        % 
-        % geoplot(pole7_coordinates_lla(:,1), pole7_coordinates_lla(:,2), '*', MarkerSize=20, Color=[0.9290, 0.6940, 0.1250]);
-        % text(pole7_coordinates_lla(:,1), pole7_coordinates_lla(:,2), '6', 'Color', [0.9290, 0.6940, 0.1250], 'FontSize', 20, 'FontWeight', 'bold');
-
+        % do nothing, use function rangeRCUcircle to plot RSUs
     end
 end
 
@@ -358,23 +354,8 @@ end
 if flag_plot_STH == 1
     % for now do nothing
 end
-%% Any debugging?
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%   _____       _
-%  |  __ \     | |
-%  | |  | | ___| |__  _   _  __ _
-%  | |  | |/ _ \ '_ \| | | |/ _` |
-%  | |__| |  __/ |_) | |_| | (_| |
-%  |_____/ \___|_.__/ \__,_|\__, |
-%                            __/ |
-%                           |___/
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% % Plot the inputs?
-% if flag_do_plots
-%
-%
-%     % Nothing to do here!
-% end
+
+end
 
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);

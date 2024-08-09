@@ -14,8 +14,8 @@ function [AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csv
 %                    longitude, altitude, and time of the location
 %                    at which the OBU sent out the BSM message to the RSU
 %                    that was in range. The code assumes latitude in first
-%                    column, longitude in second, altitude in third, and 
-%                    time in fourth. 
+%                    column, longitude in second, altitude in third, and
+%                    time in fourth.
 %
 %       (OPTIONAL INPUTS)
 %      baseLat: Latitude of the base location. Default is 40.8637 for the
@@ -27,7 +27,7 @@ function [AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csv
 %      baseAlt: Altitude of the base station. Deafault is 344.189 for the
 %      base station at the Penn State LTI test track
 %
-%      plot_color: color of the plot 
+%      plot_color: color of the plot
 %
 %      fig_num: figure number
 %
@@ -48,11 +48,11 @@ function [AVSpeed_mph, NoExtremes_SC] = fcn_PlotTestTrack_plotSpeedvsStation(csv
 %       script_test_fcn_PlotTestTrack_plotSpeedvsStation.m
 %
 % This function was written on 2024_07_15 by Vaishnavi Wagh
-% --Start to write the function 
+% --Start to write the function
 % Questions or comments? vbw5054@psu.edu
 
 % Revision History
-% 2024_07_15 V. Wagh 
+% 2024_07_15 V. Wagh
 % -- started writing function from fcn_PlotTestTrack_animateAVLane
 % by V. Wagh
 
@@ -73,7 +73,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -100,10 +100,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(1,6);
-
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(1,6);
+    end
 end
 
 
@@ -136,10 +137,10 @@ end
 
 % Does user want to specify plot_color?
 plot_color = [1 0 1]; % Default
-if 5 <= nargin 
+if 5 <= nargin
     temp = varargin{4};
-    if ~isempty(temp) 
-        plot_color = temp; 
+    if ~isempty(temp)
+        plot_color = temp;
     end
 end
 
@@ -185,7 +186,7 @@ gps_object = GPS(baseLat,baseLon,baseAlt); % Load the GPS class
 % Read csv file containing LLA coordinates and time of the OBU when the BSM
 % message was sent out to the RSU
 % csvfile_FID = fopen(csvFile);
-% formatSpec = '%d %d %d %s'; 
+% formatSpec = '%d %d %d %s';
 % [LLA,count] = fscanf(csvfile_FID,['%d' 'lat long elev timediff']);
 % fclose(csvfile_FID);
 
@@ -231,18 +232,18 @@ if 1 == 0
 end
 % % Find unique rows based on the first two columns
 % [~, uniqueIdx] = unique(LocationandTimeOBU(:, 1:2), 'rows', 'stable');
-% 
-% 
+%
+%
 % % Extract the unique rows from the original matrix
 % uniqueRows = LocationandTimeOBU(uniqueIdx, :);
-% 
+%
 % % Extract latitude, longitude, elevation, and time values, here we get time
 % % as NaNs
 % lat = uniqueRows(:,1)/10000000;
 % lon = uniqueRows(:,2)/10000000;
 % elv = uniqueRows(:,3)/10000000;
 % time = TimeDiff(uniqueIdx, :);
-% 
+%
 % % convert LLA to ENU
 % ENU_coordinates = gps_object.WGSLLA2ENU(lat,lon,elv,baseLat,baseLon,baseAlt);
 
@@ -279,7 +280,7 @@ if 1 == 0
     %final_SpeedofAV_mps(end+1) = final_SpeedofAV_mps(end);
 end
 
-% convert speed from m/s tp mph 
+% convert speed from m/s tp mph
 AVSpeed = SpeedofAV_mps*2.23694; %final_SpeedofAV_mps*2.23694;
 
 % calculate station coordiantes
@@ -296,11 +297,11 @@ end
 
 % testing a different method to get rid of the extreme values
 if 1 == 0
-StationCoordinates(distance_between_SC > 2) = NaN;
-StationCoordinates(rowsToDelete, :) = [];
-StationCoordinates_cutshort = StationCoordinates(10:end-10);
-StationCoordinates_cutshort(rowsToDeleteforzeros, :) = [];
-final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshort; StationCoordinates(end-10:end)];
+    StationCoordinates(distance_between_SC > 2) = NaN;
+    StationCoordinates(rowsToDelete, :) = [];
+    StationCoordinates_cutshort = StationCoordinates(10:end-10);
+    StationCoordinates_cutshort(rowsToDeleteforzeros, :) = [];
+    final_StationCoordinates = [StationCoordinates(1:10); StationCoordinates_cutshort; StationCoordinates(end-10:end)];
 end
 
 % putting speed and AV Speed, station coordinates and distance between
@@ -322,30 +323,30 @@ NoExtremes_SC = NoExtremes_Speed_SC_Distance(:,2);
 %                           |___/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% TO DO: chnage this to an internal function, call the internal fumction in
-% the debug area
 
-figure (fig_num); % Create a figure, % TO DO: optional input fig_num
-clf;
-plot(NoExtremes_SC(:,1),AVSpeed_mph, "Color",plot_color,"Marker",".");
-title('Station vs Speed plot');
-xlabel('Station Coordinates in m');
-ylabel('Speed in mph');
+if flag_do_plots == 1
+    figure (fig_num); % Create a figure, % TO DO: optional input fig_num
+    clf;
+    plot(NoExtremes_SC(:,1),AVSpeed_mph, "Color",plot_color,"Marker",".");
+    title('Station vs Speed plot');
+    xlabel('Station Coordinates in m');
+    ylabel('Speed in mph');
 
-figure(fig_num+5);
-clf;
-plot(smoothdata(NoExtremes_SC(:,1),'movmedian',30),AVSpeed_mph, "Color",plot_color,"Marker",".");
-title('Station vs Speed plot smooth');
-xlabel('Station Coordinates in m');
-ylabel('Speed in mph');
+    figure(fig_num+5);
+    clf;
+    plot(smoothdata(NoExtremes_SC(:,1),'movmedian',30),AVSpeed_mph, "Color",plot_color,"Marker",".");
+    title('Station vs Speed plot smooth');
+    xlabel('Station Coordinates in m');
+    ylabel('Speed in mph');
 
-figure(fig_num+10);
-clf;
-plot(StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
-title('Station vs Speed plot uncorrected');
-xlabel('Station Coordinates in m');
-ylabel('Speed in mph');
+    figure(fig_num+10);
+    clf;
+    plot(StationCoordinates(:,1),AVSpeed, "Color",plot_color,"Marker",".");
+    title('Station vs Speed plot uncorrected');
+    xlabel('Station Coordinates in m');
+    ylabel('Speed in mph');
 
+end
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
@@ -367,44 +368,44 @@ end
 %% fcn_INTERNAL_calcSpeed
 function speed = fcn_INTERNAL_calcSpeed(point1, point2, timeatpt1, timeatpt2)
 
-    % Calculate the distance between the two points
-    distance = norm(point2 - point1);
-    
-    timeInterval = timeatpt2-timeatpt1;
+% Calculate the distance between the two points
+distance = norm(point2 - point1);
 
-    % Calculate the speed
-    %time_interval_sec = seconds(timeInterval);
-    speed = distance / timeInterval;
+timeInterval = timeatpt2-timeatpt1;
+
+% Calculate the speed
+%time_interval_sec = seconds(timeInterval);
+speed = distance / timeInterval;
 end
 %% fcn_INTERNAL_modifyMatrix
 function B = fcn_INTERNAL_modifyMatrix(A)
- % Calculate the mean and standard deviation of the first column
-    mu = mean(A(:, 1), 'omitnan');
-    sigma = std(A(:, 1), 'omitnan');
-    
-    % Define the threshold for extreme values (e.g., 3 standard deviations)
-    threshold = 3 * sigma;
-    
-    % Create a copy of the input matrix
-    B = A;
-    
-    % Find elements in the first column that are extreme values
-    extremeIndices = abs(A(:, 1) - mu) > threshold;
-    
-    % Replace extreme values in the first column with NaN
-    B(extremeIndices, 1) = NaN;
-    
-    % Find rows with values > 2 in the third column
-    valueRows = A(:, 3) > 2;
-    
-    % Replace the value in the first column with NaN for these rows
-    B(valueRows, 1) = NaN;
-    
-    % Find rows with values less than 0.5 in the first column
-    lowValueRows = A(:, 1) < 0.05;
-    
-    % Delete rows with low values in the first column
-    B(lowValueRows, :) = [];
+% Calculate the mean and standard deviation of the first column
+mu = mean(A(:, 1), 'omitnan');
+sigma = std(A(:, 1), 'omitnan');
+
+% Define the threshold for extreme values (e.g., 3 standard deviations)
+threshold = 3 * sigma;
+
+% Create a copy of the input matrix
+B = A;
+
+% Find elements in the first column that are extreme values
+extremeIndices = abs(A(:, 1) - mu) > threshold;
+
+% Replace extreme values in the first column with NaN
+B(extremeIndices, 1) = NaN;
+
+% Find rows with values > 2 in the third column
+valueRows = A(:, 3) > 2;
+
+% Replace the value in the first column with NaN for these rows
+B(valueRows, 1) = NaN;
+
+% Find rows with values less than 0.5 in the first column
+lowValueRows = A(:, 1) < 0.05;
+
+% Delete rows with low values in the first column
+B(lowValueRows, :) = [];
 end
 
 %% Unused Function
@@ -414,21 +415,21 @@ end
 %     matrixBeforeColon = [];
 %     matrixBetweenColons = [];
 %     remainingStrings = {};
-% 
+%
 %     for i = 1:length(timeStrings)
 %         str = timeStrings{i};
 %         colons = strfind(str, ':');
-%         
+%
 %         % Ensure there are at least two colons in the string
 %         if length(colons) >= 2
 %             % Extract numbers before the first colon
 %             numBefore = str2double(str(1:colons(1)-1));
 %             matrixBeforeColon = [matrixBeforeColon; numBefore];
-%             
+%
 %             % Extract numbers between the first and second colons
 %             numBetween = str2double(str(colons(1)+1:colons(2)-1));
 %             matrixBetweenColons = [matrixBetweenColons; numBetween];
-%             
+%
 %             % Extract the remaining string after the second colon
 %             remainingStr = str(colons(2)+1:end);
 %             remainingStrings{end+1} = remainingStr;

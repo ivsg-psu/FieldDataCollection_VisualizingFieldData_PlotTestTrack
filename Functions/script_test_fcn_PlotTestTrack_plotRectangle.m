@@ -74,3 +74,85 @@ fig_num = 768;
 
 assert(length(LLACorners)==4);
 assert(length(enuCorners)==4);
+
+%% put figure = -1
+
+reference_latitude = 40.86368573;
+reference_longitude = -77.83592832;
+reference_altitude = 344.189;
+
+LLA_centerPoint = [40.8631116, -77.8350440,	335.9];
+LLA_second_point = [40.8633962	-77.8351958	335.5
+];
+
+car_length = [];
+car_width = [];
+AV_color = [];
+flag_LLA = [];
+flag_ENU = [];
+fig_num = -1;
+
+[enuCorners, LLACorners] = fcn_PlotTestTrack_plotRectangle(...
+    reference_latitude, reference_longitude, reference_altitude, LLA_centerPoint,...
+    LLA_second_point,car_length,car_width,AV_color,flag_LLA,flag_ENU,fig_num);
+
+%% testing speed of function
+
+% load inputs
+reference_latitude = 40.86368573;
+reference_longitude = -77.83592832;
+reference_altitude = 344.189;
+
+LLA_centerPoint = [40.8631116, -77.8350440,	335.9];
+LLA_second_point = [40.8633962	-77.8351958	335.5
+];
+
+car_length = [];
+car_width = [];
+AV_color = [];
+flag_LLA = [];
+flag_ENU = [];
+
+% Speed Test Calculation
+fig_num=[];
+REPS=5; minTimeSlow=Inf;
+tic;
+%slow mode calculation - code copied from plotVehicleXYZ
+for i=1:REPS
+tstart=tic;
+[enuCorners, LLACorners] = fcn_PlotTestTrack_plotRectangle(...
+    reference_latitude, reference_longitude, reference_altitude, LLA_centerPoint,...
+    LLA_second_point,car_length,car_width,AV_color,flag_LLA,flag_ENU,fig_num);
+telapsed=toc(tstart);
+minTimeSlow=min(telapsed,minTimeSlow);
+end
+averageTimeSlow=toc/REPS;
+%slow mode END
+%Fast Mode Calculation
+fig_num = -1;
+minTimeFast = Inf;
+tic;
+for i=1:REPS
+tstart = tic;
+[enuCorners, LLACorners] = fcn_PlotTestTrack_plotRectangle(...
+    reference_latitude, reference_longitude, reference_altitude, LLA_centerPoint,...
+    LLA_second_point,car_length,car_width,AV_color,flag_LLA,flag_ENU,fig_num);
+telapsed = toc(tstart);
+minTimeFast = min(telapsed,minTimeFast);
+end
+averageTimeFast = toc/REPS;
+%Display Console Comparison
+if 1==1
+fprintf(1,'\n\nComparison of fcn_PlotTestTrack_plotRectangle without speed setting (slow) and with speed setting (fast):\n');
+fprintf(1,'N repetitions: %.0d\n',REPS);
+fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+end
+%Assertion on averageTime NOTE: Due to the variance, there is a chance that
+%the assertion will fail.
+assert(averageTimeFast<averageTimeSlow);
+diff = averageTimeFast*10000 - averageTimeSlow*10000;

@@ -18,7 +18,7 @@ function fcn_PlotTestTrack_geoPlotData(varargin)
 %
 %      color: an optional color to plot. Default is yellow ([1 1 0]).
 %
-%      text: an optional text to add to the plot. 
+%      text: an optional text to add to the plot.
 %
 %      fig_num: a figure number to plot result
 %
@@ -51,8 +51,8 @@ function fcn_PlotTestTrack_geoPlotData(varargin)
 % 2023_09_08 by V. Wagh
 % -- added in line 197, 198
 % offset_Lat = 0; % default offset
-% offset_Lon = 0; % default offset 
-% to get rid of Unrecognized function or variable errors 
+% offset_Lon = 0; % default offset
+% to get rid of Unrecognized function or variable errors
 
 %% Debugging and Input checks
 
@@ -71,7 +71,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -98,10 +98,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(0,5);
-
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(0,5);
+    end
 end
 
 flag_do_debug = 0; % Flag to show the results for debugging
@@ -146,19 +147,19 @@ if 4 == nargin
     temp = varargin{4};
     if ~isempty(temp)
         fig_num = temp;
-        figure(fig_num);
+        %figure(fig_num);
 
         % Check to see if data is being plotting? If it is not, then we
         % need to replot the figure
         if 0==flag_plot_data
             flag_make_new_plot = 1;
-        else            
+        else
             % Do not replot the figure - data is given
             flag_make_new_plot = 0;
         end
     else % An empty figure number is given by user, so we have to make one
-        fig = figure; % create new figure with next default index
-        fig_num = get(fig,'Number');
+        %fig = figure; % create new figure with next default index
+        fig_num = 2345;
         flag_make_new_plot = 1;
     end
 end
@@ -175,15 +176,15 @@ end
 % Is the figure number still empty? If so, then we need to open a new
 % figure
 if flag_make_new_plot && isempty(fig_num)
-    fig = figure; % create new figure with next default index
-    fig_num = get(fig,'Number');
+    %fig = figure; % create new figure with next default index
+    fig_num = 47879;
     flag_make_new_plot = 1;
 end
 
 
 % Setup figures if there is debugging
 if flag_do_debug
-    fig_debug = 9999; 
+    fig_debug = 9999;
 else
     fig_debug = []; %#ok<*NASGU>
 end
@@ -207,64 +208,78 @@ end
 %  |_|  |_|\__,_|_|_| |_|
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% no calculations here
 
-% check that the figure has data
-figure(fig_num);
-temp_fig_handle = gcf;
-if isempty(temp_fig_handle.Children)
-    flag_make_new_plot = 1;
-end
+%% Any debugging?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   _____       _
+%  |  __ \     | |
+%  | |  | | ___| |__  _   _  __ _
+%  | |  | |/ _ \ '_ \| | | |/ _` |
+%  | |__| |  __/ |_) | |_| | (_| |
+%  |_____/ \___|_.__/ \__,_|\__, |
+%                            __/ |
+%                           |___/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Check to see if we are forcing image alignment via Lat and Lon shifting,
-% when doing geoplot. This is added because the geoplot images are very, very
-% slightly off at the test track, which is confusing when plotting data
-% above them.
-offset_Lat = 0; % Default offset 
-offset_Lon = 0; % Default offset 
-MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
-MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
-if ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
-    offset_Lat = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
-    offset_Lon  = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
-end
-
-if flag_make_new_plot 
-    %clf;
-    % set up new plot, clear the figure, and initialize the 
-    
-
-    % Plot the base station with a green star. This sets up the figure for
-    % the first time, including the zoom into the test track area.
-    
-    reference_latitude = 40.86368573;
-    reference_longitude = -77.83592832;
-    reference_altitude = 344.189;
-
-    h_geoplot = geoplot(reference_latitude+offset_Lat, reference_longitude+offset_Lon, '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
-    h_parent =  get(h_geoplot,'Parent');
-    set(h_parent,'ZoomLevel',16.375);
-    try
-        geobasemap satellite
-      
-    catch
-        geobasemap openstreetmap
+if flag_do_plots == 1
+    % check that the figure has data
+    figure(fig_num);
+    temp_fig_handle = gcf;
+    if isempty(temp_fig_handle.Children)
+        flag_make_new_plot = 1;
     end
-    geotickformat -dd
-    hold on
-end
 
-if flag_plot_data
-    geoplot(data_to_plot(:,1)+offset_Lat,data_to_plot(:,2)+offset_Lon,'-','Color',color_to_plot,'Linewidth',1,'Markersize',20);
-    %geoplot(data_to_plot(:,1)+offset_Lat,data_to_plot(:,2)+offset_Lon,'-','Color',color_to_plot,'Linewidth',1,'Markersize',20,'LineStyle', line_type);
-    geoplot(data_to_plot(1,1)+offset_Lat, data_to_plot(1,2)+offset_Lon, 'o','Color',[0 1 0],'Linewidth',1,'Markersize',10);
-    geoplot(data_to_plot(end,1)+offset_Lat, data_to_plot(end,2)+offset_Lon, 'x','Color',[1 0 0],'Linewidth',1,'Markersize',10);
+    % Check to see if we are forcing image alignment via Lat and Lon shifting,
+    % when doing geoplot. This is added because the geoplot images are very, very
+    % slightly off at the test track, which is confusing when plotting data
+    % above them.
+    offset_Lat = 0; % Default offset
+    offset_Lon = 0; % Default offset
+    MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
+    MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
+    if ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
+        offset_Lat = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
+        offset_Lon  = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
+    end
 
-    % Label the plots?
-    if ~isempty(label_text)
-        text(data_to_plot(1,1)+offset_Lat, data_to_plot(1,2)+offset_Lon,sprintf('%s',label_text),'Color',color_to_plot,'FontSize',14);
+    if flag_make_new_plot
+        %clf;
+        % set up new plot, clear the figure, and initialize the
+
+
+        % Plot the base station with a green star. This sets up the figure for
+        % the first time, including the zoom into the test track area.
+
+        reference_latitude = 40.86368573;
+        reference_longitude = -77.83592832;
+        reference_altitude = 344.189;
+
+        h_geoplot = geoplot(reference_latitude+offset_Lat, reference_longitude+offset_Lon, '*','Color',[0 1 0],'Linewidth',3,'Markersize',10);
+        h_parent =  get(h_geoplot,'Parent');
+        set(h_parent,'ZoomLevel',16.375);
+        try
+            geobasemap satellite
+
+        catch
+            geobasemap openstreetmap
+        end
+        geotickformat -dd
+        hold on
+    end
+
+    if flag_plot_data
+        geoplot(data_to_plot(:,1)+offset_Lat,data_to_plot(:,2)+offset_Lon,'-','Color',color_to_plot,'Linewidth',1,'Markersize',20);
+        %geoplot(data_to_plot(:,1)+offset_Lat,data_to_plot(:,2)+offset_Lon,'-','Color',color_to_plot,'Linewidth',1,'Markersize',20,'LineStyle', line_type);
+        geoplot(data_to_plot(1,1)+offset_Lat, data_to_plot(1,2)+offset_Lon, 'o','Color',[0 1 0],'Linewidth',1,'Markersize',10);
+        geoplot(data_to_plot(end,1)+offset_Lat, data_to_plot(end,2)+offset_Lon, 'x','Color',[1 0 0],'Linewidth',1,'Markersize',10);
+
+        % Label the plots?
+        if ~isempty(label_text)
+            text(data_to_plot(1,1)+offset_Lat, data_to_plot(1,2)+offset_Lon,sprintf('%s',label_text),'Color',color_to_plot,'FontSize',14);
+        end
     end
 end
-
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end

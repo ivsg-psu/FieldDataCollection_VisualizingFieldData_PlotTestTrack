@@ -93,7 +93,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -120,10 +120,12 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(3,12);
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(3,12);
 
+    end
 end
 
 % Default base location coordinates (PSU test track)
@@ -304,124 +306,124 @@ ENU_RightLaneY = RightLaneY';
 
 % before opeaning up a figure, lets start to capture the frames for an
 % animation if the user has entered a name for the mov file
+if flag_do_plots == 1
+    if ~isempty(name_of_movfile)
 
-if ~isempty(name_of_movfile)
+        if isempty(path_to_save_video)
+            error('Give a path to save the video');
+        end
+        % Define the number of frames for the video
+        numFrames = Num_length;
 
-    if isempty(path_to_save_video)
-        error('Give a path to save the video');
+        % Specify the folder where you want to save the video
+        outputFolder = path_to_save_video; % Replace with your desired path
+
+        % Create the full file path
+        outputFileName = fullfile(outputFolder, sprintf('%s',name_of_movfile'));
+
+        % Create a VideoWriter object
+        video = VideoWriter(outputFileName, 'MPEG-4'); % Use 'Uncompressed AVI' for uncompressed format
+        video.FrameRate = 30; % Set the frame rate
+
+        % Open the video writer object to start writing
+        open(video);
+
     end
-    % Define the number of frames for the video
-    numFrames = Num_length;
+    figure (fig_num); % Create a figure
+    clf;
 
-    % Specify the folder where you want to save the video
-    outputFolder = path_to_save_video; % Replace with your desired path
+    % Plot the base station i.e the RSU in this case with the same colour as the AV.
+    % This sets up the figure for
+    % the first time, including the zoom into the test track area.
+    h_geoplot = geoplot(baseLat, baseLon, '*','Color',AV_color,'Linewidth',3,'Markersize',10);
+    h_parent = get(h_geoplot,'Parent');
+    set(h_parent,'ZoomLevel',16.375);
 
-    % Create the full file path
-    outputFileName = fullfile(outputFolder, sprintf('%s',name_of_movfile'));
+    try
+        geobasemap satellite
+    catch
+        geobasemap openstreetmap
+    end
+    geotickformat -dd;
 
-    % Create a VideoWriter object
-    video = VideoWriter(outputFileName, 'MPEG-4'); % Use 'Uncompressed AVI' for uncompressed format
-    video.FrameRate = 30; % Set the frame rate
+    % plot original data i.e centerline and rectangle of car
+    hold on;
+    h_center = geoplot(lat, lon, "Color",AV_color, "LineWidth", 3);
+    h_left = geoplot(LLA_LeftLane(:, 1), LLA_LeftLane(:, 2), "Color",left_color, "LineWidth", 3);
+    h_right = geoplot(LLA_RightLane(:, 1), LLA_RightLane(:, 2), "Color",right_color, "LineWidth", 3);
+    h_rect = geoplot(nan, nan, "Color",AV_color, 'LineWidth', 2);
 
-    % Open the video writer object to start writing
-    open(video);
+    % Conversion factors
+    feet_per_degree_lat = 364567; % Approximate conversion factor for latitude
+    feet_per_degree_lon = feet_per_degree_lat * cosd(mean(lat)); % Adjust for mid-latitude
 
-end
-figure (fig_num); % Create a figure
-clf;
+    % Convert car dimensions to degrees
+    car_length_deg = car_length / feet_per_degree_lat;
+    car_width_deg = car_width / feet_per_degree_lon;
 
-% Plot the base station i.e the RSU in this case with the same colour as the AV.
-% This sets up the figure for
-% the first time, including the zoom into the test track area.
-h_geoplot = geoplot(baseLat, baseLon, '*','Color',AV_color,'Linewidth',3,'Markersize',10);
-h_parent = get(h_geoplot,'Parent');
-set(h_parent,'ZoomLevel',16.375);
+    % Animation loop
+    for ith_coordinate = 1:Num_length
+        % Update the data for center, left and right lane
+        set(h_center, 'XData', lat(1:ith_coordinate), 'YData', lon(1:ith_coordinate), 'LineWidth', 3);
+        set(h_left, 'XData', LLA_LeftLane(1:ith_coordinate, 1), 'YData', LLA_LeftLane(1:ith_coordinate, 2), 'LineWidth', 3);
+        set(h_right, 'XData', LLA_RightLane(1:ith_coordinate, 1), 'YData', LLA_RightLane(1:ith_coordinate, 2), 'LineWidth', 3);
 
-try
-    geobasemap satellite
-catch
-    geobasemap openstreetmap
-end
-geotickformat -dd;
+        % Update the data for the rectangle to represent the car
+        % Calculate the unit vector where the car is heading to
+        Vector = [lat(ith_coordinate+1)-lat(ith_coordinate), lon(ith_coordinate+1)-lon(ith_coordinate)];
+        magnitude = sum(Vector.^2,2).^0.5;
+        unitVtor = Vector./magnitude;
+        %Calculate the unit vector that is perpendicular to the direction of
+        % the car
+        perpVector = [unitVtor(2), -unitVtor(1)];
+        scaled_perpVector = perpVector * (car_width_deg/2);
+        center = [lat(ith_coordinate) lon(ith_coordinate)];
+        % Find center points of front, back, left and right of the lane
+        New_point_left = center - scaled_perpVector;
+        New_point_right = center + scaled_perpVector;
+        New_point_front = center + unitVtor.*(car_length_deg/2);
+        New_point_back = center - unitVtor.*(car_length_deg/2);
+        % Find the points of the four corners of the car
+        Left_bottom_corner = New_point_back - scaled_perpVector;
+        Left_top_corner = New_point_front - scaled_perpVector;
+        Right_bottom_corner = New_point_back + scaled_perpVector;
+        Right_top_corner = New_point_front + scaled_perpVector;
+        %Coordination of the rectangle
+        x = [Left_bottom_corner(1),Right_bottom_corner(1),Right_top_corner(1),Left_top_corner(1),Left_bottom_corner(1)];
+        y = [Left_bottom_corner(2),Right_bottom_corner(2),Right_top_corner(2),Left_top_corner(2),Left_bottom_corner(2)];
+        set(h_rect,'XData',x,'YData',y)
+        % Pause to control the speed of the animation
+        pause(0.1);
 
-% plot original data i.e centerline and rectangle of car
-hold on;
-h_center = geoplot(lat, lon, "Color",AV_color, "LineWidth", 3);
-h_left = geoplot(LLA_LeftLane(:, 1), LLA_LeftLane(:, 2), "Color",left_color, "LineWidth", 3);
-h_right = geoplot(LLA_RightLane(:, 1), LLA_RightLane(:, 2), "Color",right_color, "LineWidth", 3);
-h_rect = geoplot(nan, nan, "Color",AV_color, 'LineWidth', 2);
+        if ~isempty(name_of_movfile)
+            % Get the current frame as an image
+            frame = getframe(gcf);
 
-% Conversion factors
-feet_per_degree_lat = 364567; % Approximate conversion factor for latitude
-feet_per_degree_lon = feet_per_degree_lat * cosd(mean(lat)); % Adjust for mid-latitude
+            % Write the frame to the video
+            writeVideo(video, frame);
+        end
 
-% Convert car dimensions to degrees
-car_length_deg = car_length / feet_per_degree_lat;
-car_width_deg = car_width / feet_per_degree_lon;
+    end
 
-% Animation loop
-for ith_coordinate = 1:Num_length
-    % Update the data for center, left and right lane
-    set(h_center, 'XData', lat(1:ith_coordinate), 'YData', lon(1:ith_coordinate), 'LineWidth', 3);
-    set(h_left, 'XData', LLA_LeftLane(1:ith_coordinate, 1), 'YData', LLA_LeftLane(1:ith_coordinate, 2), 'LineWidth', 3);
-    set(h_right, 'XData', LLA_RightLane(1:ith_coordinate, 1), 'YData', LLA_RightLane(1:ith_coordinate, 2), 'LineWidth', 3);
-
-    % Update the data for the rectangle to represent the car
-    % Calculate the unit vector where the car is heading to
-    Vector = [lat(ith_coordinate+1)-lat(ith_coordinate), lon(ith_coordinate+1)-lon(ith_coordinate)];
-    magnitude = sum(Vector.^2,2).^0.5;
-    unitVtor = Vector./magnitude;
-    %Calculate the unit vector that is perpendicular to the direction of
-    % the car
-    perpVector = [unitVtor(2), -unitVtor(1)];
-    scaled_perpVector = perpVector * (car_width_deg/2);
-    center = [lat(ith_coordinate) lon(ith_coordinate)];
-    % Find center points of front, back, left and right of the lane
-    New_point_left = center - scaled_perpVector;
-    New_point_right = center + scaled_perpVector;
-    New_point_front = center + unitVtor.*(car_length_deg/2);
-    New_point_back = center - unitVtor.*(car_length_deg/2);
-    % Find the points of the four corners of the car
-    Left_bottom_corner = New_point_back - scaled_perpVector;
-    Left_top_corner = New_point_front - scaled_perpVector;
-    Right_bottom_corner = New_point_back + scaled_perpVector;
-    Right_top_corner = New_point_front + scaled_perpVector;
-    %Coordination of the rectangle
-    x = [Left_bottom_corner(1),Right_bottom_corner(1),Right_top_corner(1),Left_top_corner(1),Left_bottom_corner(1)];
-    y = [Left_bottom_corner(2),Right_bottom_corner(2),Right_top_corner(2),Left_top_corner(2),Left_bottom_corner(2)];
-    set(h_rect,'XData',x,'YData',y)
-    % Pause to control the speed of the animation
-    pause(0.1);
+    legend([h_center, h_left, h_right, h_rect], {'Center Lane', 'Left Lane', 'Right Lane', 'Car'}, 'Location', 'best');
+    hold off;
 
     if ~isempty(name_of_movfile)
-    % Get the current frame as an image
-    frame = getframe(gcf);
+        % Close the video writer object
+        close(video);
 
-    % Write the frame to the video
-    writeVideo(video, frame);
+        % Close the figure
+        close(gcf);
+
+        fprintf('Video saved as %s\n',name_of_movfile);
+    end
+
+    if flag_do_debug
+        fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
     end
 
 end
-
-legend([h_center, h_left, h_right, h_rect], {'Center Lane', 'Left Lane', 'Right Lane', 'Car'}, 'Location', 'best');
-hold off;
-
-if ~isempty(name_of_movfile)
-    % Close the video writer object
-    close(video);
-
-    % Close the figure
-    close(gcf);
-
-    fprintf('Video saved as %s\n',name_of_movfile);
 end
-
-if flag_do_debug
-    fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
-end
-
-end
-
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   ______                _   _

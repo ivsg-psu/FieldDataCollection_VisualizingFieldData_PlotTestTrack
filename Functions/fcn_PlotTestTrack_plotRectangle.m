@@ -78,12 +78,10 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
-
-flag_do_debug = 1;
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
@@ -105,9 +103,11 @@ end
 % See: http://patorjk.com/software/taag/#p=display&f=Big&t=Inputs
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-if flag_max_speed == 1
-    % Are there the right number of inputs?
-    narginchk(5,11);
+if 0 == flag_max_speed
+    if flag_check_inputs == 1
+        % Are there the right number of inputs?
+        narginchk(5,11);
+    end
 end
 
 % car length or length of the rectangle
@@ -234,10 +234,10 @@ enuCorners_Left = [X_leftFront Y_leftFront 0
 enuCorners_Right = [X_rightFront Y_rightFront 0
     X_rightBack Y_rightBack 0];
 
-enuCorners = [X_leftFront Y_leftFront 
-    X_rightFront Y_rightFront 
-    X_rightBack Y_rightBack 
-    X_leftBack Y_leftBack 
+enuCorners = [X_leftFront Y_leftFront
+    X_rightFront Y_rightFront
+    X_rightBack Y_rightBack
+    X_leftBack Y_leftBack
     ];
 
 orderedENUPoints = fcn_INTERNAL_reorderRectanglePoints(enuCorners);
@@ -261,53 +261,56 @@ LLACorners_Final = LLACorners(1:end-1,:);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Plot rectangle in LLA
-if flag_LLA == 1
+if flag_do_plots == 1
+    if flag_LLA == 1
 
-    % Plot the rectangle on a geographic plot
-    figure(fig_num);
+        % Plot the rectangle on a geographic plot
+        figure(fig_num);
+        clf;
 
-    % Plot the center of the rectangle
-    h_geoplot = geoplot(centerLat, centerLon, '*','Color',AV_color,'MarkerSize',3);
+        % Plot the center of the rectangle
+        h_geoplot = geoplot(centerLat, centerLon, '*','Color',AV_color,'MarkerSize',3);
 
 
-    % Obtain the parent of the geoplot with a sattelite or openstreetmap view
-    h_parent = get(h_geoplot, 'Parent');
-    %set(h_parent, 'ZoomLevel', 16.375);
-    try
-        geobasemap satellite;
-    catch
-        geobasemap openstreetmap;
+        % Obtain the parent of the geoplot with a sattelite or openstreetmap view
+        h_parent = get(h_geoplot, 'Parent');
+        %set(h_parent, 'ZoomLevel', 16.375);
+        try
+            geobasemap satellite;
+        catch
+            geobasemap openstreetmap;
+        end
+        hold on;
+        geotickformat -dd;
+
+        geoplot(LLACorners(:, 1), LLACorners(:, 2), 'Color',AV_color,'LineStyle','-','LineWidth',3);
+        geoplot(LLA_second_point(:,1), LLA_second_point(:,2), 'g*','MarkerSize',3); % Plot direction point
+        title('Rectangle of AV in LLA Coordinates');
     end
-    hold on;
-    geotickformat -dd;
 
-    geoplot(LLACorners(:, 1), LLACorners(:, 2), 'Color',AV_color,'LineStyle','-','LineWidth',3);
-    geoplot(LLA_second_point(:,1), LLA_second_point(:,2), 'g*','MarkerSize',3); % Plot direction point
-    title('Rectangle of AV in LLA Coordinates');
+
+    if flag_ENU == 1
+
+        % Plot the rectangle in ENU coordinates
+        figure(fig_num+1);
+        clf;
+
+        % Plot the center of the rectangle
+        plot(centerENU(:,1),centerENU(:,2),'Color',AV_color,'Marker','*','MarkerSize',5);
+        hold on;
+        plot(secondPoint_ENU(:,1), secondPoint_ENU(:,2), 'g*','MarkerSize',3); % Plot direction point
+        hold on;
+        plot(orderedENUPoints(:, 1), orderedENUPoints(:, 2), 'Color',AV_color,'LineWidth',3);
+        title('Rectangle in ENU Coordinates');
+        xlabel('East (meters)');
+        ylabel('North (meters)');
+        axis equal;
+        grid on;
+
+        hold off;
+        legend('Center of rectangle','Second Point', 'Rectangle');
+    end
 end
-
-
-if flag_ENU == 1
-
-    % Plot the rectangle in ENU coordinates
-    figure(fig_num+1);
-
-    % Plot the center of the rectangle
-    plot(centerENU(:,1),centerENU(:,2),'Color',AV_color,'Marker','*','MarkerSize',5);
-    hold on;
-    plot(secondPoint_ENU(:,1), secondPoint_ENU(:,2), 'g*','MarkerSize',3); % Plot direction point
-    hold on;
-    plot(orderedENUPoints(:, 1), orderedENUPoints(:, 2), 'Color',AV_color,'LineWidth',3);
-    title('Rectangle in ENU Coordinates');
-    xlabel('East (meters)');
-    ylabel('North (meters)');
-    axis equal;
-    grid on;
-
-    hold off;
-    legend('Center of rectangle','Second Point', 'Rectangle');
-end
-
 end
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -371,37 +374,37 @@ end
 %% fcn_INTERNAL_reorderRectanglePoints
 
 function rectPoints = fcn_INTERNAL_reorderRectanglePoints(points)
-    % plotRectangleFromUnorderedPoints Plots a rectangle from four unordered XY points.
-    %
-    % Inputs:
-    %   points - A 4x2 matrix where each row is an (X, Y) coordinate
+% plotRectangleFromUnorderedPoints Plots a rectangle from four unordered XY points.
+%
+% Inputs:
+%   points - A 4x2 matrix where each row is an (X, Y) coordinate
 
-    % Ensure the input is a 4x2 matrix
-    assert(size(points, 1) == 4 && size(points, 2) == 2, 'Input must be a 4x2 matrix of points.');
+% Ensure the input is a 4x2 matrix
+assert(size(points, 1) == 4 && size(points, 2) == 2, 'Input must be a 4x2 matrix of points.');
 
-    % Calculate the centroid of the points
-    centroid = mean(points);
+% Calculate the centroid of the points
+centroid = mean(points);
 
-    % Calculate angles of each point relative to the centroid
-    angles = atan2(points(:, 2) - centroid(2), points(:, 1) - centroid(1));
+% Calculate angles of each point relative to the centroid
+angles = atan2(points(:, 2) - centroid(2), points(:, 1) - centroid(1));
 
-    % Sort points based on angles
-    [~, order] = sort(angles);
-    orderedPoints = points(order, :);
+% Sort points based on angles
+[~, order] = sort(angles);
+orderedPoints = points(order, :);
 
-    % Reorder the points to form a rectangle (ensure correct order)
-    % Find the pair of opposite corners with the maximum distance
-    dists = pdist2(orderedPoints, orderedPoints);
-    [~, idx] = max(dists(:));
-    [row, col] = ind2sub(size(dists), idx);
+% Reorder the points to form a rectangle (ensure correct order)
+% Find the pair of opposite corners with the maximum distance
+dists = pdist2(orderedPoints, orderedPoints);
+[~, idx] = max(dists(:));
+[row, col] = ind2sub(size(dists), idx);
 
-    % Determine the two pairs of corners
-    corners1 = [orderedPoints(row, :); orderedPoints(col, :)];
-    remainingPoints = setdiff(1:4, [row, col]);
-    corners2 = [orderedPoints(remainingPoints(1), :); orderedPoints(remainingPoints(2), :)];
+% Determine the two pairs of corners
+corners1 = [orderedPoints(row, :); orderedPoints(col, :)];
+remainingPoints = setdiff(1:4, [row, col]);
+corners2 = [orderedPoints(remainingPoints(1), :); orderedPoints(remainingPoints(2), :)];
 
-    % Combine the points to form the rectangle
-    rectPoints = [corners1(1, :); corners2(1, :); corners1(2, :); corners2(2, :); corners1(1, :)];
+% Combine the points to form the rectangle
+rectPoints = [corners1(1, :); corners2(1, :); corners1(2, :); corners2(2, :); corners1(1, :)];
 end
 
 

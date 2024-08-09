@@ -4,7 +4,7 @@ function fcn_PlotTestTrack_plotTraceENU(ENU_data, varargin)
 %
 % FORMAT:
 %
-%       fcn_PlotTestTrack_plotTraceENU(ENU_data,(plot_color),(fig_num))
+%       fcn_PlotTestTrack_plotTraceENU(ENU_data,(plot_color),line_width,flag_plot_headers_and_tailers,flag_plot_points,(fig_num))
 %
 % INPUTS:
 %
@@ -51,7 +51,7 @@ function fcn_PlotTestTrack_plotTraceENU(ENU_data, varargin)
 % 2023_07_25 by S. Brennan, sbrennan@psu.edu
 % -- start writing function
 % 2024_06_12 by Jiabao Zhao
-% -- Added debug section and changed the corrspending input 
+% -- Added debug section and changed the corrspending input
 
 
 flag_do_debug = 0; % Flag to show the results for debugging
@@ -82,7 +82,7 @@ else
     MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
     MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
     if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG); 
+        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
         flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
     end
 end
@@ -165,8 +165,7 @@ if 6 == nargin
         fig_num = temp;
 
     else % An empty figure number is given by user, so we have to make one
-        fig = figure; % create new figure with next default index
-        fig_num = get(fig,'Number');
+        fig_num = 2345;
         flag_make_new_plot = 1;
     end
 end
@@ -175,8 +174,7 @@ end
 % Is the figure number still empty? If so, then we need to open a new
 % figure
 if flag_make_new_plot && isempty(fig_num)
-    fig = figure; % create new figure with next default index
-    fig_num = get(fig,'Number');
+    fig_num = 2675;
     flag_make_new_plot = 1;
 end
 
@@ -208,36 +206,50 @@ end
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% no calculations
 
-% Prep a figure
-figure(fig_num);
+%% Any debugging?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   _____       _
+%  |  __ \     | |
+%  | |  | | ___| |__  _   _  __ _
+%  | |  | |/ _ \ '_ \| | | |/ _` |
+%  | |__| |  __/ |_) | |_| | (_| |
+%  |_____/ \___|_.__/ \__,_|\__, |
+%                            __/ |
+%                           |___/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+if flag_do_plots == 1
+    % Prep a figure
+    figure(fig_num);
+    clf;
 
 
-% Set background to near-black?
-h_axis = gca;
-if isempty(h_axis.Children)
-    set(gca,'Color',[1 1 1]*0.4);
-    grid on;
-    set(gca,'GridColor', [1 1 1]*0.85);
+    % Set background to near-black?
+    h_axis = gca;
+    if isempty(h_axis.Children)
+        set(gca,'Color',[1 1 1]*0.4);
+        grid on;
+        set(gca,'GridColor', [1 1 1]*0.85);
 
-    axis equal
-    hold on;
+        axis equal
+        hold on;
 
-    % Plot the base station with a green star
-    plot(0, 0, '*','Color',[0 1 0],'Linewidth',line_width,'Markersize',15);
-end
-
-
-% Plot ENU results as cell?
-if iscell(ENU_data)
-    for ith_data = 1:length(ENU_data)
-        ENU_data_to_plot = ENU_data{ith_data};
-        fcn_INTERNAL_plotData(ENU_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
+        % Plot the base station with a green star
+        plot(0, 0, '*','Color',[0 1 0],'Linewidth',line_width,'Markersize',15);
     end
-else
-    fcn_INTERNAL_plotData(ENU_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points);
-end
 
+
+    % Plot ENU results as cell?
+    if iscell(ENU_data)
+        for ith_data = 1:length(ENU_data)
+            ENU_data_to_plot = ENU_data{ith_data};
+            fcn_INTERNAL_plotData(ENU_data_to_plot,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points)
+        end
+    else
+        fcn_INTERNAL_plotData(ENU_data,plot_color,line_width,flag_plot_headers_and_tailers, flag_plot_points);
+    end
+end
 if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end

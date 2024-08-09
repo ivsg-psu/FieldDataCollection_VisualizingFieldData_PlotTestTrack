@@ -173,3 +173,66 @@ ENU_fig_num = 456;
     plot_color, MarkerSize, LLA_fig_num, ENU_fig_num);
 
 assert(length(LLA_coordinates) == length(ENU_coordinates))
+
+%% testing speed of function
+
+% load inputs
+% FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
+initial_points =  [
+40.43073, -79.87261 0
+]; % RSU location in pittsburg
+
+input_coordinates_type = "LLA";
+
+% base station in pittsburg
+reference_latitude_pitts = 40.44181017;
+reference_longitude_pitts = -79.76090840;
+reference_altitude_pitts = 327.428;
+base_station_coordinates = [reference_latitude_pitts, reference_longitude_pitts, reference_altitude_pitts];
+plot_color = [1 1 0];
+MarkerSize = 20;
+
+% Speed Test Calculation
+fig_num=[];
+REPS=5; minTimeSlow=Inf;
+tic;
+%slow mode calculation - code copied from plotVehicleXYZ
+for i=1:REPS
+tstart=tic;
+
+[LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+    initial_points, input_coordinates_type, base_station_coordinates,...
+    plot_color, MarkerSize, fig_num, fig_num);
+telapsed=toc(tstart);
+minTimeSlow=min(telapsed,minTimeSlow);
+end
+averageTimeSlow=toc/REPS;
+%slow mode END
+%Fast Mode Calculation
+fig_num = -1;
+minTimeFast = Inf;
+tic;
+for i=1:REPS
+tstart = tic;
+
+[LLA_coordinates, ENU_coordinates]  = fcn_PlotTestTrack_plotPointsAnywhere(...
+    initial_points, input_coordinates_type, base_station_coordinates,...
+    plot_color, MarkerSize, fig_num, fig_num);
+telapsed = toc(tstart);
+minTimeFast = min(telapsed,minTimeFast);
+end
+averageTimeFast = toc/REPS;
+%Display Console Comparison
+if 1==1
+fprintf(1,'\n\nComparison of fcn_PlotTestTrack_plotPointsAnywhere without speed setting (slow) and with speed setting (fast):\n');
+fprintf(1,'N repetitions: %.0d\n',REPS);
+fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+end
+%Assertion on averageTime NOTE: Due to the variance, there is a chance that
+%the assertion will fail.
+assert(averageTimeFast<averageTimeSlow);
