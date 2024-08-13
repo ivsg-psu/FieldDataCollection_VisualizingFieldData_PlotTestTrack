@@ -1,29 +1,40 @@
-function h_plot = fcn_plotRoad_plotXY(XYdata, varargin)
-%fcn_plotRoad_plotXY    plots XY data with user-defined formatting strings
+function h_plot = fcn_plotRoad_plotXYI(XYIdata, varargin)
+%fcn_plotRoad_plotXYI    plots XY data with intensiy color mapping
 % 
 % FORMAT:
 %
-%      h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num))
+%      h_plot = fcn_plotRoad_plotXYI(XYIdata, (plotFormat), (colorMap), (fig_num))
 %
 % INPUTS:  
 %
-%      h_plot = XYdata: an [Nx2+] vector data to plot where N is the number of
-%      points, and there are 2 or more columns. Each row of data correspond
-%      to the [X Y] coordinate of the point to plot in the 1st and 2nd
-%      column.
+%      XYIdata: an [Nx3+] vector data to plot where N is the number
+%      of points, and there are 3 or more columns. Each row of data
+%      correspond to the [X Y] coordinate of the point to plot in the 1st
+%      and 2nd column, and intensity in the 3rd column. If the intensity is
+%      not scaled between 0 and 1, then it is converted to 0 and 1 via the
+%      following: Iconverted = (I - Imin)/(Imax-Imin)
 %      
 %      (OPTIONAL INPUTS)
 %
 %      plotFormat: one of the following:
 %      
-%          * a format string, e.g. 'b-', that dictates the plot style
+%          * a format string, e.g. 'b-', that dictates the plot style.
+%          a colormap is created using this value as 100%, to white as 0%
 %          * a [1x3] color vector specifying the RGB ratios from 0 to 1
+%          a colormap is created using this value as 100%, to white as 0%
 %          * a structure whose subfields for the plot properties to change, for example:
 %            plotFormat.LineWideth = 3;
 %            plotFormat.MarkerSize = 10;
 %            plotFormat.Color = [1 0.5 0.5];
 %            A full list of properties can be found by examining the plot
 %            handle, for example: h_plot = plot(1:10); get(h_plot)
+%          If a color is specified, a colormap is created using this value
+%          as 100%, to white as 0% - this supercedes any colormap.  If no
+%          color or colormap is specified, then the default color is used.
+%          If no color is specified, but a colormap is given, the colormap
+%          is used.
+%
+%      colorMap: a string specifying the colormap for the plot, default is "hot".
 %
 %      fig_num: a figure number to plot results. If set to -1, skips any
 %      input checking or debugging, no figures will be generated, and sets
@@ -31,11 +42,12 @@ function h_plot = fcn_plotRoad_plotXY(XYdata, varargin)
 %
 % OUTPUTS:
 %
-%      h_plot: the handle to the plotting result
+%      h_plot: the handle to the plotting results, with one handle per
+%      colormap entry.
 %
 % DEPENDENCIES:
 %
-%      (none)
+%      fcn_plotRoad_plotXY
 %
 % EXAMPLES:
 %
@@ -45,17 +57,12 @@ function h_plot = fcn_plotRoad_plotXY(XYdata, varargin)
 %  
 %       for a full test suite.
 %
-% This function was written on 2024_08_05 by Sean Brennan
+% This function was written on 2024_08_12 by Sean Brennan
 % Questions or comments? sbrennan@psu.edu
 
 % Revision history
-% 2024_08_05 - Sean Brennan
-% -- Created function by copying out of load script in Geometry library
-% 2024_08_09 - Jiabao Zhao
-% -- Added format string as a optional input
 % 2024_08_12 - Sean Brennan
-% -- Added structure rather than string type for plotFormat, especially as
-% this structure is already auto-generated in MATLAB
+% -- Created function by copying out of load script in Geometry library
 
 %% Debugging and Input checks
 
@@ -63,7 +70,7 @@ function h_plot = fcn_plotRoad_plotXY(XYdata, varargin)
 % argument (varargin) is given a number of -1, which is not a valid figure
 % number.
 flag_max_speed = 0;
-if (nargin==3 && isequal(varargin{end},-1))
+if (nargin==4 && isequal(varargin{end},-1))
     flag_do_debug = 0; % % % % Flag to plot the results for debugging
     flag_check_inputs = 0; % Flag to perform input checking
     flag_max_speed = 1;
@@ -106,7 +113,7 @@ end
 if 0==flag_max_speed
     if flag_check_inputs == 1
         % Are there the right number of inputs?
-        narginchk(1,3);
+        narginchk(1,4);
 
         % % Check the points input to be length greater than or equal to 2
         % fcn_DebugTools_checkInputsToFunctions(...
@@ -159,25 +166,36 @@ end
 %     end
 % end
 
-% Set plotting defaults
-plotFormat = 'k';
-formatting_type = 1;  % Plot type in an integer to save the type of formatting. The numbers refer to 1: a string is given or 2: a color is given, or 3: a structure is given
 
-% Check to see if user specifies plotFormat?
+% Does user want to specify plotFormat?
+% plotFormat = 'k';
+plotFormat = [];
 if 2 <= nargin
     input = varargin{1};
     if ~isempty(input)
-        plotFormat = input;
-        if ischar(plotFormat) && length(plotFormat)<=4
-            formatting_type = 1;
-        elseif isnumeric(plotFormat)  % Numbers are a color style
-            formatting_type = 2;
-        elseif isstruct(plotFormat)  % Structures give properties
-            formatting_type = 3;
+        if ischar(input) && length(input)<=4
+            plotFormat = fcn_plotRoad_extractFormatFromString(input);
+        elseif isnumeric(input)  % Numbers are a color style
+            plotFormat.Color = input;
+        elseif isstruct(input)  % Structures give properties
+            plotFormat = input;
         else
             warning('on','backtrace');
-            warning('An unkown input format is detected - throwing an error.')
+            warning('An unkown input plotFormat is detected - throwing an error.')
             error('Unknown plotFormat input detected')
+        end
+    end
+end
+
+
+% Does user want to specify colorMapToUse?
+colorMapToUse = [];
+if (1<=nargin)
+    temp = varargin{2};
+    if ~isempty(temp)
+        colorMapToUse = temp;
+        if ischar(colorMapToUse)
+            colorMapToUse = colormap(colorMapToUse);
         end
     end
 end
@@ -204,9 +222,57 @@ end
 % 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+NplotPoints = length(XYIdata(:,1));
+
+% Check the user entries
+XYdata = XYIdata(:,1:2);
+rawIdata = XYIdata(:,3);
+
+maxI = max(rawIdata);
+minI = min(rawIdata);
+if maxI>1 || minI<0
+    Idata = (rawIdata - minI)/(maxI - minI);
+else
+    Idata = rawIdata;
+end
+
+% Check the colorMap
+if isempty(colorMapToUse)
+    if isfield(plotFormat,'Color')
+        colorToScale = plotFormat.Color;
+    else
+        % Find the next color
+        if isempty(plotFormat)
+            colors = get(gca,'ColorOrder');
+            index  = get(gca,'ColorOrderIndex');
+        end
+        colorToScale = colors(index,:);
+    end
+    ratios = linspace(0,1,8)';
+
+    colorMapToUse = (1-ratios)*colorToScale + ratios*[1 1 1];
+end
+
+% Reformat the XY data if line formats are given (not points)
+if isfield(plotFormat,'LineStyle')
+    X_dataPadded = [XYdata(1:end-1,1)'; XYdata(2:end,1)'; nan(1,NplotPoints-1)];
+    Y_dataPadded = [XYdata(1:end-1,2)'; XYdata(2:end,2)'; nan(1,NplotPoints-1)];
+    I_dataPadded = [Idata(1:end-1,1)'; Idata(1:end-1,1)'; Idata(1:end-1,1)'];
+
+    X_data = reshape(X_dataPadded,[],1);
+    Y_data = reshape(Y_dataPadded,[],1);
+    I_data = reshape(I_dataPadded,[],1);
+else
+    plotFormat.Marker = '.';
+    plotFormat.LineStyle = 'none';
+    X_data = XYdata(:,1);
+    Y_data = XYdata(:,2);   
+    I_data = Idata;
+end
 
 % Initialize the output
-h_plot = 0;
+Ncolors = length(colorMapToUse(:,1));
+h_plot = nan(Ncolors,1);
 
 %% Plot the results (for debugging)?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -219,53 +285,28 @@ h_plot = 0;
 %                            __/ |
 %                           |___/ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 if flag_do_plots
-    temp_h = figure(fig_num);
-    flag_rescale_axis = 0;
-    if isempty(get(temp_h,'Children'))
-        flag_rescale_axis = 1;
-    end        
 
-    hold on;
-    grid on;
-    axis equal
+    colorIndicies = round(I_data*(Ncolors-1))+1;
 
-    title('XY plot');
-    xlabel('X [m]');
-    ylabel('Y [m]');
+    for ith_color = 1:Ncolors
+        h_plot(ith_color,1) = nan;
+        plotting_indicies = find(colorIndicies==ith_color);
+        if ~isempty(plotting_indicies)
+            % Append the color to the current plot format
+            tempPlotFormat = plotFormat;
+            tempPlotFormat.Color = colorMapToUse(ith_color,:);
 
-    % make plots
-    if formatting_type==1
-        finalPlotFormat = fcn_plotRoad_extractFormatFromString(plotFormat, (-1));
-    elseif formatting_type==2
-        finalPlotFormat.Color = plotFormat;
-    elseif formatting_type==3        
-        finalPlotFormat = plotFormat;
-    else
-        warning('on','backtrace');
-        warning('An unkown input format is detected in the main code - throwing an error.')
-        error('Unknown plot type')
+            % Update the X and Y data to select only the points in this
+            % color
+            X_data_selected = X_data(plotting_indicies,:);
+            Y_data_selected = Y_data(plotting_indicies,:);
+
+            % Do the plotting
+            h_plot(ith_color,1)  = fcn_plotRoad_plotXY([X_data_selected Y_data_selected], (tempPlotFormat), (fig_num));
+        end
     end
-
-    % Do plot
-    h_plot = plot(XYdata(:,1),XYdata(:,2));
-    list_fieldNames = fieldnames(finalPlotFormat);
-    for ith_field = 1:length(list_fieldNames)
-        thisField = list_fieldNames{ith_field};
-        h_plot.(thisField) = finalPlotFormat.(thisField);
-    end
-
-
-    % Make axis slightly larger?
-    if flag_rescale_axis
-        temp = axis;
-        %     temp = [min(points(:,1)) max(points(:,1)) min(points(:,2)) max(points(:,2))];
-        axis_range_x = temp(2)-temp(1);
-        axis_range_y = temp(4)-temp(3);
-        percent_larger = 0.3;
-        axis([temp(1)-percent_larger*axis_range_x, temp(2)+percent_larger*axis_range_x,  temp(3)-percent_larger*axis_range_y, temp(4)+percent_larger*axis_range_y]);
-    end
-
     
 end % Ends check if plotting
 

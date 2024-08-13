@@ -17,7 +17,12 @@
 
 %% Revision History:
 % 2023_06_01 - sbrennan@psu.edu and vbw5054@psu.edu
-% -- First write of code using LOadWZ code as starter
+% -- First write of code using LoadWZ code as starter
+% 2024_08_09 - S. Brennan
+% -- Restarting work, does not look like many changes here
+% -- Fixed the LoadWZ global variable definition, _PLOTROAD_ throughout
+
+
 
 %% Prep the workspace
 close all
@@ -64,7 +69,7 @@ library_url{ith_library}     = 'https://github.com/ivsg-psu/FeatureExtraction_Da
 
 %% Clear paths and folders, if needed
 if 1==0
-    clear flag_PlotTestTrack_Folders_Initialized;
+    clear flag_plotRoad_Folders_Initialized;
     fcn_INTERNAL_clearUtilitiesFromPathAndFolders;
 
     % Clean up data files
@@ -82,10 +87,10 @@ end
 
 
 %% Do we need to set up the work space?
-if ~exist('flag_PlotTestTrack_Folders_Initialized','var')
+if ~exist('flag_plotRoad_Folders_Initialized','var')
     this_project_folders = {'Functions','Data'};
     fcn_INTERNAL_initializeUtilities(library_name,library_folders,library_url,this_project_folders);
-    flag_PlotTestTrack_Folders_Initialized = 1;
+    flag_plotRoad_Folders_Initialized = 1;
 end
 
 %% Load hard-coded vectors
@@ -100,8 +105,8 @@ hard_coded_reference_unit_tangent_vector_LC_south_lane = [0.794630317120972   0.
 % shifting, when doing geoplot. This is added because the geoplot images
 % are very, very slightly off at the test track, which is confusing when
 % plotting data above them.
-setenv('MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT','-0.0000008');
-setenv('MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON','0.0000054');
+setenv('MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LAT','-0.0000008');
+setenv('MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LON','0.0000054');
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

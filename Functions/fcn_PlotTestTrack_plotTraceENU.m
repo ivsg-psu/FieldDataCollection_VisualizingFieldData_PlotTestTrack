@@ -1,6 +1,5 @@
 function fcn_PlotTestTrack_plotTraceENU(ENU_data, varargin)
-%% fcn_PlotTestTrack_plotTraceENU
-% Plots trace of ENU data via plot.
+%fcn_PlotTestTrack_plotTraceENU plots EN components of ENU data via plot
 %
 % FORMAT:
 %
@@ -10,7 +9,7 @@ function fcn_PlotTestTrack_plotTraceENU(ENU_data, varargin)
 %
 %      (MANDATORY INPUTS)
 %
-%       ENU_data: a NX2 vector of [X Y] data for the lane marker positions
+%       ENU_data: a NX2 vector of [E N] data for plotting
 %
 %       (OPTIONAL INPUTS)
 %
@@ -51,7 +50,7 @@ function fcn_PlotTestTrack_plotTraceENU(ENU_data, varargin)
 % 2023_07_25 by S. Brennan, sbrennan@psu.edu
 % -- start writing function
 % 2024_06_12 by Jiabao Zhao
-% -- Added debug section and changed the corrspending input
+% -- Added debug section and changed the corresponding input
 
 
 flag_do_debug = 0; % Flag to show the results for debugging
@@ -65,6 +64,7 @@ if flag_do_debug
 else
     debug_fig_num = [];
 end
+
 %% Debugging and Input checks
 
 % Check if flag_max_speed set. This occurs if the fig_num variable input

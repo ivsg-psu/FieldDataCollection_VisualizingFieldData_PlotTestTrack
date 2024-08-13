@@ -1,16 +1,16 @@
-function h_plot = fcn_plotRoad_plotXY(XYdata, varargin)
-%fcn_plotRoad_plotXY    plots XY data with user-defined formatting strings
+function h_plot = fcn_plotRoad_plotXYZ(XYZdata, varargin)
+%fcn_plotRoad_plotXYZ    plots XYZ data with user-defined formatting strings
 % 
 % FORMAT:
 %
-%      h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num))
+%      h_plot = fcn_plotRoad_plotXYZ(XYZdata, (plotFormat), (fig_num))
 %
 % INPUTS:  
 %
-%      h_plot = XYdata: an [Nx2+] vector data to plot where N is the number of
-%      points, and there are 2 or more columns. Each row of data correspond
-%      to the [X Y] coordinate of the point to plot in the 1st and 2nd
-%      column.
+%      h_plot = XYZdata: an [Nx3+] vector data to plot where N is the
+%      number of points, and there are 3 or more columns. Each row of data
+%      correspond to the [X Y Z] coordinate of the point to plot in the
+%      1st, 2nd, and 3rd column.
 %      
 %      (OPTIONAL INPUTS)
 %
@@ -41,7 +41,7 @@ function h_plot = fcn_plotRoad_plotXY(XYdata, varargin)
 %
 %       See the script:
 % 
-%       script_test_fcn_plotRoad_plotXY.m 
+%       script_test_fcn_plotRoad_plotXYZ.m 
 %  
 %       for a full test suite.
 %
@@ -233,6 +233,7 @@ if flag_do_plots
     title('XY plot');
     xlabel('X [m]');
     ylabel('Y [m]');
+    zlabel('Z [m]');
 
     % make plots
     if formatting_type==1
@@ -248,12 +249,14 @@ if flag_do_plots
     end
 
     % Do plot
-    h_plot = plot(XYdata(:,1),XYdata(:,2));
+    h_plot = plot3(XYZdata(:,1),XYZdata(:,2),XYZdata(:,3));
     list_fieldNames = fieldnames(finalPlotFormat);
     for ith_field = 1:length(list_fieldNames)
         thisField = list_fieldNames{ith_field};
         h_plot.(thisField) = finalPlotFormat.(thisField);
     end
+
+    view(3);
 
 
     % Make axis slightly larger?
@@ -262,8 +265,9 @@ if flag_do_plots
         %     temp = [min(points(:,1)) max(points(:,1)) min(points(:,2)) max(points(:,2))];
         axis_range_x = temp(2)-temp(1);
         axis_range_y = temp(4)-temp(3);
+        axis_range_z = temp(6)-temp(5);
         percent_larger = 0.3;
-        axis([temp(1)-percent_larger*axis_range_x, temp(2)+percent_larger*axis_range_x,  temp(3)-percent_larger*axis_range_y, temp(4)+percent_larger*axis_range_y]);
+        axis([temp(1)-percent_larger*axis_range_x, temp(2)+percent_larger*axis_range_x,  temp(3)-percent_larger*axis_range_y, temp(4)+percent_larger*axis_range_y,  temp(5)-percent_larger*axis_range_z, temp(6)+percent_larger*axis_range_z]);
     end
 
     
