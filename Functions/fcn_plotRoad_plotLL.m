@@ -1,30 +1,39 @@
-function fcn_plotRoad_plotLL(varargin)
-%% fcn_plotRoad_plotLL
-% Plots data from an array one by one, created to plot data arrays for
-% scenarios, using the "geoplot" command. If the user gives no data to
-% plot, then the function initializes the figure.
+function h_geoplot = fcn_plotRoad_plotLL(varargin)
+%fcn_plotRoad_plotLL   geoplots Latitude and Longitude data with user-defined formatting strings
 %
 % FORMAT:
 %
-%       fcn_plotRoad_plotLL((data_array),(color),(text),(fig_num))
+%       h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num))
 %
 % INPUTS:
 %
 %      (OPTIONAL INPUTS)
 %
-%      data_array: an optional data array to plot. Data is assumed to be of
-%      the form: Nx3 array with each row containing:
-%          [Latitude Longitude Altitude]
+%      LLdata: an [Nx2+] vector data to plot where N is the number of
+%      points, and there are 2 or more columns. Each row of data correspond
+%      to the [Latitude Longitude] coordinate of the point to plot in the
+%      1st and 2nd column.
 %
-%      color: an optional color to plot. Default is yellow ([1 1 0]).
+%      plotFormat: one of the following:
+%      
+%          * a format string, e.g. 'b-', that dictates the plot style
+%          * a [1x3] color vector specifying the RGB ratios from 0 to 1
+%          * a structure whose subfields for the plot properties to change, for example:
+%            plotFormat.LineWideth = 3;
+%            plotFormat.MarkerSize = 10;
+%            plotFormat.Color = [1 0.5 0.5];
+%            A full list of properties can be found by examining the plot
+%            handle, for example: h_plot = plot(1:10); get(h_plot)
 %
-%      text: an optional text to add to the plot.
+%      labelText: an optional text to add to the first point of the plot.
 %
-%      fig_num: a figure number to plot result
+%      fig_num: a figure number to plot results. If set to -1, skips any
+%      input checking or debugging, no figures will be generated, and sets
+%      up code to maximize speed.
 %
 % OUTPUTS:
 %
-%      (none)
+%      h_geoplot: the handle to the geoplot result
 %
 % DEPENDENCIES:
 %
@@ -33,26 +42,19 @@ function fcn_plotRoad_plotLL(varargin)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_plotRoad_plotLL.m for a full
-%       test suite.
 %
-% This function was written on 2023_06_06 by V. Wagh
-% Questions or comments? vbw5054@psu.ed
-
+%       script_test_fcn_plotRoad_plotLL.m 
+%
+%       for a full test suite.
+%
+% This function was written on 2024_08_13 by S. Brennan
+% Questions or comments? snb10@psu.edu
 
 % Revision history:
-% 2023_06_06 by V. Wagh
-% -- start writing function
-% 2023_06_07 by S. Brennan (sbrennan@psu.edu)
-% -- continued work on functionalization
-% -- added test script
-% 2023_07_25 by S. Brennan (sbrennan@psu.edu)
-% -- added geotick formatting to be negative decimal degrees
-% 2023_09_08 by V. Wagh
-% -- added in line 197, 198
-% offset_Lat = 0; % default offset
-% offset_Lon = 0; % default offset
-% to get rid of Unrecognized function or variable errors
+% 2024_08_13 by S. Brennan
+% -- Created function by copying out of load script in Geometry library and
+% merging with similar code in PlotTestTrack library
+
 
 %% Debugging and Input checks
 
@@ -60,7 +62,7 @@ function fcn_plotRoad_plotLL(varargin)
 % argument (varargin) is given a number of -1, which is not a valid figure
 % number.
 flag_max_speed = 0;
-if (nargin==5 && isequal(varargin{end},-1))
+if (nargin==4 && isequal(varargin{end},-1))
     flag_do_debug = 0; % % % % Flag to plot the results for debugging
     flag_check_inputs = 0; % Flag to perform input checking
     flag_max_speed = 1;
@@ -68,15 +70,15 @@ else
     % Check to see if we are externally setting debug mode to be "on"
     flag_do_debug = 0; % % % % Flag to plot the results for debugging
     flag_check_inputs = 1; % Flag to perform input checking
-    MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS");
-    MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG = getenv("MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG");
-    if ~isempty(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG)
-        flag_do_debug = str2double(MATLABFLAG_PlotTestTrack_FLAG_DO_DEBUG);
-        flag_check_inputs  = str2double(MATLABFLAG_PlotTestTrack_FLAG_CHECK_INPUTS);
+    MATLABFLAG_PLOTROAD_FLAG_CHECK_INPUTS = getenv("MATLABFLAG_PLOTROAD_FLAG_CHECK_INPUTS");
+    MATLABFLAG_PLOTROAD_FLAG_DO_DEBUG = getenv("MATLABFLAG_PLOTROAD_FLAG_DO_DEBUG");
+    if ~isempty(MATLABFLAG_PLOTROAD_FLAG_CHECK_INPUTS) && ~isempty(MATLABFLAG_PLOTROAD_FLAG_DO_DEBUG)
+        flag_do_debug = str2double(MATLABFLAG_PLOTROAD_FLAG_DO_DEBUG);
+        flag_check_inputs  = str2double(MATLABFLAG_PLOTROAD_FLAG_CHECK_INPUTS);
     end
 end
 
-flag_do_debug = 1;
+% flag_do_debug = 1;
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
@@ -85,6 +87,7 @@ if flag_do_debug
 else
     debug_fig_num = [];
 end
+
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____                   _
@@ -101,17 +104,34 @@ end
 if 0 == flag_max_speed
     if flag_check_inputs == 1
         % Are there the right number of inputs?
-        narginchk(0,5);
+        narginchk(0,4);
+
+
+        % % Check the points input to be length greater than or equal to 2
+        % fcn_DebugTools_checkInputsToFunctions(...
+        %     points, '2column_of_numbers',[2 3]);
+        %
+        % % Check the transverse_tolerance input is a positive single number
+        % fcn_DebugTools_checkInputsToFunctions(transverse_tolerance, 'positive_1column_of_numbers',1);
+        %
+        % % Check the station_tolerance input is a positive single number
+        % if ~isempty(station_tolerance)
+        %     fcn_DebugTools_checkInputsToFunctions(station_tolerance, 'positive_1column_of_numbers',1);
+        % end
+
     end
+else
+    fig_num = [];
 end
 
+% Check for empty inputs - this just initializes the plot
 % Default is to NOT make a new plot, which will clear the plot and start a new plot
 flag_make_new_plot = 0; 
-if 0 == nargin
+if 0 == nargin || 1==flag_max_speed
     flag_make_new_plot = 1;
 end
 
-
+% Check the data input
 flag_plot_data = 0; % Default is not to plot the data
 if 1 <= nargin
     temp = varargin{1};
@@ -119,7 +139,7 @@ if 1 <= nargin
     % Check to see if data is being plotting. If it is not, then we
     % need to replot the figure
     if ~isempty(temp)
-        data_to_plot = temp;
+        dataToPlot = temp;
         flag_plot_data = 1;
     else
         % No data is given - must be a new plot
@@ -127,47 +147,53 @@ if 1 <= nargin
     end
 end
 
-color_to_plot = [1 1 0]; % Default is yellow
-if 2<= nargin
-    temp = varargin{2};
-    if ~isempty(temp)
-        color_to_plot = temp;
+
+% Set plotting defaults
+plotFormat = 'k';
+formatting_type = 1;  % Plot type in an integer to save the type of formatting. The numbers refer to 1: a string is given or 2: a color is given, or 3: a structure is given
+
+% Check to see if user specifies plotFormat?
+if 2 <= nargin
+    input = varargin{2};
+    if ~isempty(input)
+        plotFormat = input;
+        if ischar(plotFormat) && length(plotFormat)<=4
+            formatting_type = 1;
+        elseif isnumeric(plotFormat)  % Numbers are a color style
+            formatting_type = 2;
+        elseif isstruct(plotFormat)  % Structures give properties
+            formatting_type = 3;
+        else
+            warning('on','backtrace');
+            warning('An unkown input format is detected - throwing an error.')
+            error('Unknown plotFormat input detected')
+        end
     end
 end
 
-label_text =''; % Default is empty
+% Check for a label input
+labelText =''; % Default is empty
 if 3<= nargin
     temp = varargin{3};
     if ~isempty(temp)
-        label_text = temp;
-    end
-end
-
-if 4 <= nargin
-    temp = varargin{end};
-    if ~isempty(temp)
-        line_type = temp;
-    else
-        line_type = '-';
+        labelText = temp;
     end
 end
 
 
 % Default is to make a plot - this starts the plotting process
 flag_do_plots = 1;
-
 fig_num = []; % Initialize the figure number to be empty
-if (0==flag_max_speed) && (5<= nargin)
-    temp = varargin{4};
+if (0==flag_max_speed) && (4<= nargin)
+    temp = varargin{end};
     if ~isempty(temp)
         fig_num = temp;
-    else % An empty figure number is given by user, so we have to make one
+    else % An empty figure number is given by user, so we have to open a new one
         % create new figure with next default index
         fig_num = figure;
         flag_make_new_plot = 1;
     end
 end
-
 
 % Is the figure number still empty? If so, then we need to open a new
 % figure
@@ -196,7 +222,9 @@ end
 %  |_|  |_|\__,_|_|_| |_|
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% no calculations here
+
+% Initialize the output
+h_geoplot = 0;
 
 %% Any debugging?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -211,7 +239,7 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 if flag_do_plots == 1
-    % check that the figure has data
+    % check whether the figure already has data
     figure(fig_num);
     temp_fig_handle = gcf;
     if isempty(temp_fig_handle.Children)
@@ -224,11 +252,11 @@ if flag_do_plots == 1
     % above them.
     offset_Lat = 0; % Default offset
     offset_Lon = 0; % Default offset
-    MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
-    MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
-    if ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
-        offset_Lat = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
-        offset_Lon  = str2double(MATLABFLAG_PLOTTESTTRACK_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
+    MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LAT = getenv("MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LAT");
+    MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LON = getenv("MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LON");
+    if ~isempty(MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LAT) && ~isempty(MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LON)
+        offset_Lat = str2double(MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LAT);
+        offset_Lon  = str2double(MATLABFLAG_PLOTROAD_ALIGNMATLABLLAPLOTTINGIMAGES_LON);
     end
 
     if flag_make_new_plot
@@ -258,14 +286,31 @@ if flag_do_plots == 1
     end
 
     if flag_plot_data
-        geoplot(data_to_plot(:,1)+offset_Lat,data_to_plot(:,2)+offset_Lon,'-','Color',color_to_plot,'Linewidth',1,'Markersize',20);
-        %geoplot(data_to_plot(:,1)+offset_Lat,data_to_plot(:,2)+offset_Lon,'-','Color',color_to_plot,'Linewidth',1,'Markersize',20,'LineStyle', line_type);
-        geoplot(data_to_plot(1,1)+offset_Lat, data_to_plot(1,2)+offset_Lon, 'o','Color',[0 1 0],'Linewidth',1,'Markersize',10);
-        geoplot(data_to_plot(end,1)+offset_Lat, data_to_plot(end,2)+offset_Lon, 'x','Color',[1 0 0],'Linewidth',1,'Markersize',10);
+        % make plots
+        if formatting_type==1
+            finalPlotFormat = fcn_plotRoad_extractFormatFromString(plotFormat, (-1));
+        elseif formatting_type==2
+            finalPlotFormat.Color = plotFormat;
+        elseif formatting_type==3
+            finalPlotFormat = plotFormat;
+        else
+            warning('on','backtrace');
+            warning('An unkown input format is detected in the main code - throwing an error.')
+            error('Unknown plot type')
+        end
+
+        % Do plot
+        h_plot = geoplot(dataToPlot(:,1)+offset_Lat,dataToPlot(:,2)+offset_Lon);
+        list_fieldNames = fieldnames(finalPlotFormat);
+        for ith_field = 1:length(list_fieldNames)
+            thisField = list_fieldNames{ith_field};
+            h_plot.(thisField) = finalPlotFormat.(thisField);
+        end
+        color_to_plot = h_plot.Color;
 
         % Label the plots?
-        if ~isempty(label_text)
-            text(data_to_plot(1,1)+offset_Lat, data_to_plot(1,2)+offset_Lon,sprintf('%s',label_text),'Color',color_to_plot,'FontSize',14);
+        if ~isempty(labelText)
+            text(dataToPlot(1,1)+offset_Lat, dataToPlot(1,2)+offset_Lon,sprintf('%s',labelText),'Color',color_to_plot,'FontSize',14);
         end
     end
 end
@@ -285,3 +330,4 @@ end % Ends main function
 %
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Functions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
+

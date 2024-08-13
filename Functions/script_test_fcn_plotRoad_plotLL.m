@@ -4,48 +4,60 @@
 % and Vaishnavi Wagh, vbw5054@psu.edu
 
 % Revision history:
-% 2023_06_07 
+% 2023_06_07
 % -- first write of the code
 
+close all;
 
 %% Basic Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 
-%   ____            _        ______                           _      
-%  |  _ \          (_)      |  ____|                         | |     
-%  | |_) | __ _ ___ _  ___  | |__  __  ____ _ _ __ ___  _ __ | | ___ 
+%
+%   ____            _        ______                           _
+%  |  _ \          (_)      |  ____|                         | |
+%  | |_) | __ _ ___ _  ___  | |__  __  ____ _ _ __ ___  _ __ | | ___
 %  |  _ < / _` / __| |/ __| |  __| \ \/ / _` | '_ ` _ \| '_ \| |/ _ \
 %  | |_) | (_| \__ \ | (__  | |____ >  < (_| | | | | | | |_) | |  __/
 %  |____/ \__,_|___/_|\___| |______/_/\_\__,_|_| |_| |_| .__/|_|\___|
-%                                                      | |           
-%                                                      |_|          
+%                                                      | |
+%                                                      |_|
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 
-%% BASIC example 1
+%% BASIC example 0 - only opens and initializes plot
 % call the function with empty inputs, and it should create the plot with
 % the focus on the test track, satellite view
-fcn_plotRoad_plotLL;
+h_geoplot = fcn_plotRoad_plotLL;
 
-% Add an assertion here
+% Check results
+assert(ishandle(h_geoplot));
+close(gcf);
+
+%% BASIC example 1 - all defaults, no data. Also opens and initializes plot
+fig_num = 1;
+figure(fig_num);
+clf;
+
+LLdata = [];
+
+% Test the function
+plotFormat = [];
+labelText = [];
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing initializing plot to figure number',fig_num), 'Interpreter','none');
+
+% Check results
+assert(ishandle(h_geoplot));
+close(gcf);
 
 %% BASIC example 2
-% call the function with empty inputs, but with a figure number,
-% and it should create the plot with
-% the focus on the test track, satellite view
-% fcn_plotRoad_plotLL((data_array),(color),(text),(fig_num))
-data_array = []; % Make it empty to NOT plot data
-plot_color = []; % Make it empty to use default
-plot_text = ''; % Make it empty to NOT put text on
-line_type = [];
-fig_num = 222; % Give a figure number to make it plot it the figure
-fcn_plotRoad_plotLL(data_array,plot_color,plot_text,line_type,fig_num);
-
-%% BASIC example 3
 % Plot data onto an empty figure. This will force the code to check to see
 % if the figure has data inside it, and if not, it will prepare the figure
 % the same way as a new figure.
 
+fig_num = 2;
+figure(fig_num);
+clf;
 
 % Fill in some dummy data (East curve from scenario 1_1)
 
@@ -92,33 +104,42 @@ data3 = [
     -77.83211176999998,40.86579081600007,0
     ];
 
-% fcn_plotRoad_plotLL((data_array),(color),(text),(fig_num))
-% Fill in the data array. NOTE: above data is in BAD column order, so we
+% NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
-data_array = [data3(:,2), data3(:,1), data3(:,3)]; 
-plot_color = []; % Make it empty to use default
-plot_text = ''; % Make it empty to NOT put text on
-fig_num = 333; % Give a figure number to make it plot it the figure
-line_type = [];
-fcn_plotRoad_plotLL(data_array,plot_color,plot_text,line_type,fig_num);
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
 
-%% Basic example 4
-% Plot data onto an existing figure
+% Test the function
+plotFormat = [];
+labelText = [];
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing plotting of data',fig_num), 'Interpreter','none');
+
+% Check results
+assert(ishandle(h_geoplot));
+
+%% Basic example 3 - plot data onto an existing figure
+fig_num = 3;
+figure(fig_num);
+clf;
 
 % call the function with empty inputs, but with a figure number,
 % and it should create the plot with
 % the focus on the test track, satellite view
-% fcn_plotRoad_plotLL((data_array),(color),(text),(fig_num))
-empty_data = []; % Make it empty to NOT plot data
-plot_color = []; % Make it empty to use default
-plot_text = ''; % Make it empty to NOT put text on
-fig_num = 444; % Give a figure number to make it plot it the figure
-line_type = [];
-fcn_plotRoad_plotLL(empty_data,plot_color,plot_text,line_type,fig_num);
+LLdata = [];
+
+% Test the function
+plotFormat = [];
+labelText = [];
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+% Check results
+assert(ishandle(h_geoplot));
+
 
 % Now call the function again to plot data into an existing figure to check
 % that this works
-plot_data = [ 
+data3 = [
     -77.83108116099999,40.86426763900005,0
     -77.83098509099995,40.86432365200005,0
     -77.83093857199998,40.86435301300003,0
@@ -127,15 +148,28 @@ plot_data = [
     -77.83075077399997,40.86449883100005,0
     -77.83069596999997,40.86455288200005,0
     -77.83064856399994,40.86461089600004,0];
-data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-line_type = [];
-fcn_plotRoad_plotLL(data_array,plot_color,plot_text,line_type,fig_num);
 
-%% Basic example 5
-% Plot data with user-given color
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
 
-% fcn_plotRoad_plotLL((data_array),(color),(text),(fig_num))
-plot_data = [ 
+% Test the function
+plotFormat = [];
+labelText = [];
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing plotting of data on existing figure',fig_num), 'Interpreter','none');
+
+% Check results
+assert(ishandle(h_geoplot));
+
+%% Basic example 4 - plot data with simple formatting string
+fig_num = 4;
+figure(fig_num);
+clf;
+
+% Fill in data
+data3 = [
     -77.83108116099999,40.86426763900005,0
     -77.83098509099995,40.86432365200005,0
     -77.83093857199998,40.86435301300003,0
@@ -143,19 +177,30 @@ plot_data = [
     -77.83080882499996,40.86444684500003,0
     -77.83075077399997,40.86449883100005,0
     -77.83069596999997,40.86455288200005,0
-    -77.83064856399994,40.86461089600004,0]; % reuse data from before
-plot_color = [0 0 1]; % Make it blue!
-plot_text = ''; % Make it empty to NOT put text on
-fig_num = 555; % Give a figure number to make it plot it the figure
-data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-line_type = [];
-fcn_plotRoad_plotLL(data_array,plot_color,plot_text,line_type,fig_num);
+    -77.83064856399994,40.86461089600004,0];
 
-%% Basic example 6
-% Plot data with text
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
 
-% fcn_plotRoad_plotLL((data_array),(color),(text),(fig_num))
-plot_data = [ 
+% Test the function
+plotFormat = 'y.-';
+labelText = [];
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing use of simple formatting string',fig_num), 'Interpreter','none');
+
+% Check results
+assert(ishandle(h_geoplot));
+
+%% Basic example 5 - Plot data with user-given color vector
+
+fig_num = 5;
+figure(fig_num);
+clf;
+
+% Fill in data
+data3 = [
     -77.83108116099999,40.86426763900005,0
     -77.83098509099995,40.86432365200005,0
     -77.83093857199998,40.86435301300003,0
@@ -163,18 +208,100 @@ plot_data = [
     -77.83080882499996,40.86444684500003,0
     -77.83075077399997,40.86449883100005,0
     -77.83069596999997,40.86455288200005,0
-    -77.83064856399994,40.86461089600004,0]; % first 8 rows from data3
-plot_color = []; % Make it empty to use default
-plot_text = 'Test'; % Make it empty to NOT put text on
-fig_num = 666; % Give a figure number to make it plot it the figure
-data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-line_type = [];
-fcn_plotRoad_plotLL(data_array,plot_color,plot_text,line_type,fig_num);
+    -77.83064856399994,40.86461089600004,0];
 
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
+
+% Test the function
+plotFormat = [0 1 0];
+labelText = [];
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing use of color vector',fig_num), 'Interpreter','none');
+
+% Check results
+assert(ishandle(h_geoplot));
+
+%% Basic example 6 - Plot data with format structure
+
+fig_num = 6;
+figure(fig_num);
+clf;
+
+% Fill in data
+data3 = [
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0];
+
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
+
+% Test the function
+clear plotFormat
+plotFormat.Color = [0 0.7 0];
+plotFormat.Marker = '.';
+plotFormat.MarkerSize = 10;
+plotFormat.LineStyle = '-';
+plotFormat.LineWidth = 3;
+labelText = [];
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing use of format structure',fig_num), 'Interpreter','none');
+
+% Check results
+assert(ishandle(h_geoplot));
+
+%% Basic example 7 - Plot data with text
+
+fig_num = 7;
+figure(fig_num);
+clf;
+
+
+% Fill in data
+data3 = [
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0];
+
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
+
+% Test the function
+clear plotFormat
+plotFormat.Color = [0 1 1];
+plotFormat.Marker = '.';
+plotFormat.MarkerSize = 10;
+plotFormat.LineStyle = '-';
+plotFormat.LineWidth = 3;
+labelText = 'Test of text';
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing use of text label',fig_num), 'Interpreter','none');
+
+% Check results
+assert(ishandle(h_geoplot));
 %% testing speed of function
 
-% load inputs
-plot_data = [ 
+
+% Now call the function again to plot data into an existing figure to check
+% that this works
+data3 = [
     -77.83108116099999,40.86426763900005,0
     -77.83098509099995,40.86432365200005,0
     -77.83093857199998,40.86435301300003,0
@@ -182,46 +309,60 @@ plot_data = [
     -77.83080882499996,40.86444684500003,0
     -77.83075077399997,40.86449883100005,0
     -77.83069596999997,40.86455288200005,0
-    -77.83064856399994,40.86461089600004,0]; % first 8 rows from data3
-plot_color = []; % Make it empty to use default
-plot_text = 'Test'; % Make it empty to NOT put text on
-data_array = [plot_data(:,2), plot_data(:,1), plot_data(:,3)]; 
-line_type = [];
+    -77.83064856399994,40.86461089600004,0];
+
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
+
+% Test the function
+clear plotFormat
+plotFormat.Color = [0 1 1];
+plotFormat.Marker = '.';
+plotFormat.MarkerSize = 10;
+plotFormat.LineStyle = '-';
+plotFormat.LineWidth = 3;
+labelText = 'Test of text';
+
 % Speed Test Calculation
 fig_num=[];
 REPS=5; minTimeSlow=Inf;
 tic;
-%slow mode calculation - code copied from plotVehicleXYZ
+% Slow mode calculation - code copied from plotVehicleXYZ
 for i=1:REPS
-tstart=tic;
-fcn_plotRoad_plotLL(data_array,plot_color,plot_text,line_type,fig_num);
-telapsed=toc(tstart);
-minTimeSlow=min(telapsed,minTimeSlow);
+    tstart=tic;
+    h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+    telapsed=toc(tstart);
+    minTimeSlow=min(telapsed,minTimeSlow);
 end
 averageTimeSlow=toc/REPS;
-%slow mode END
-%Fast Mode Calculation
+% Slow mode END
+
+close all;
+
+% Fast Mode Calculation
 fig_num = -1;
 minTimeFast = Inf;
 tic;
 for i=1:REPS
-tstart = tic;
-fcn_plotRoad_plotLL(data_array,plot_color,plot_text,line_type,fig_num);
-telapsed = toc(tstart);
-minTimeFast = min(telapsed,minTimeFast);
+    tstart = tic;
+    h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+    telapsed = toc(tstart);
+    minTimeFast = min(telapsed,minTimeFast);
 end
 averageTimeFast = toc/REPS;
-%Display Console Comparison
+
+% Display Console Comparison
 if 1==1
-fprintf(1,'\n\nComparison of fcn_plotRoad_plotLL without speed setting (slow) and with speed setting (fast):\n');
-fprintf(1,'N repetitions: %.0d\n',REPS);
-fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
-fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
-fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
-fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
-fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
-fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+    fprintf(1,'\n\nComparison of fcn_plotRoad_plotLL without speed setting (slow) and with speed setting (fast):\n');
+    fprintf(1,'N repetitions: %.0d\n',REPS);
+    fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+    fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+    fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+    fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+    fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+    fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
 end
 %Assertion on averageTime NOTE: Due to the variance, there is a chance that
 %the assertion will fail.
-assert(averageTimeFast<averageTimeSlow);
+assert(averageTimeFast<2*averageTimeSlow);

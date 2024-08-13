@@ -226,7 +226,10 @@ if flag_do_plots == 1
     if isempty(temp_fig_handle.Children)
         % Initialize the plot
         % which automatically plot the base station with a green star
-        fcn_PlotTestTrack_geoPlotData([],[],'',[],fig_num);
+        LLdata = [];
+        plotFormat = [];
+        labelText = [];
+        h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
     end
 
     % Plot LLA results as cell?

@@ -107,74 +107,25 @@ setenv('MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LAT','-0.0000008');
 setenv('MATLABFLAG_LOADWZ_ALIGNMATLABLLAPLOTTINGIMAGES_LON','0.0000054');
 
 
-%% fcn_plotRoad_plotXY
-% Basic Examples of fcn_plotRoad_plotXY
+%% Basic Examples
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%   ____            _        ______                           _
-%  |  _ \          (_)      |  ____|                         | |
-%  | |_) | __ _ ___ _  ___  | |__  __  ____ _ _ __ ___  _ __ | | ___
-%  |  _ < / _` / __| |/ __| |  __| \ \/ / _` | '_ ` _ \| '_ \| |/ _ \
-%  | |_) | (_| \__ \ | (__  | |____ >  < (_| | | | | | | |_) | |  __/
-%  |____/ \__,_|___/_|\___| |______/_/\_\__,_|_| |_| |_| .__/|_|\___|
-%                                                      | |
-%                                                      |_|
-% See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
+%  ____            _        ______                           _
+% |  _ \          (_)      |  ____|                         | |
+% | |_) | __ _ ___ _  ___  | |__  __  ____ _ _ __ ___  _ __ | | ___  ___
+% |  _ < / _` / __| |/ __| |  __| \ \/ / _` | '_ ` _ \| '_ \| |/ _ \/ __|
+% | |_) | (_| \__ \ | (__  | |____ >  < (_| | | | | | | |_) | |  __/\__ \
+% |____/ \__,_|___/_|\___| |______/_/\_\__,_|_| |_| |_| .__/|_|\___||___/
+%                                                     | |
+%                                                     |_|
+% See:
+% https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Examples
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
 % function only plots, has no outputs
 
-%% BASIC example 1 - all defaults
-fig_num = 1;
-figure(fig_num);
-clf;
 
-time = linspace(0,10,100)';
-XYdata = [time sin(time)];
+%% fcn_plotRoad_plotXY
 
-% Test the function
-plotFormat = [];
-h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
-title(sprintf('Example %.0d: showing basic plotting',fig_num), 'Interpreter','none');
-
-% Check results
-assert(ishandle(h_plot));
-
-
-%% BASIC example 2 - basic plot string
-fig_num = 2;
-figure(fig_num);
-clf;
-
-time = linspace(0,10,100)';
-XYdata = [time sin(time)];
-
-% Test the function
-plotFormat = 'r.-';
-h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
-title(sprintf('Example %.0d: showing basic plot string',fig_num), 'Interpreter','none');
-
-% Check results
-assert(ishandle(h_plot));
-
-
-%% BASIC example 3 - color numbers
-fig_num = 3;
-figure(fig_num);
-clf;
-
-time = linspace(0,10,100)';
-XYdata = [time sin(time)];
-
-% Test the function
-plotFormat = [1 0.4 1];
-h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
-title(sprintf('Example %.0d: showing  color numbers',fig_num), 'Interpreter','none');
-
-% Check results
-assert(ishandle(h_plot));
-
-
-%% BASIC example 4 - structure input
 fig_num = 3;
 figure(fig_num);
 clf;
@@ -196,8 +147,9 @@ title(sprintf('Example %.0d: showing  color numbers',fig_num), 'Interpreter','no
 assert(ishandle(h_plot));
 
 %% fcn_plotRoad_plotXYI
-%  BASIC example 2 - specifying the color
-fig_num = 2;
+% Simple example
+
+fig_num = 4;
 figure(fig_num);
 clf;
 
@@ -259,6 +211,77 @@ indicies_to_keep = (1:8:256)';
 colormapValues = colormapValues(indicies_to_keep,:);
 
 h_plot = fcn_plotRoad_plotXYZI(XYZIdata, (plotFormat),  (colormapValues), (fig_num));
+title(sprintf('Example %.0d: showing use of a complex plotFormat',fig_num), 'Interpreter','none');
+
+% Check results
+good_indicies = find(~isnan(h_plot));
+assert(all(ishandle(h_plot(good_indicies,1))));
+
+%% fcn_plotRoad_plotLL
+
+fig_num = 6;
+figure(fig_num);
+clf;
+
+
+% Now call the function again to plot data into an existing figure to check
+% that this works
+data3 = [
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0];
+
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+LLdata = [data3(:,2), data3(:,1), data3(:,3)];
+
+% Test the function
+clear plotFormat
+plotFormat.Color = [0 1 1];
+plotFormat.Marker = '.';
+plotFormat.MarkerSize = 10;
+plotFormat.LineStyle = '-';
+plotFormat.LineWidth = 3;
+labelText = 'Test of text';
+h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num));
+
+title(sprintf('Example %.0d: showing use of text label',fig_num), 'Interpreter','none');
+
+%% fcn_plotRoad_plotLLI
+
+fig_num = 7;
+figure(fig_num);
+clf;
+
+% Fill in data
+data3 = [
+    -77.83108116099999,40.86426763900005,0
+    -77.83098509099995,40.86432365200005,0
+    -77.83093857199998,40.86435301300003,0
+    -77.83087253399998,40.86439877000004,0
+    -77.83080882499996,40.86444684500003,0
+    -77.83075077399997,40.86449883100005,0
+    -77.83069596999997,40.86455288200005,0
+    -77.83064856399994,40.86461089600004,0];
+
+% NOTE: above data is in BAD column order, so we
+% have to manually rearrange it.
+time = linspace(0,10,length(LLdata(:,1)))';
+LLIdata = [data3(:,2), data3(:,1), time];
+
+% Test the function
+clear plotFormat
+plotFormat.LineStyle = '-';
+plotFormat.LineWidth = 3;
+plotFormat.Marker = '.';
+plotFormat.MarkerSize = 5;
+colorMap = 'hot';
+h_plot = fcn_plotRoad_plotLLI(LLIdata, (plotFormat),  (colorMap), (fig_num));
 title(sprintf('Example %.0d: showing use of a complex plotFormat',fig_num), 'Interpreter','none');
 
 % Check results

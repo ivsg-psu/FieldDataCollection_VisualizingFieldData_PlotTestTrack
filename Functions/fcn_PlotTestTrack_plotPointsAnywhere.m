@@ -86,6 +86,7 @@ if flag_do_debug
 else
     debug_fig_num = [];
 end
+
 %% check input arguments
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %   _____                   _
@@ -273,7 +274,7 @@ nanArray = NaN(size(LLA_coordinates,1),1);
 % LLA plot?
 if exist('LLA_fig_num','var') && ~isempty(LLA_fig_num)
     if ~isempty(LLA_coordinates)
-        
+
         f = figure(LLA_fig_num);
         %clf;
         hold on

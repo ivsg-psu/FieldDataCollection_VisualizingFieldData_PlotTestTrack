@@ -34,7 +34,8 @@ function h_plot = fcn_plotRoad_plotXYI(XYIdata, varargin)
 %          If no color is specified, but a colormap is given, the colormap
 %          is used.
 %
-%      colorMap: a string specifying the colormap for the plot, default is "hot".
+%      colorMap: a string specifying the colormap for the plot, default is
+%      to use the current colormap
 %
 %      fig_num: a figure number to plot results. If set to -1, skips any
 %      input checking or debugging, no figures will be generated, and sets
@@ -53,7 +54,7 @@ function h_plot = fcn_plotRoad_plotXYI(XYIdata, varargin)
 %
 %       See the script:
 % 
-%       script_test_fcn_plotRoad_plotXY.m 
+%       script_test_fcn_plotRoad_plotXYI.m 
 %  
 %       for a full test suite.
 %
@@ -128,44 +129,6 @@ if 0==flag_max_speed
         % end
     end
 end
-
-% 
-% % Does user want to specify station_tolerance?
-% test_date_string = '2024_06_28'; % The date of testing. This defines the folder where the data should be found within LargeData main folder
-% if (1<=nargin)
-%     temp = varargin{1};
-%     if ~isempty(temp)
-%         test_date_string = temp;
-%     end
-% end
-% 
-% % Does user want to specify station_tolerance?
-% vehicle_pose_string = 'VehiclePose_ENU.mat'; % The name of the file containing VehiclePose
-% if (2<=nargin)
-%     temp = varargin{2};
-%     if ~isempty(temp)
-%         vehicle_pose_string = temp;
-%     end
-% end
-% 
-% % Does user want to specify station_tolerance?
-% LIDAR_file_string   = 'Velodyne_LiDAR_Scan_ENU.mat'; % The name of the file containing the LIDAR data
-% if (3<=nargin)
-%     temp = varargin{3};
-%     if ~isempty(temp)
-%         LIDAR_file_string = temp;
-%     end
-% end
-% 
-% % Does user want to specify flag_load_all_data?
-% flag_load_all_data = 0; % FORCE LOAD? Set this manually to 1 to FORCE load
-% if (4<=nargin)
-%     temp = varargin{4};
-%     if ~isempty(temp)
-%         flag_load_all_data = temp;
-%     end
-% end
-
 
 % Does user want to specify plotFormat?
 % plotFormat = 'k';
