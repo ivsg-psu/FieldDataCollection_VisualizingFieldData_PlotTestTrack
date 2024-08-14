@@ -164,21 +164,21 @@ if 2==length(centerPointXYZ(1,:))
     cornersXYZ =  centerPointXYZ + rotated_rectangle;
 elseif 3==length(centerPointXYZ(1,:))
     % Construct the plane rotation point sequences in each of the planes
-    XY_plane = [0 0 0; 1 0 0; 1 1 0; 0 1 0; 0 0 0];
-    YZ_plane = [0 0 0; 0 1 0; 0 1 1; 0 0 1; 0 0 0];
-    XZ_plane = [0 0 0; 1 0 0; 1 0 1; 0 0 1; 0 0 0];
-    neg_XY_plane = flipud(XY_plane) + [zeros(5,2) ones(5,1)];
-    neg_YZ_plane = flipud(YZ_plane) + [ones(5,1) zeros(5,2)];
-    neg_XZ_plane = flipud(XZ_plane) + [zeros(5,1) ones(5,1) zeros(5,1)];
+    XY0_plane = [0 0 0; 0 1 0; 1 1 0; 1 0 0; 0 0 0];
+    YZ0_plane = [0 0 0; 0 0 1; 0 1 1; 0 1 0; 0 0 0];
+    XZ0_plane = [0 0 0; 1 0 0; 1 0 1; 0 0 1; 0 0 0];
+    XY1_plane = [0 0 1; 1 0 1; 1 1 1; 0 1 1; 0 0 1];
+    YZ1_plane = [1 0 1; 1 0 0; 1 1 0; 1 1 1; 1 0 1];
+    XZ1_plane = [1 1 1; 0 1 1; 0 1 0; 1 1 0; 1 1 1];
 
     % Create the initial square
     initial_square = [...
-        XY_plane; 
-        YZ_plane; 
-        XZ_plane; 
-        neg_XY_plane; 
-        neg_YZ_plane; 
-        neg_XZ_plane] - 1/2*ones(5*6,3);
+        XY0_plane; 
+        YZ0_plane; 
+        XZ0_plane; 
+        XY1_plane; 
+        YZ1_plane; 
+        XZ1_plane]; 
     shifted_initial_square = initial_square - 1/2*ones(length(initial_square(:,1)),3); 
     initial_rectangle = shifted_initial_square*diag(LWH);
     rotated_rectangle = (initial_rectangle + centerOffsetLWH)*[cos(yawAngle) sin(yawAngle) 0; -sin(yawAngle) cos(yawAngle) 0; 0 0 1];
@@ -224,6 +224,7 @@ if flag_do_plots == 1
     elseif 3==length(centerPointXYZ(1,:))
         plot3(cornersXYZ(:,1), cornersXYZ(:,2), cornersXYZ(:,3), 'b.-');
         zlabel('Z [m]');
+        view(3);
     end
 
 

@@ -110,7 +110,7 @@ assert(isequal(round(cornersXYZ,4),[...
     0         0]));
 
 
-%% Basic Example 5: Basic rectangle, moved and rotated and measured from back corner
+%% Basic Example 5: Basic 3D rectangle, moved and rotated and measured from back corner
 fig_num = 5;
 figure(fig_num);
 clf;
@@ -119,23 +119,48 @@ clf;
 centerPointXYZ = [0 0 0];
 LWH = [4 2 1];
 yawAngle = 45*pi/180;
-centerOffsetLWH = [2 1 0];
+centerOffsetLWH = [2 1 0.5];
 
 cornersXYZ = fcn_plotRoad_calcRectangleXYZ(centerPointXYZ, LWH, (yawAngle), (centerOffsetLWH), (fig_num));
 title(sprintf('Example %.0d: basic rectangle',fig_num), 'Interpreter','none');
 
 % Check results
 assert(all(ishandle(fig_num)));
-assert(length(cornersXYZ(:,1))==5);
-assert(length(cornersXYZ(1,:))==2);
+assert(length(cornersXYZ(:,1))==5*6);
+assert(length(cornersXYZ(1,:))==3);
 assert(isequal(round(cornersXYZ,4),[...
-    0         0
-    2.8284    2.8284
-    1.4142    4.2426
-    -1.4142    1.4142
-    0         0]));
+         0         0         0
+   -1.4142    1.4142         0
+    1.4142    4.2426         0
+    2.8284    2.8284         0
+         0         0         0
+         0         0         0
+         0         0    1.0000
+   -1.4142    1.4142    1.0000
+   -1.4142    1.4142         0
+         0         0         0
+         0         0         0
+    2.8284    2.8284         0
+    2.8284    2.8284    1.0000
+         0         0    1.0000
+         0         0         0
+         0         0    1.0000
+    2.8284    2.8284    1.0000
+    1.4142    4.2426    1.0000
+   -1.4142    1.4142    1.0000
+         0         0    1.0000
+    2.8284    2.8284    1.0000
+    2.8284    2.8284         0
+    1.4142    4.2426         0
+    1.4142    4.2426    1.0000
+    2.8284    2.8284    1.0000
+    1.4142    4.2426    1.0000
+   -1.4142    1.4142    1.0000
+   -1.4142    1.4142         0
+    1.4142    4.2426         0
+    1.4142    4.2426    1.0000]));
 
-%% testing speed of function
+%% Testing speed mode
 
 centerPointXYZ = [0 0];
 LWH = [4 2];
@@ -148,7 +173,7 @@ fig_num=[];
 REPS=5; minTimeSlow=Inf;
 tic;
 
-% slow mode calculation - code copied from plotVehicleXYZ
+% Slow mode calculation - code copied from plotVehicleXYZ
 for i=1:REPS
     tstart=tic;
     cornersXYZ = fcn_plotRoad_calcRectangleXYZ(centerPointXYZ, LWH, (yawAngle), (centerOffsetLWH), (fig_num));
@@ -156,7 +181,7 @@ for i=1:REPS
     minTimeSlow=min(telapsed,minTimeSlow);
 end
 averageTimeSlow=toc/REPS;
-% slow mode END
+% Slow mode END
 
 % Fast Mode Calculation
 fig_num = -1;

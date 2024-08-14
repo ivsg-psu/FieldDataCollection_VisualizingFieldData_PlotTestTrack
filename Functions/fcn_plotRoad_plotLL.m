@@ -3,7 +3,7 @@ function h_geoplot = fcn_plotRoad_plotLL(varargin)
 %
 % FORMAT:
 %
-%       h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (labelText), (fig_num))
+%       h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num))
 %
 % INPUTS:
 %
@@ -24,8 +24,6 @@ function h_geoplot = fcn_plotRoad_plotLL(varargin)
 %            plotFormat.Color = [1 0.5 0.5];
 %            A full list of properties can be found by examining the plot
 %            handle, for example: h_plot = plot(1:10); get(h_plot)
-%
-%      labelText: an optional text to add to the first point of the plot.
 %
 %      fig_num: a figure number to plot results. If set to -1, skips any
 %      input checking or debugging, no figures will be generated, and sets
@@ -62,7 +60,7 @@ function h_geoplot = fcn_plotRoad_plotLL(varargin)
 % argument (varargin) is given a number of -1, which is not a valid figure
 % number.
 flag_max_speed = 0;
-if (nargin==4 && isequal(varargin{end},-1))
+if (nargin==3 && isequal(varargin{end},-1))
     flag_do_debug = 0; % % % % Flag to plot the results for debugging
     flag_check_inputs = 0; % Flag to perform input checking
     flag_max_speed = 1;
@@ -104,7 +102,7 @@ end
 if 0 == flag_max_speed
     if flag_check_inputs == 1
         % Are there the right number of inputs?
-        narginchk(0,4);
+        narginchk(0,3);
 
 
         % % Check the points input to be length greater than or equal to 2
@@ -171,20 +169,11 @@ if 2 <= nargin
     end
 end
 
-% Check for a label input
-labelText =''; % Default is empty
-if 3<= nargin
-    temp = varargin{3};
-    if ~isempty(temp)
-        labelText = temp;
-    end
-end
-
 
 % Default is to make a plot - this starts the plotting process
 flag_do_plots = 1;
 fig_num = []; % Initialize the figure number to be empty
-if (0==flag_max_speed) && (4<= nargin)
+if (0==flag_max_speed) && (3<= nargin)
     temp = varargin{end};
     if ~isempty(temp)
         fig_num = temp;
@@ -301,16 +290,12 @@ if flag_do_plots == 1
 
         % Do plot
         h_plot = geoplot(dataToPlot(:,1)+offset_Lat,dataToPlot(:,2)+offset_Lon);
+
+        % Fix attributes
         list_fieldNames = fieldnames(finalPlotFormat);
         for ith_field = 1:length(list_fieldNames)
             thisField = list_fieldNames{ith_field};
             h_plot.(thisField) = finalPlotFormat.(thisField);
-        end
-        color_to_plot = h_plot.Color;
-
-        % Label the plots?
-        if ~isempty(labelText)
-            text(dataToPlot(1,1)+offset_Lat, dataToPlot(1,2)+offset_Lon,sprintf('%s',labelText),'Color',color_to_plot,'FontSize',14);
         end
     end
 end

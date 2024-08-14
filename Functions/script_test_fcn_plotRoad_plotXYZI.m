@@ -46,7 +46,7 @@ figure(fig_num);
 clf;
 
 time = linspace(0,10,100)';
-XYIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
+XYZIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
 
 % Test the function
 plotFormat = 'r';
@@ -64,7 +64,7 @@ figure(fig_num);
 clf;
 
 time = linspace(0,10,100)';
-XYIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
+XYZIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
 
 % Test the function
 plotFormat = [];
@@ -73,7 +73,7 @@ h_plot = fcn_plotRoad_plotXYZI(XYZIdata, (plotFormat),  (colorMapString), (fig_n
 title(sprintf('Example %.0d: showing user-defined color map',fig_num), 'Interpreter','none');
 
 % Check results
-good_indicies = find(~isnan(h_plot));
+good_indicies = ~isnan(h_plot);
 assert(all(ishandle(h_plot(good_indicies,1))));
 
 
@@ -84,7 +84,7 @@ figure(fig_num);
 clf;
 
 time = linspace(0,10,100)';
-XYIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
+XYZIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
 
 % Test the function
 plotFormat = '-';
@@ -93,7 +93,7 @@ h_plot = fcn_plotRoad_plotXYZI(XYZIdata, (plotFormat),  (colorMapString), (fig_n
 title(sprintf('Example %.0d: showing use of a linestyle',fig_num), 'Interpreter','none');
 
 % Check results
-good_indicies = find(~isnan(h_plot));
+good_indicies = ~isnan(h_plot);
 assert(all(ishandle(h_plot(good_indicies,1))));
 
 %% BASIC example 5 - specifying the full plotFormat
@@ -102,7 +102,7 @@ figure(fig_num);
 clf;
 
 time = linspace(0,10,100)';
-XYIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
+XYZIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
 
 % Test the function
 clear plotFormat
@@ -115,7 +115,7 @@ h_plot = fcn_plotRoad_plotXYZI(XYZIdata, (plotFormat),  (colorMapString), (fig_n
 title(sprintf('Example %.0d: showing use of a complex plotFormat',fig_num), 'Interpreter','none');
 
 % Check results
-good_indicies = find(~isnan(h_plot));
+good_indicies = ~isnan(h_plot);
 assert(all(ishandle(h_plot(good_indicies,1))));
 
 %% BASIC example 5 - specifying a reduced colormap (for speed)
@@ -124,7 +124,7 @@ figure(fig_num);
 clf;
 
 time = linspace(0,10,100)';
-XYIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
+XYZIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
 
 % Test the function
 clear plotFormat
@@ -149,7 +149,7 @@ assert(all(ishandle(h_plot(good_indicies,1))));
 
 
 time = linspace(0,10,100)';
-XYIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
+XYZIdata = [time sin(time) 1/25*(time-5).^2  cos(time)];
 
 
 % Test the function

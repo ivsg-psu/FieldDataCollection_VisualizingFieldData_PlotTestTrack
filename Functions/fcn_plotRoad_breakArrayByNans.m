@@ -1,15 +1,20 @@
-%%  fcn_PlotTestTrack_breakArrayByNans
-function indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(input_array)
-% Finds sections of nan, and breaks indicies into segments of non-nan data,
-% returning indicies of each segment
+function indicies_cell_array = fcn_plotRoad_breakArrayByNans(input_array, varargin)
+%fcn_plotRoad_breakArrayByNans  finds sections of nan, and breaks indicies into segments of non-nan data
+%        returning indicies of each segment
 %
 % FORMAT:
 %
-%       indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(input_array)
+%       indicies_cell_array = fcn_plotRoad_breakArrayByNans(input_array)
 %
 % INPUTS:
 %
 %       input_array: a matrix where some rows contain NaN values
+%
+%      (OPTIONAL INPUTS)
+%
+%      fig_num: a figure number to plot results. If set to -1, skips any
+%      input checking or debugging, no figures will be generated, and sets
+%      up code to maximize speed.
 %
 % OUTPUTS:
 %
@@ -23,7 +28,7 @@ function indicies_cell_array = fcn_PlotTestTrack_breakArrayByNans(input_array)
 % EXAMPLES:
 %
 %       See the script:
-%       script_test_fcn_PlotTestTrack_breakArrayByNans.m for a full
+%       script_test_fcn_plotRoad_breakArrayByNans.m for a full
 %       test suite.
 %
 % This function was written on 2023_07_14 by S. Brennan
@@ -56,7 +61,7 @@ else
     end
 end
 
-flag_do_debug = 1;
+% flag_do_debug = 1;
 
 if flag_do_debug
     st = dbstack; %#ok<*UNRCH>
@@ -81,13 +86,18 @@ end
 if 0 == flag_max_speed
     if flag_check_inputs == 1
         % Are there the right number of inputs?
-        narginchk(1,1);
+        narginchk(1,2);
     end
 end
 
+% Check to see if user specifies fig_num?
 flag_do_plots = 0;
 if (0==flag_max_speed) && (1<= nargin)
-% there is no plotting here
+    temp = varargin{end};
+    if ~isempty(temp)
+        fig_num = temp;
+        flag_do_plots = 1;
+    end
 end
 
 % Setup figures if there is debugging
@@ -171,7 +181,7 @@ if flag_do_debug
     fprintf(1,'ENDING function: %s, in file: %s\n\n',st(1).name,st(1).file);
 end
 
-end % Ends main function for  fcn_PlotTestTrack_breakArrayByNans
+end % Ends main function for  fcn_plotRoad_breakArrayByNans
 
 %% Functions follow
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,10 +1,12 @@
-%% script_test_fcn_PlotTestTrack_plotTraces.m
-% This is a script to exercise the function: fcn_PlotTestTrack_plotTraces.m
+%% script_test_fcn_plotRoad_plotTraces
+% This is a script to exercise the function: fcn_plotRoad_plotTraces
 % This function was written on 2023_03_25 by V. Wagh, vbw5054@psu.edu
 
 % Revision history:
 % 2023_03_25
 % -- first write of the code
+% 2024_08_14 - S Brennan
+% -- changed the argument input to allow variable plot styles
 
 
 
@@ -40,7 +42,7 @@ Trace_coordinates = 1.0e+02 * [
 ];
 
 input_coordinates_type = "ENU";
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+fcn_plotRoad_plotTraces(Trace_coordinates, input_coordinates_type);
 
 %% Basic example 2 - input LLA coordinates and plot a trace in only LLA coordinates
 % FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
@@ -59,7 +61,7 @@ Trace_coordinates = 1.0e+02 *[
 ];
 
 input_coordinates_type = "LLA";
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+fcn_plotRoad_plotTraces(Trace_coordinates, input_coordinates_type);
 
 %% Basic example 3 - input STH coordinates and plot a trace in only LLA coordinates
 %
@@ -76,7 +78,7 @@ Trace_coordinates = 1.0e+02 * [
     -1.142946654037681  -1.337823833081837
     ];
 input_coordinates_type = "STH";
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+fcn_plotRoad_plotTraces(Trace_coordinates, input_coordinates_type);
 
 %% Basic example 4 - input ENU coordinates and plot a trace in only ENU
 
@@ -96,20 +98,23 @@ Trace_coordinates = 1.0e+02 * [
 ];
 
 input_coordinates_type = "ENU";
-plot_color = [];
-line_width = [];
 LLA_fig_num =[];
 ENU_fig_num = 145;
 STH_fig_num = [];
 reference_unit_tangent_vector =[];
 flag_plot_headers_and_tailers =[];
-flag_plot_points =[];
+
 hard_coded_reference_unit_tangent_vector_outer_lanes   = [0.793033249943519   0.609178351949592];
 hard_coded_reference_unit_tangent_vector_LC_south_lane = [0.794630317120972   0.607093616431785];
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
-    plot_color,line_width,...
-    LLA_fig_num,ENU_fig_num,STH_fig_num,reference_unit_tangent_vector,...
-    flag_plot_headers_and_tailers, flag_plot_points);
+
+plotFormat = [];
+
+fcn_plotRoad_plotTraces(...
+    Trace_coordinates, input_coordinates_type,...
+    (plotFormat),...
+    (reference_unit_tangent_vector),...
+    (flag_plot_headers_and_tailers),...
+    (LLA_fig_num), (ENU_fig_num), (STH_fig_num));
 
 %% Basic example 5 - input ENU coordinates and plot a trace in only STH
 
@@ -128,20 +133,22 @@ Trace_coordinates = 1.0e+02 * [
 -0.096035753167200  -1.756950994360000   0.227825672033000
 ];
 
+
+plotFormat = [];
 input_coordinates_type = "ENU";
-plot_color = [];
-line_width = [];
 LLA_fig_num =[];
 ENU_fig_num = [];
 STH_fig_num = 678;
 reference_unit_tangent_vector =[];
 flag_plot_headers_and_tailers =[];
-flag_plot_points =[];
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
-    plot_color,line_width,...
-    reference_unit_tangent_vector,...
-    flag_plot_headers_and_tailers, flag_plot_points,...
-    LLA_fig_num,ENU_fig_num,STH_fig_num);
+
+
+fcn_plotRoad_plotTraces(...
+    Trace_coordinates, input_coordinates_type,...
+    (plotFormat),...
+    (reference_unit_tangent_vector),...
+    (flag_plot_headers_and_tailers),...
+    (LLA_fig_num), (ENU_fig_num), (STH_fig_num));
 
 %% Basic example 6 - input STH coordinates and plot a trace in only STH
 
@@ -158,20 +165,22 @@ Trace_coordinates = 1.0e+02 * [
     -1.170580581946491  -1.298665344937900
     -1.142946654037681  -1.337823833081837
     ];
+
+plotFormat = [];
+
 input_coordinates_type = "STH";
-plot_color = [];
-line_width = [];
 LLA_fig_num =[];
 ENU_fig_num = [];
 STH_fig_num = 678;
 reference_unit_tangent_vector =[];
 flag_plot_headers_and_tailers =[];
-flag_plot_points =[];
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
-    plot_color,line_width,...
-    reference_unit_tangent_vector,...
-    flag_plot_headers_and_tailers, flag_plot_points,...
-    LLA_fig_num,ENU_fig_num,STH_fig_num);
+
+fcn_plotRoad_plotTraces(...
+    Trace_coordinates, input_coordinates_type,...
+    (plotFormat),...
+    (reference_unit_tangent_vector),...
+    (flag_plot_headers_and_tailers),...
+    (LLA_fig_num), (ENU_fig_num), (STH_fig_num));
 
 %% Basic example 7 - input STH coordinates and plot a trace in only LLA
 
@@ -188,22 +197,24 @@ Trace_coordinates = 1.0e+02 * [
     -1.170580581946491  -1.298665344937900
     -1.142946654037681  -1.337823833081837
     ];
+
+
+plotFormat = [];
 input_coordinates_type = "STH";
-plot_color = [];
-line_width = [];
 LLA_fig_num =1232;
 ENU_fig_num = [];
 STH_fig_num = [];
 reference_unit_tangent_vector =[];
 flag_plot_headers_and_tailers =[];
-flag_plot_points =[];
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
-    plot_color,line_width,...
-    reference_unit_tangent_vector,...
-    flag_plot_headers_and_tailers, flag_plot_points,...
-    LLA_fig_num,ENU_fig_num,STH_fig_num);
 
-%% Basic example 7 - input STH coordinates and plot a trace in only ENU
+fcn_plotRoad_plotTraces(...
+    Trace_coordinates, input_coordinates_type,...
+    (plotFormat),...
+    (reference_unit_tangent_vector),...
+    (flag_plot_headers_and_tailers),...
+    (LLA_fig_num), (ENU_fig_num), (STH_fig_num));
+
+%% Basic example 8 - input STH coordinates and plot a trace in only ENU
 
 % FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
 Trace_coordinates = 1.0e+02 * [
@@ -218,20 +229,60 @@ Trace_coordinates = 1.0e+02 * [
     -1.170580581946491  -1.298665344937900
     -1.142946654037681  -1.337823833081837
     ];
+
+plotFormat = [];
 input_coordinates_type = "STH";
-plot_color = [];
-line_width = [];
 LLA_fig_num =[];
 ENU_fig_num = 8989;
 STH_fig_num = [];
 reference_unit_tangent_vector =[];
 flag_plot_headers_and_tailers =[];
-flag_plot_points =[];
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
-    plot_color,line_width,...
-    reference_unit_tangent_vector,...
-    flag_plot_headers_and_tailers, flag_plot_points,...
-    LLA_fig_num,ENU_fig_num,STH_fig_num);
+
+fcn_plotRoad_plotTraces(...
+    Trace_coordinates, input_coordinates_type,...
+    (plotFormat),...
+    (reference_unit_tangent_vector),...
+    (flag_plot_headers_and_tailers),...
+    (LLA_fig_num), (ENU_fig_num), (STH_fig_num));
+
+%% Basic example 999 - input LLA coordinates and plot all traces
+% FieldMeasurements_OriginalTrackLane_OuterMarkerClusterSolidWhite_1
+
+Trace_coordinates = 1.0e+02 *[
+
+0.408623854107731  -0.778367360663248   3.667869999985497
+0.408623527614556  -0.778366824471459   3.667869999850096
+0.408623228140075  -0.778366298073317   3.667860000095597
+0.408622834336925  -0.778365531515185   3.668379999958485
+0.408622432755178  -0.778364682365638   3.668739999760671
+0.408622053936209  -0.778363776401051   3.669000000069386
+0.408621723905615  -0.778362865478155   3.669120000111036
+0.408621412026466  -0.778361862594228   3.669249999930642
+0.408621166253217  -0.778360964599280   3.669500000276769
+0.408621037130544  -0.778360422209667   3.669740000166511
+];
+
+clear plotFormat
+plotFormat.Color = [1 1 1];
+plotFormat.Marker = '.';
+plotFormat.MarkerSize = 10;
+plotFormat.LineStyle = '-';
+plotFormat.LineWidth = 3;
+
+
+input_coordinates_type = "LLA";
+LLA_fig_num = 1111;
+ENU_fig_num = 2222;
+STH_fig_num = 3333;
+reference_unit_tangent_vector =[];
+flag_plot_headers_and_tailers =[];
+
+fcn_plotRoad_plotTraces(...
+    Trace_coordinates, input_coordinates_type,...
+    (plotFormat),...
+    (reference_unit_tangent_vector),...
+    (flag_plot_headers_and_tailers),...
+    (LLA_fig_num), (ENU_fig_num), (STH_fig_num));
 
 %% Plot the electric poles on the test track
 
@@ -245,68 +296,69 @@ Trace_coordinates = [
     ];
 
 input_coordinates_type = "ENU";
-[LLA_trace, ENU_trace, STH_trace] = fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type);
+[LLA_trace, ENU_trace, STH_trace] = fcn_plotRoad_plotTraces(Trace_coordinates, input_coordinates_type);
 
 %% testing speed of function
-
-% load inputs
-Trace_coordinates = [
-    -41.54388324160499 -111.0086546354483 -12.592103434894112
-    -41.569363315580546 -110.75959350573615 -12.613099216676304
-    -41.34223821788768 -110.66675022734344 -12.70109625294922
-    -41.162258919321594 -110.78811147949827 -12.855097101992692
-    ];
-
-input_coordinates_type = "ENU";
-plot_color = [];
-line_width = [];
-reference_unit_tangent_vector =[];
-flag_plot_headers_and_tailers =[];
-flag_plot_points =[];
-% Speed Test Calculation
-fig_num=[];
-REPS=5; minTimeSlow=Inf;
-tic;
-%slow mode calculation - code copied from plotVehicleXYZ
-for i=1:REPS
-tstart=tic;
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
-    plot_color,line_width,...
-    fig_num,fig_num,fig_num,reference_unit_tangent_vector,...
-    flag_plot_headers_and_tailers, flag_plot_points);
-telapsed=toc(tstart);
-minTimeSlow=min(telapsed,minTimeSlow);
-end
-averageTimeSlow=toc/REPS;
-%slow mode END
-%Fast Mode Calculation
-fig_num = -1;
-minTimeFast = Inf;
-tic;
-for i=1:REPS
-tstart = tic;
-fcn_PlotTestTrack_plotTraces(Trace_coordinates, input_coordinates_type,...
-    plot_color,line_width,...
-    fig_num,fig_num,fig_num,reference_unit_tangent_vector,...
-    flag_plot_headers_and_tailers, flag_plot_points);
-telapsed = toc(tstart);
-minTimeFast = min(telapsed,minTimeFast);
-end
-averageTimeFast = toc/REPS;
-%Display Console Comparison
-if 1==1
-fprintf(1,'\n\nComparison of fcn_PlotTestTrack_plotTraces without speed setting (slow) and with speed setting (fast):\n');
-fprintf(1,'N repetitions: %.0d\n',REPS);
-fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
-fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
-fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
-fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
-fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
-fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
-end
-%Assertion on averageTime NOTE: Due to the variance, there is a chance that
-%the assertion will fail.
-assert(averageTimeFast<averageTimeSlow);
+% NOTHING to test - plot requires fig_num input 
+%
+% % load inputs
+% Trace_coordinates = [
+%     -41.54388324160499 -111.0086546354483 -12.592103434894112
+%     -41.569363315580546 -110.75959350573615 -12.613099216676304
+%     -41.34223821788768 -110.66675022734344 -12.70109625294922
+%     -41.162258919321594 -110.78811147949827 -12.855097101992692
+%     ];
+% 
+% input_coordinates_type = "ENU";
+% plot_color = [];
+% line_width = [];
+% reference_unit_tangent_vector =[];
+% flag_plot_headers_and_tailers =[];
+% flag_plot_points =[];
+% % Speed Test Calculation
+% fig_num=[];
+% REPS=5; minTimeSlow=Inf;
+% tic;
+% %slow mode calculation - code copied from plotVehicleXYZ
+% for i=1:REPS
+%     tstart=tic;
+%     fcn_plotRoad_plotTraces(Trace_coordinates, input_coordinates_type,...
+%         plot_color,line_width,...
+%         fig_num,fig_num,fig_num,reference_unit_tangent_vector,...
+%         flag_plot_headers_and_tailers, flag_plot_points);
+%     telapsed=toc(tstart);
+%     minTimeSlow=min(telapsed,minTimeSlow);
+% end
+% averageTimeSlow=toc/REPS;
+% %slow mode END
+% %Fast Mode Calculation
+% fig_num = -1;
+% minTimeFast = Inf;
+% tic;
+% for i=1:REPS
+%     tstart = tic;
+%     fcn_plotRoad_plotTraces(Trace_coordinates, input_coordinates_type,...
+%         plot_color,line_width,...
+%         fig_num,fig_num,fig_num,reference_unit_tangent_vector,...
+%         flag_plot_headers_and_tailers, flag_plot_points);
+%     telapsed = toc(tstart);
+%     minTimeFast = min(telapsed,minTimeFast);
+% end
+% averageTimeFast = toc/REPS;
+% %Display Console Comparison
+% if 1==1
+%     fprintf(1,'\n\nComparison of fcn_plotRoad_plotTraces without speed setting (slow) and with speed setting (fast):\n');
+%     fprintf(1,'N repetitions: %.0d\n',REPS);
+%     fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+%     fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+%     fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+%     fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+%     fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+%     fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+% end
+% %Assertion on averageTime NOTE: Due to the variance, there is a chance that
+% %the assertion will fail.
+% assert(averageTimeFast<averageTimeSlow);
 
 %%
 % % Power pole by the gas tank, Height ~ 10 meters

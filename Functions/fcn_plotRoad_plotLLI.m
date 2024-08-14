@@ -278,8 +278,7 @@ if flag_do_plots
             Y_data_selected = Lon_data(plotting_indicies,:);
 
             % Do the plotting
-            labelText = [];
-            h_geoplot(ith_color,1)  = fcn_plotRoad_plotLL([X_data_selected Y_data_selected], (tempPlotFormat), (labelText), (fig_num));
+            h_geoplot(ith_color,1)  = fcn_plotRoad_plotLL([X_data_selected Y_data_selected], (tempPlotFormat), (fig_num));
         end
     end
     

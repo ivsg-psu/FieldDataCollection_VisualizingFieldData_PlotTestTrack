@@ -1,5 +1,5 @@
-%% script_test_fcn_plotRoad_plotXY
-% This is a script to exercise the function: fcn_plotRoad_plotXY
+%% script_test_fcn_plotRoad_plotHeadTailXY
+% This is a script to exercise the function: fcn_plotRoad_plotHeadTailXY
 % This function was written on 2023_08_12 by S. Brennan, sbrennan@psu.edu
 
 
@@ -33,7 +33,11 @@ XYdata = [time sin(time)];
 % Test the function
 plotFormat = [];
 h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailXY(XYdata, fig_num);
+
 title(sprintf('Example %.0d: showing basic plotting',fig_num), 'Interpreter','none');
+
+
 
 % Check results
 assert(ishandle(h_plot));
@@ -50,6 +54,8 @@ XYdata = [time sin(time)];
 % Test the function
 plotFormat = 'r.-';
 h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailXY(XYdata, fig_num, plotFormat);
+
 title(sprintf('Example %.0d: showing basic plot string',fig_num), 'Interpreter','none');
 
 % Check results
@@ -67,6 +73,8 @@ XYdata = [time sin(time)];
 % Test the function
 plotFormat = [1 0.4 1];
 h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailXY(XYdata, fig_num, plotFormat);
+
 title(sprintf('Example %.0d: showing  color numbers',fig_num), 'Interpreter','none');
 
 % Check results
@@ -89,66 +97,69 @@ plotFormat.MarkerSize = 10;
 plotFormat.LineStyle = '-';
 plotFormat.LineWidth = 3;
 h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailXY(XYdata, fig_num, plotFormat);
+
 title(sprintf('Example %.0d: showing  color numbers',fig_num), 'Interpreter','none');
 
 % Check results
 assert(ishandle(h_plot));
 
 %% testing speed of function
+% Speed testing is not possible for this function because it requires a
+% fig_num input, so this is not optional.
 
-
-time = linspace(0,10,100)';
-XYdata = [time sin(time)];
-
-% Test the function
-clear plotFormat
-plotFormat.Color = [0 0.7 0];
-plotFormat.Marker = '.';
-plotFormat.MarkerSize = 10;
-plotFormat.LineStyle = '-';
-plotFormat.LineWidth = 3;
-
-
-% Speed Test Calculation
-fig_num=[];
-REPS=5; minTimeSlow=Inf;
-tic;
-
-% Slow mode calculation
-for i=1:REPS
-    tstart=tic;
-    h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
-    telapsed=toc(tstart);
-    minTimeSlow=min(telapsed,minTimeSlow);
-end
-averageTimeSlow=toc/REPS;
-% Slow mode END
-
-close all;
-
-% Fast Mode Calculation
-fig_num = -1;
-minTimeFast = Inf;
-tic;
-for i=1:REPS
-    tstart = tic;
-    h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
-    telapsed = toc(tstart);
-    minTimeFast = min(telapsed,minTimeFast);
-end
-averageTimeFast = toc/REPS;
-
-% Display Console Comparison
-if 1==1
-    fprintf(1,'\n\nComparison of fcn_PlotTestTrack_plotTraceENU without speed setting (slow) and with speed setting (fast):\n');
-    fprintf(1,'N repetitions: %.0d\n',REPS);
-    fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
-    fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
-    fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
-    fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
-    fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
-    fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
-end
-%Assertion on averageTime NOTE: Due to the variance, there is a chance that
-%the assertion will fail.
-assert(averageTimeFast<2*averageTimeSlow);
+% 
+% 
+% time = linspace(0,10,100)';
+% XYdata = [time sin(time)];
+% 
+% % Test the function
+% clear plotFormat
+% plotFormat.Color = [0 0.7 0];
+% plotFormat.Marker = '.';
+% plotFormat.MarkerSize = 10;
+% plotFormat.LineStyle = '-';
+% plotFormat.LineWidth = 3;
+% 
+% 
+% % Speed Test Calculation
+% fig_num=[];
+% REPS=5; minTimeSlow=Inf;
+% tic;
+% 
+% % Slow mode calculation
+% for i=1:REPS
+%     tstart=tic;
+%     h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
+%     telapsed=toc(tstart);
+%     minTimeSlow=min(telapsed,minTimeSlow);
+% end
+% averageTimeSlow=toc/REPS;
+% %slow mode END
+% 
+% % Fast Mode Calculation
+% fig_num = -1;
+% minTimeFast = Inf;
+% tic;
+% for i=1:REPS
+%     tstart = tic;
+%     h_plot = fcn_plotRoad_plotXY(XYdata, (plotFormat), (fig_num));
+%     telapsed = toc(tstart);
+%     minTimeFast = min(telapsed,minTimeFast);
+% end
+% averageTimeFast = toc/REPS;
+% 
+% % Display Console Comparison
+% if 1==1
+%     fprintf(1,'\n\nComparison of fcn_PlotTestTrack_plotTraceENU without speed setting (slow) and with speed setting (fast):\n');
+%     fprintf(1,'N repetitions: %.0d\n',REPS);
+%     fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+%     fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+%     fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+%     fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+%     fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+%     fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+% end
+% %Assertion on averageTime NOTE: Due to the variance, there is a chance that
+% %the assertion will fail.
+% assert(averageTimeFast<averageTimeSlow);

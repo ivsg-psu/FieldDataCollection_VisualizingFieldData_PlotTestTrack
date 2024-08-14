@@ -1,10 +1,9 @@
-%% script_test_fcn_plotRoad_plotLL.m
-% This is a script to exercise the function: fcn_plotRoad_plotLL.m
-% This function was written on 2023_06_07 by S. Brennan, sbrennan@psu.edu
-% and Vaishnavi Wagh, vbw5054@psu.edu
+%% script_test_fcn_plotRoad_plotHeadTailLL
+% This is a script to exercise the function: fcn_plotRoad_plotHeadTailLL
+% This function was written on 2024_08_14 by S. Brennan, sbrennan@psu.edu
 
 % Revision history:
-% 2023_06_07
+% 2024_08_14
 % -- first write of the code
 
 close all;
@@ -22,32 +21,6 @@ close all;
 %                                                      |_|
 % See: https://patorjk.com/software/taag/#p=display&f=Big&t=Basic%20Example
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%§
-
-%% BASIC example 0 - only opens and initializes plot
-% call the function with empty inputs, and it should create the plot with
-% the focus on the test track, satellite view
-h_geoplot = fcn_plotRoad_plotLL;
-
-% Check results
-assert(ishandle(h_geoplot));
-close(gcf);
-
-%% BASIC example 1 - all defaults, no data. Also opens and initializes plot
-fig_num = 1;
-figure(fig_num);
-clf;
-
-LLdata = [];
-
-% Test the function
-plotFormat = [];
-h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
-
-title(sprintf('Example %.0d: showing initializing plot to figure number',fig_num), 'Interpreter','none');
-
-% Check results
-assert(ishandle(h_geoplot));
-close(gcf);
 
 %% BASIC example 2
 % Plot data onto an empty figure. This will force the code to check to see
@@ -110,6 +83,7 @@ LLdata = [data3(:,2), data3(:,1), data3(:,3)];
 % Test the function
 plotFormat = [];
 h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailLL(LLdata, fig_num, plotFormat);
 
 title(sprintf('Example %.0d: showing plotting of data',fig_num), 'Interpreter','none');
 
@@ -153,6 +127,7 @@ LLdata = [data3(:,2), data3(:,1), data3(:,3)];
 % Test the function
 plotFormat = [];
 h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailLL(LLdata, fig_num, plotFormat);
 
 title(sprintf('Example %.0d: showing plotting of data on existing figure',fig_num), 'Interpreter','none');
 
@@ -182,6 +157,7 @@ LLdata = [data3(:,2), data3(:,1), data3(:,3)];
 % Test the function
 plotFormat = 'y.-';
 h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailLL(LLdata, fig_num, plotFormat);
 
 title(sprintf('Example %.0d: showing use of simple formatting string',fig_num), 'Interpreter','none');
 
@@ -212,6 +188,7 @@ LLdata = [data3(:,2), data3(:,1), data3(:,3)];
 % Test the function
 plotFormat = [0 1 0];
 h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailLL(LLdata, fig_num, plotFormat);
 
 title(sprintf('Example %.0d: showing use of color vector',fig_num), 'Interpreter','none');
 
@@ -247,6 +224,7 @@ plotFormat.MarkerSize = 10;
 plotFormat.LineStyle = '-';
 plotFormat.LineWidth = 3;
 h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
+fcn_plotRoad_plotHeadTailLL(LLdata, fig_num, plotFormat);
 
 title(sprintf('Example %.0d: showing use of format structure',fig_num), 'Interpreter','none');
 
@@ -255,72 +233,73 @@ assert(ishandle(h_geoplot));
 
 
 %% testing speed of function
-
-
-% Now call the function again to plot data into an existing figure to check
-% that this works
-data3 = [
-    -77.83108116099999,40.86426763900005,0
-    -77.83098509099995,40.86432365200005,0
-    -77.83093857199998,40.86435301300003,0
-    -77.83087253399998,40.86439877000004,0
-    -77.83080882499996,40.86444684500003,0
-    -77.83075077399997,40.86449883100005,0
-    -77.83069596999997,40.86455288200005,0
-    -77.83064856399994,40.86461089600004,0];
-
-% NOTE: above data is in BAD column order, so we
-% have to manually rearrange it.
-LLdata = [data3(:,2), data3(:,1), data3(:,3)];
-
-% Test the function
-clear plotFormat
-plotFormat.Color = [0 1 1];
-plotFormat.Marker = '.';
-plotFormat.MarkerSize = 10;
-plotFormat.LineStyle = '-';
-plotFormat.LineWidth = 3;
-labelText = 'Test of text';
-
-% Speed Test Calculation
-fig_num=[];
-REPS=5; minTimeSlow=Inf;
-tic;
-% Slow mode calculation - code copied from plotVehicleXYZ
-for i=1:REPS
-    tstart=tic;
-    h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
-    telapsed=toc(tstart);
-    minTimeSlow=min(telapsed,minTimeSlow);
-end
-averageTimeSlow=toc/REPS;
-% Slow mode END
-
-close all;
-
-% Fast Mode Calculation
-fig_num = -1;
-minTimeFast = Inf;
-tic;
-for i=1:REPS
-    tstart = tic;
-    h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
-    telapsed = toc(tstart);
-    minTimeFast = min(telapsed,minTimeFast);
-end
-averageTimeFast = toc/REPS;
-
-% Display Console Comparison
-if 1==1
-    fprintf(1,'\n\nComparison of fcn_plotRoad_plotLL without speed setting (slow) and with speed setting (fast):\n');
-    fprintf(1,'N repetitions: %.0d\n',REPS);
-    fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
-    fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
-    fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
-    fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
-    fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
-    fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
-end
-%Assertion on averageTime NOTE: Due to the variance, there is a chance that
-%the assertion will fail.
-assert(averageTimeFast<2*averageTimeSlow);
+% Speed testing is not possible as fig_num is a required input
+ 
+% 
+% % Now call the function again to plot data into an existing figure to check
+% % that this works
+% data3 = [
+%     -77.83108116099999,40.86426763900005,0
+%     -77.83098509099995,40.86432365200005,0
+%     -77.83093857199998,40.86435301300003,0
+%     -77.83087253399998,40.86439877000004,0
+%     -77.83080882499996,40.86444684500003,0
+%     -77.83075077399997,40.86449883100005,0
+%     -77.83069596999997,40.86455288200005,0
+%     -77.83064856399994,40.86461089600004,0];
+% 
+% % NOTE: above data is in BAD column order, so we
+% % have to manually rearrange it.
+% LLdata = [data3(:,2), data3(:,1), data3(:,3)];
+% 
+% % Test the function
+% clear plotFormat
+% plotFormat.Color = [0 1 1];
+% plotFormat.Marker = '.';
+% plotFormat.MarkerSize = 10;
+% plotFormat.LineStyle = '-';
+% plotFormat.LineWidth = 3;
+% labelText = 'Test of text';
+% 
+% % Speed Test Calculation
+% fig_num=[];
+% REPS=5; minTimeSlow=Inf;
+% tic;
+% % Slow mode calculation - code copied from plotVehicleXYZ
+% for i=1:REPS
+%     tstart=tic;
+%     h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
+%     telapsed=toc(tstart);
+%     minTimeSlow=min(telapsed,minTimeSlow);
+% end
+% averageTimeSlow=toc/REPS;
+% % Slow mode END
+% 
+% close all;
+% 
+% % Fast Mode Calculation
+% fig_num = -1;
+% minTimeFast = Inf;
+% tic;
+% for i=1:REPS
+%     tstart = tic;
+%     h_geoplot = fcn_plotRoad_plotLL((LLdata), (plotFormat), (fig_num));
+%     telapsed = toc(tstart);
+%     minTimeFast = min(telapsed,minTimeFast);
+% end
+% averageTimeFast = toc/REPS;
+% 
+% % Display Console Comparison
+% if 1==1
+%     fprintf(1,'\n\nComparison of fcn_plotRoad_plotLL without speed setting (slow) and with speed setting (fast):\n');
+%     fprintf(1,'N repetitions: %.0d\n',REPS);
+%     fprintf(1,'Slow mode average speed per call (seconds): %.5f\n',averageTimeSlow);
+%     fprintf(1,'Slow mode fastest speed over all calls (seconds): %.5f\n',minTimeSlow);
+%     fprintf(1,'Fast mode average speed per call (seconds): %.5f\n',averageTimeFast);
+%     fprintf(1,'Fast mode fastest speed over all calls (seconds): %.5f\n',minTimeFast);
+%     fprintf(1,'Average ratio of fast mode to slow mode (unitless): %.3f\n',averageTimeSlow/averageTimeFast);
+%     fprintf(1,'Fastest ratio of fast mode to slow mode (unitless): %.3f\n',minTimeSlow/minTimeFast);
+% end
+% %Assertion on averageTime NOTE: Due to the variance, there is a chance that
+% %the assertion will fail.
+% assert(averageTimeFast<2*averageTimeSlow);

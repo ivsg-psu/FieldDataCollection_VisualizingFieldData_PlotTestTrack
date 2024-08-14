@@ -10,11 +10,11 @@
 clearvars; 
 close all; 
 clc;
-all_scripts = dir(cat(2,'.',filesep,'Functions',filesep,'script_test_fcn_*.m'));
+all_scripts = dir(cat(2,'.',filesep,'Functions',filesep,'script_test_fcn_plotRoad_*.m'));
 N_files = length(all_scripts);
 testing_times = nan(N_files,1);
 
-diary 'script_test_fcn_PlotTestTrack_all_stdout.txt';
+diary 'script_test_fcn_plotRoad_all_stdout.txt';
 
 for i_script = 1:N_files
     file_name_extended = all_scripts(i_script).name;
@@ -39,4 +39,5 @@ grid on;
 xlabel('Script test number');
 ylabel('Elapsed time to test (sec)');
 
+fprintf(1,'The testing times for each script:\n');
 disp(testing_times);

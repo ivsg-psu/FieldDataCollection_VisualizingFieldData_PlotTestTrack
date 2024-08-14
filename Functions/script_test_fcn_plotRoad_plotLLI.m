@@ -40,7 +40,7 @@ data3 = [
 
 % NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
-time = linspace(0,10,length(LLdata(:,1)))';
+time = linspace(0,10,length(data3(:,1)))';
 LLIdata = [data3(:,2), data3(:,1), time];
 
 
@@ -72,7 +72,7 @@ data3 = [
 
 % NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
-time = linspace(0,10,length(LLdata(:,1)))';
+time = linspace(0,10,length(data3(:,1)))';
 LLIdata = [data3(:,2), data3(:,1), time];
 
 % Test the function
@@ -103,7 +103,7 @@ data3 = [
 
 % NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
-time = linspace(0,10,length(LLdata(:,1)))';
+time = linspace(0,10,length(data3(:,1)))';
 LLIdata = [data3(:,2), data3(:,1), time];
 
 % Test the function
@@ -113,7 +113,7 @@ h_plot = fcn_plotRoad_plotLLI(LLIdata, (plotFormat),  (colorMap), (fig_num));
 title(sprintf('Example %.0d: showing user-defined color map',fig_num), 'Interpreter','none');
 
 % Check results
-good_indicies = find(~isnan(h_plot));
+good_indicies = ~isnan(h_plot);
 assert(all(ishandle(h_plot(good_indicies,1))));
 
 
@@ -136,7 +136,7 @@ data3 = [
 
 % NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
-time = linspace(0,10,length(LLdata(:,1)))';
+time = linspace(0,10,length(data3(:,1)))';
 LLIdata = [data3(:,2), data3(:,1), time];
 
 % Test the function
@@ -167,7 +167,7 @@ data3 = [
 
 % NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
-time = linspace(0,10,length(LLdata(:,1)))';
+time = linspace(0,10,length(data3(:,1)))';
 LLIdata = [data3(:,2), data3(:,1), time];
 
 % Test the function
@@ -201,7 +201,7 @@ data3 = [
 
 % NOTE: above data is in BAD column order, so we
 % have to manually rearrange it.
-time = linspace(0,10,length(LLdata(:,1)))';
+time = linspace(0,10,length(data3(:,1)))';
 LLIdata = [data3(:,2), data3(:,1), time];
 
 
